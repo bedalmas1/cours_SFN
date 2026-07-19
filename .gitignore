@@ -203,6 +203,22 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# LaTeX / Beamer generated files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
 # Ruff stuff:
 .ruff_cache/
 

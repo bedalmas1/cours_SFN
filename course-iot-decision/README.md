@@ -12,12 +12,17 @@ Cette première étape installe uniquement l’arborescence. Les contenus seront
 
 - `syllabus/` : syllabus général et bibliographie ;
 - `sessions/` : huit séquences de quatre heures ;
+- `latex/common/` : préambule Beamer et bibliographie partagés ;
 - `src/` : code Python pédagogique ;
 - `data/` : données brutes, traitées et échantillons ;
 - `notebooks/` : notebooks Jupyter ;
 - `docker/` : environnement MQTT local ;
 - `tests/` : tests automatisés ;
 - `prompts/` : grilles et prompts d’évaluation assistée par IA.
+
+Chaque séquence conserve ses slides dans `sessions/<séquence>/slides/`. Le fichier
+`.tex` principal et les figures associées restent ainsi proches des exercices et
+des guides de la séquence. Les fichiers générés par LaTeX ne sont pas versionnés.
 
 ## Principe de progression
 
