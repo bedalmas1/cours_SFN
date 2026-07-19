@@ -63,6 +63,91 @@ Déroulé indicatif prévu :
 
 [INSÉRER LE DÉROULÉ PRÉVU OU LE COPIER DEPUIS LE SYLLABUS]
 
+## Arborescence du projet et règles de lecture/écriture
+
+Toutes les routes ci-dessous sont relatives à la racine `course-iot-decision/`.
+Avant de produire la séquence, lire les fichiers de cadrage et les ressources déjà
+présentes afin de conserver la cohérence du cours. Ne pas créer de fichiers à la
+racine lorsqu'un dossier dédié existe.
+
+Remplacer dans toutes les routes suivantes :
+
+- `<session>` par le dossier de la séquence préparée, parmi
+  `s01_baseline_pipeline`, `s02_mqtt_broker_data_source`,
+  `s03_parsing_traceability`, `s04_data_quality_uncertainty`,
+  `s05_indicators_decision_traps`, `s06_visualization_decision_briefing`,
+  `s07_security_trust_robustness` ou `s08_final_decision_project` ;
+- `<sXX_nom_sequence>` par le même identifiant, utilisé comme préfixe des
+  fichiers propres à la séquence.
+
+### Fichiers et dossiers à lire
+
+Lire systématiquement :
+
+- `README.md` : objectifs du dépôt, conventions générales et organisation ;
+- `syllabus/syllabus_overall.md` : progression, objectifs et déroulé de référence
+  des huit séquences ;
+- `sessions/README.md` : conventions communes aux séquences et aux slides ;
+- `sessions/<session>/README.md` : cadrage propre à la séquence ;
+- `latex/README.md`, `latex/common/preamble.tex` et
+  `latex/common/references.bib` : conventions Beamer, commandes partagées et
+  références déjà disponibles ;
+- `data/README.md`, `data/raw/README.md`, `data/processed/README.md` et
+  `data/samples/README.md` : règles applicables aux données ;
+- `src/README.md` et `src/iot_decision/README.md` : organisation du code Python ;
+- `notebooks/README.md`, `docker/README.md`, `docker/mosquitto/README.md`,
+  `tests/README.md` et `prompts/README.md` : conventions des autres livrables.
+
+Lire lorsqu'ils existent ou sont pertinents pour la séquence :
+
+- `sessions/<session>/slides/<sXX_nom_sequence>.tex` et tout fichier placé dans
+  `sessions/<session>/slides/figures/` ;
+- les guides, exercices, corrigés, évaluations et autres supports déjà présents
+  dans `sessions/<session>/` ;
+- les scripts de `src/iot_decision/`, les notebooks de `notebooks/`, les tests de
+  `tests/`, les prompts et grilles de `prompts/` ;
+- les configurations de `docker/` et `docker/mosquitto/` ;
+- les jeux de données de `data/raw/`, `data/processed/` et `data/samples/` ;
+- les ressources d'une séquence antérieure uniquement si elles sont nécessaires
+  à la continuité pédagogique. Ne pas les modifier dans ce cas.
+
+### Fichiers et dossiers dans lesquels écrire
+
+Produire ou mettre à jour les livrables aux emplacements suivants :
+
+- `sessions/<session>/README.md` : vue d'ensemble et mode d'emploi de la séquence ;
+- `sessions/<session>/slides/<sXX_nom_sequence>.tex` : slides Beamer principales ;
+- `sessions/<session>/slides/figures/` : figures propres aux slides ;
+- `sessions/<session>/guide_enseignant.md` : déroulé détaillé, timing, consignes,
+  réponses attendues, points de vigilance et débriefs ;
+- `sessions/<session>/guide_etudiant.md` : consignes et supports distribuables ;
+- `sessions/<session>/exercices.md` : énoncés des activités ;
+- `sessions/<session>/corrige.md` : éléments de correction séparés des énoncés ;
+- `sessions/<session>/evaluation.md` : modalités, critères et barème de
+  l'évaluation de la séquence ;
+- `src/iot_decision/` : modules et scripts Python réutilisables, simples et
+  commentés ;
+- `notebooks/` : notebooks Jupyter d'exploration ou de manipulation ;
+- `tests/` : tests automatisés associés au code et aux cas de qualité des données ;
+- `data/raw/` : messages reçus ou simulés conservés sans transformation ;
+- `data/processed/` : données nettoyées, enrichies ou agrégées ;
+- `data/samples/` : petits jeux de données reproductibles à distribuer ;
+- `docker/` et `docker/mosquitto/` : Docker Compose, configuration Mosquitto et
+  fichiers nécessaires à l'environnement MQTT local ;
+- `prompts/` : prompts et grilles d'évaluation assistée par IA ;
+- `latex/common/references.bib` : références bibliographiques partagées ;
+- `latex/common/preamble.tex` : uniquement les commandes ou dépendances réellement
+  communes à plusieurs séquences.
+
+Conserver dans `sessions/<session>/` les ressources spécifiques à une seule
+séquence. Placer dans les dossiers partagés uniquement ce qui est réutilisable.
+Utiliser dans les slides le préambule commun avec
+`\input{../../../latex/common/preamble}` et placer les citations BibTeX dans
+`latex/common/references.bib`. Ne pas écrire ni versionner les fichiers générés par
+LaTeX (`.aux`, `.log`, `.nav`, `.out`, `.snm`, `.toc`, `.vrb`, `.bbl`,
+`.blg`, `.fls`, `.fdb_latexmk`, `.synctex.gz`) ni les PDF de compilation,
+sauf demande explicite.
+
 Contraintes :
 
 - La séquence dure 4 h.
