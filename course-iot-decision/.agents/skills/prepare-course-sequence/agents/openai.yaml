@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare Course Sequence"
+  short_description: "Build one course sequence from the syllabus"
+  default_prompt: "Use $prepare-course-sequence with sequence 2 to prepare its working prompt and help me build all sequence deliverables."

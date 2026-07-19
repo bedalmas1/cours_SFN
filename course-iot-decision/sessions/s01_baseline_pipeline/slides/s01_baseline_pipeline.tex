@@ -1,15 +1,573 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
 \graphicspath{{figures/}}
-
-\title{Séquence 1 -- De la mesure à la décision}
-\subtitle{Introduction et pipeline baseline}
+\title{De la donnée capteur à la décision opérationnelle}
+\subtitle{Séquence 1 -- Comprendre le scénario et construire une pipeline baseline}
 \author{École de l'air et de l'espace}
 \date{}
 
 \begin{document}
-\begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Comprendre le scénario opérationnel et construire une première pipeline simple de bout en bout.
+
+\begin{frame}
+  \titlepage
 \end{frame}
+
+\begin{frame}{Bienvenue dans le cours}
+  \begin{block}{Le sujet du cours}
+    Comprendre comment une donnée imparfaite devient -- ou ne devient pas -- une décision opérationnelle.
+  \end{block}
+  \begin{itemize}
+    \item Nous suivrons une donnée depuis un capteur jusqu'à un choix d'action.
+    \item Nous apprendrons à distinguer ce qui est observé, calculé, supposé et décidé.
+    \item Les outils informatiques sont des moyens pour exercer le jugement, pas une fin en soi.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Le fil rouge des huit séquences}
+  \centering
+  \Large Donnée capteur imparfaite\\[2mm]
+  $\Downarrow$\\[-1mm]
+  Pipeline de traitement\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Indicateur\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Décision opérationnelle
+  \vfill
+  \normalsize À chaque étape, nous demanderons : que gagne-t-on en lisibilité, que risque-t-on de perdre, et quel niveau de confiance reste défendable ?
+\end{frame}
+
+\begin{frame}{Ce que vous saurez faire à la fin de cette séquence}
+  \begin{enumerate}
+    \item raconter le scénario opérationnel avec ses zones et ses enjeux ;
+    \item distinguer message brut, donnée structurée, indicateur et décision ;
+    \item récupérer des messages MQTT sans modifier la preuve originale ;
+    \item produire une table CSV et un graphique lisible ;
+    \item formuler une recommandation avec preuves, incertitudes, confiance et vérification.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{La question qui guidera la séance}
+  \decisionquestion{Les données disponibles permettent-elles de maintenir l'activité prévue sur la base projetée ?}
+  \begin{itemize}
+    \item Une réponse possible est : maintenir, inspecter, protéger, différer ou vérifier sur le terrain.
+    \item Nous ne chercherons pas une réponse spectaculaire, mais une réponse proportionnée aux preuves.
+    \item Une conclusion prudente peut être meilleure qu'une certitude infondée.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 1\\[3mm]
+  \Large Comprendre la mission et la question de décision
+  \vfill
+  \normalsize Nous commençons par le contexte opérationnel avant de manipuler le moindre fichier.
+\end{frame}
+
+\begin{frame}{Le scénario : une base aérienne projetée}
+  \begin{columns}[T]
+    \column{.55\textwidth}
+    La base doit continuer à fonctionner tout en protégeant des équipements sensibles. Des capteurs environnementaux mesurent la température dans plusieurs zones.
+    \column{.4\textwidth}
+    \begin{block}{Contrainte de décision}
+      Les mesures arrivent par une chaîne technique. Le décideur ne voit pas directement le capteur.
+    \end{block}
+  \end{columns}
+  \vfill
+  \alert{La première question n'est donc pas « quel code écrire ? », mais « quelle décision cette donnée doit-elle éclairer ? »}
+\end{frame}
+
+\begin{frame}{Les cinq zones critiques}
+  \begin{description}
+    \item[Stockage batteries] préserver les batteries de drones et éviter une indisponibilité matérielle.
+    \item[Shelter transmissions] maintenir les communications nécessaires à l'activité.
+    \item[Local informatique tactique] protéger les équipements numériques.
+    \item[Zone de maintenance légère] maintenir l'activité technique quotidienne.
+    \item[Abri matériel optronique] protéger des équipements d'observation sensibles.
+  \end{description}
+  \vfill
+  \normalsize Une même température n'a pas forcément la même conséquence opérationnelle selon la zone.
+\end{frame}
+
+\begin{frame}{Le contexte de la décision}
+  \begin{block}{Situation fictive}
+    Il est 10 h 05. Le commandement doit décider si l'activité prévue peut continuer. Les messages sont disponibles dans un broker MQTT simulé.
+  \end{block}
+  \begin{itemize}
+    \item Le broker est une source technique, pas un verdict.
+    \item Les messages peuvent être anciens, incomplets ou mal interprétés.
+    \item Le seuil de 35 °C utilisé aujourd'hui est pédagogique : il devra être validé par une autorité compétente dans un contexte réel.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Avant de regarder les données : votre décision}
+  \begin{columns}[T]
+    \column{.45\textwidth}
+    Choisissez une action :
+    \begin{enumerate}
+      \item maintenir ;
+      \item déclencher une inspection ;
+      \item protéger le matériel ;
+      \item différer ;
+      \item demander une vérification terrain.
+    \end{enumerate}
+    \column{.48\textwidth}
+    Notez également :
+    \begin{itemize}
+      \item votre confiance de 0 à 100 \% ;
+      \item une raison ;
+      \item l'information qui vous manque le plus.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \alert{Ce vote initial sera comparé au vote final : l'objectif est de voir comment la preuve transforme le jugement.}
+\end{frame}
+
+\begin{frame}{Une donnée n'est pas encore une décision}
+  \begin{description}
+    \item[Message] ce qui a été transmis et reçu.
+    \item[Donnée] un message replacé dans son contexte : zone, unité, temps, capteur.
+    \item[Indicateur] un résumé construit pour répondre à une question.
+    \item[Décision] une action choisie en tenant compte des conséquences et des limites.
+  \end{description}
+  \begin{block}{Exemple}
+    « 35,4 » est une valeur. « La zone batteries demande une inspection avant poursuite » est une décision conditionnelle.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lire une chaîne de données comme une chaîne de responsabilités}
+  \begin{enumerate}
+    \item Le capteur produit-il une mesure dans la bonne unité ?
+    \item Le message identifie-t-il la bonne zone et le bon instant ?
+    \item Le broker a-t-il transmis le message attendu ?
+    \item Le traitement a-t-il conservé la trace de la source ?
+    \item L'indicateur répond-il réellement à la question du commandement ?
+  \end{enumerate}
+  \vfill
+  À chaque réponse, nous ajoutons une condition à la confiance.
+\end{frame}
+
+\begin{frame}{Confiance et incertitude : deux questions différentes}
+  \begin{block}{Confiance}
+    Jusqu'à quel point les éléments disponibles sont-ils adaptés à la décision envisagée ?
+  \end{block}
+  \begin{block}{Incertitude}
+    Que ne savons-nous pas encore, et quelle ignorance pourrait changer l'action ?
+  \end{block}
+  \begin{alertblock}{Réflexe de décideur}
+    Une incertitude utile n'est pas une liste abstraite : elle conduit à une vérification ou à une action de protection.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{La pipeline minimale de la séance}
+  \centering
+  \Large Broker MQTT\\[2mm]
+  $\Downarrow$\quad messages reçus\\[2mm]
+  Fichier JSONL brut\\[2mm]
+  $\Downarrow$\quad parsing et contrôles simples\\[2mm]
+  Table CSV\\[2mm]
+  $\Downarrow$\quad indicateur et graphique\\[2mm]
+  Recommandation opérationnelle
+\end{frame}
+
+\begin{frame}{Comment va se dérouler votre travail ?}
+  \begin{enumerate}
+    \item comprendre la situation et choisir une première action ;
+    \item observer la source MQTT et préserver les messages reçus ;
+    \item transformer les messages en table sans perdre leur origine ;
+    \item construire un indicateur et une visualisation pour une question ;
+    \item décider, qualifier la confiance et proposer une vérification.
+  \end{enumerate}
+  \vfill
+  \alert{Chaque section alterne explication courte, manipulation, restitution et décision.}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 2\\[3mm]
+  \Large Observer la source et préserver la preuve
+  \vfill
+  \normalsize Vous allez maintenant travailler en binômes sur les messages MQTT.
+\end{frame}
+
+\begin{frame}{Ce que la pipeline fait -- et ce qu'elle ne fait pas}
+  \begin{columns}[T]
+    \column{.47\textwidth}
+    \begin{block}{Elle permet de}
+      \begin{itemize}
+        \item conserver les messages reçus ;
+        \item comparer les zones ;
+        \item repérer un dépassement observé ;
+        \item expliquer comment un résultat a été produit.
+      \end{itemize}
+    \end{block}
+    \column{.47\textwidth}
+    \begin{alertblock}{Elle ne prouve pas}
+      \begin{itemize}
+        \item que le capteur est calibré ;
+        \item que toutes les données existent ;
+        \item que la situation future sera identique ;
+        \item que le seuil est une norme réelle.
+      \end{itemize}
+    \end{alertblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Comprendre MQTT sans devenir administrateur réseau}
+  \begin{description}
+    \item[Publication] un producteur envoie un message.
+    \item[Topic] un chemin textuel permet de classer et de sélectionner les messages.
+    \item[Broker] un service reçoit, conserve éventuellement et redistribue les messages.
+    \item[Abonnement] un client demande les messages correspondant à un topic.
+  \end{description}
+  \begin{block}{Dans notre laboratoire}
+    Nous nous abonnons à `airbase/batch001/\#` pour récupérer les mesures de la mission 001.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Un topic raconte une organisation, pas toute la vérité}
+  \small
+  \begin{verbatim}
+airbase/batch001/battery-shelter-01/temperature/0002
+  \end{verbatim}
+  \begin{itemize}
+    \item `airbase` : site logique ;
+    \item `batch001` : lot de mission ;
+    \item `battery-shelter-01` : zone ;
+    \item `temperature` : famille de mesure ;
+    \item `0002` : repère de séquence.
+  \end{itemize}
+  \alert{Nous comparerons le topic avec le contenu JSON : deux indices doivent raconter la même histoire.}
+\end{frame}
+
+\begin{frame}[fragile]{À l'intérieur du message JSON}
+  \scriptsize
+  \begin{verbatim}
+{"message_id":"battery-shelter-01-0002",
+ "site_id":"base-projetee-alpha",
+ "zone":"battery-shelter-01",
+ "sensor":"temperature",
+ "measured_at":"2026-10-12T10:00:00Z",
+ "value":35.4,"unit":"celsius","sequence":2}
+  \end{verbatim}
+  \normalsize
+  La valeur n'est interprétable qu'avec sa zone, son unité, son instant et son identifiant.
+\end{frame}
+
+\begin{frame}{Retained : le piège de la fraîcheur}
+  Un message retained est conservé par le broker et remis à un nouvel abonné qui correspond au topic.
+  \begin{alertblock}{Deux dates à ne pas confondre}
+    \texttt{measured\_at} : instant déclaré de la mesure.\\
+    \texttt{received\_at} : instant où notre extraction a reçu le message.
+  \end{alertblock}
+  \begin{block}{Question à poser}
+    Un message reçu à 10 h 05 a-t-il nécessairement été mesuré à 10 h 05 ?
+  \end{block}
+  Source : OASIS, MQTT Version 5.0, section 3.3.1.3.
+\end{frame}
+
+\begin{frame}{Le premier livrable : préserver la preuve}
+  \begin{block}{JSONL brut}
+    Une ligne par enveloppe reçue, conservée au plus près de l'extraction.
+  \end{block}
+  \begin{itemize}
+    \item ne pas supprimer une valeur gênante ;
+    \item ne pas corriger directement une unité ou une date ;
+    \item conserver topic, réception, retained et payload ;
+    \item pouvoir relier chaque future ligne CSV à sa source.
+  \end{itemize}
+  \alert{Si nous perdons le brut, nous ne pouvons plus expliquer ni corriger notre traitement.}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : extraire les messages}
+  \scriptsize
+  \begin{verbatim}
+python -m iot_decision.mqtt_tools extract \
+  data/raw/batch001_raw.jsonl
+  \end{verbatim}
+  \begin{block}{Si le broker n'est pas disponible}
+  \begin{verbatim}
+python -m iot_decision.baseline_cli extract-sample \
+  data/samples/batch001_messages.jsonl \
+  data/raw/batch001_raw.jsonl
+  \end{verbatim}
+  \end{block}
+  \normalsize
+  Avant de conclure, vérifier l'effectif, les zones, les dates et les métadonnées conservées.
+\end{frame}
+
+\begin{frame}{TP 1 -- Extraction contrôlée des messages}
+  \begin{block}{Votre mission}
+    Produire \texttt{data/raw/batch001\_raw.jsonl} à partir du broker ou du fichier de repli, sans modifier les payloads.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la commande d'extraction ;
+    \item compter les lignes et identifier les cinq zones ;
+    \item lire la première et la dernière enveloppe ;
+    \item relever topic, \texttt{received\_at}, \texttt{measured\_at} et retained ;
+    \item comparer une information observée avec une conclusion possible.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Remettre le JSONL et une phrase : « Avec ces messages, je peux / je ne peux pas encore décider de ... »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Après extraction : première pause de raisonnement}
+  \decisionquestion{Que pouvez-vous affirmer uniquement parce que 15 messages ont été extraits ?}
+  \begin{itemize}
+    \item Formulez une observation vérifiable.
+    \item Formulez séparément une conclusion qui serait excessive.
+    \item Donnez une action prudente si une information manque.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Incident : toutes les zones sont-elles comparables ?}
+  Comparez les dates de mesure avec l'instant d'extraction.
+  \begin{enumerate}
+    \item Quelle zone possède les mesures les plus anciennes ?
+    \item Cette ancienne mesure est-elle inutile, ou seulement moins actuelle ?
+    \item Quel effet sur la confiance dans une décision de maintien ?
+    \item Quelle vérification terrain devient prioritaire ?
+  \end{enumerate}
+  \alert{Une donnée ancienne ne doit pas être supprimée pour rendre le graphique plus confortable.}
+\end{frame}
+
+\begin{frame}{Restitution du TP 1 : le contradicteur}
+  Un binôme présente son constat ; un autre doit poser trois questions :
+  \begin{enumerate}
+    \item Quelle ligne du brut soutient votre affirmation ?
+    \item Quelle date utilisez-vous pour parler de fraîcheur ?
+    \item Quelle information manquante pourrait changer l'action ?
+  \end{enumerate}
+  \vfill
+  \decisionquestion{La présence d'un message est-elle une preuve de situation actuelle ?}
+\end{frame}
+
+\begin{frame}{Brut, transformé, exploitable}
+  \begin{description}
+    \item[Brut] ce qui a été reçu, avec son contexte d'extraction.
+    \item[Transformé] une représentation dérivée par des règles explicites.
+    \item[Exploitable] une sortie adaptée à une question et à une décision précises.
+  \end{description}
+  \begin{block}{Phrase à retenir}
+    Transformer rend souvent les données plus lisibles ; cela ne les rend pas automatiquement plus vraies.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 3\\[3mm]
+  \Large Transformer sans effacer l'incertitude
+  \vfill
+  \normalsize Le but du parsing est de rendre la comparaison possible tout en gardant la trace de la source.
+\end{frame}
+
+\begin{frame}{Du JSON imbriqué vers une ligne CSV}
+  \begin{columns}[T]
+    \column{.46\textwidth}
+    \textbf{Source}\par
+    payload \texttt{zone}, \texttt{value}, \texttt{measured\_at}, \texttt{unit}\\
+    enveloppe \texttt{topic}, \texttt{received\_at}, \texttt{retained}
+    \column{.46\textwidth}
+    \textbf{Sortie}\par
+    une ligne comparable par mesure, avec les champs source conservés.
+  \end{columns}
+  \vfill
+  \alert{Le CSV répond au besoin de comparaison ; il ne remplace pas le JSONL comme preuve de départ.}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : produire la table}
+  \scriptsize
+  \begin{verbatim}
+python -m iot_decision.baseline_cli transform \
+  data/raw/batch001_raw.jsonl \
+  data/processed/batch001_measurements.csv
+  \end{verbatim}
+  \normalsize
+  Contrôler ensemble : nombre de lignes, cinq zones, unité unique, horodatages, \texttt{message\_id}, topic et réception.
+\end{frame}
+
+\begin{frame}{TP 2 -- Du JSONL vers le CSV}
+  \begin{block}{Votre mission}
+    Produire \texttt{data/processed/batch001\_measurements.csv} et expliquer chaque colonne dérivée.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la transformation ;
+    \item vérifier les 15 lignes, les cinq zones et l'unité ;
+    \item retrouver une ligne CSV dans le JSONL par son identifiant ;
+    \item vérifier que topic et date de réception n'ont pas disparu ;
+    \item noter une amélioration de lisibilité et une limite persistante.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Remettre le CSV et répondre : « Cette table est-elle suffisante pour comparer les zones ? Pourquoi ? »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lire un contrôle de qualité minimal}
+  \begin{itemize}
+    \item 15 lignes : l'effectif attendu est-il bien présent ?
+    \item 5 zones : une zone manque-t-elle complètement ?
+    \item 1 unité : compare-t-on des températures dans la même unité ?
+    \item identifiants uniques : un doublon pourrait-il gonfler un indicateur ?
+    \item dates : les mesures couvrent-elles le même horizon ?
+  \end{itemize}
+  \decisionquestion{Le CSV est-il exploitable pour comparer les zones, et avec quelles réserves ?}
+\end{frame}
+
+\begin{frame}{Un indicateur répond à une question}
+  \begin{block}{Question de la baseline}
+    Quelle zone présente le maximum observé le plus élevé ?
+  \end{block}
+  \begin{itemize}
+    \item Indicateur choisi : maximum de température par zone.
+    \item Seuil pédagogique : 35 °C.
+    \item Action possible : inspection ciblée avant un maintien sans réserve.
+  \end{itemize}
+  \alert{Un indicateur est un choix de représentation : il rend certaines choses visibles et en masque d'autres.}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 4\\[3mm]
+  \Large Construire une vue utile pour décider
+  \vfill
+  \normalsize Un graphique n'est pas la conclusion : c'est un instrument de discussion.
+\end{frame}
+
+\begin{frame}{Maximum observé par zone}
+  \centering
+  \includegraphics[width=.88\textwidth]{batch001_max_by_zone.png}
+\end{frame}
+
+\begin{frame}{TP 3 -- Produire et critiquer le graphique}
+  \begin{block}{Votre mission}
+    Produire un graphique qui répond à une question explicite, puis en tester la portée.
+  \end{block}
+  \begin{enumerate}
+    \item générer \texttt{batch001\_max\_by\_zone.png} ;
+    \item vérifier titre, unité, zones, seuil et lisibilité ;
+    \item écrire une phrase d'observation sans interprétation ;
+    \item écrire une phrase d'interprétation sans certitude excessive ;
+    \item identifier ce que le maximum masque.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Remettre le PNG et répondre : « Quelle zone mérite une attention immédiate, avec quel niveau de confiance ? »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lire le graphique en trois phrases}
+  \begin{enumerate}
+    \item \textbf{Observation :} le maximum observé dans le stockage batteries est 35,4 °C.
+    \item \textbf{Interprétation prudente :} cette zone mérite une attention ciblée au regard du seuil pédagogique.
+    \item \textbf{Limite :} le graphique ne prouve ni la durée du dépassement, ni la calibration, ni l'état futur.
+  \end{enumerate}
+  \begin{block}{Règle de présentation}
+    Toujours séparer ce que les données montrent de ce que nous décidons d'en faire.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Ce que le maximum masque}
+  \begin{itemize}
+    \item la durée et la continuité d'un éventuel dépassement ;
+    \item l'âge de la mesure et la cadence d'acquisition ;
+    \item les valeurs manquantes ou non reçues ;
+    \item l'incertitude de mesure et la calibration ;
+    \item l'évolution qui suivra l'instant observé.
+  \end{itemize}
+  \decisionquestion{Le maximum suffit-il à autoriser une action irréversible ?}
+\end{frame}
+
+\begin{frame}{Construire une recommandation défendable}
+  \begin{enumerate}
+    \item une action concrète et proportionnée ;
+    \item un niveau de confiance : très faible, faible, moyen ou élevé ;
+    \item deux preuves chiffrées et retrouvables ;
+    \item au moins deux incertitudes qui pourraient changer la décision ;
+    \item une vérification prioritaire, terrain ou technique.
+  \end{enumerate}
+  \begin{alertblock}{Formulation attendue}
+    « Je recommande ..., avec une confiance ..., parce que ... ; je vérifierais ... avant ... . »
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 5\\[3mm]
+  \Large Décider, justifier et vérifier
+  \vfill
+  \normalsize Nous revenons maintenant à la situation initiale avec une preuve construite collectivement.
+\end{frame}
+
+\begin{frame}{TP 4 -- Le brief décisionnel}
+  \begin{block}{Votre mission}
+    Rédiger une recommandation de 120 mots maximum à partir du JSONL, du CSV et du graphique.
+  \end{block}
+  \begin{enumerate}
+    \item choisir une action concrète ;
+    \item citer deux preuves chiffrées et retrouvables ;
+    \item qualifier la confiance ;
+    \item citer deux incertitudes qui peuvent changer la décision ;
+    \item proposer une vérification terrain ou technique prioritaire.
+  \end{enumerate}
+  \begin{alertblock}{Règle de restitution}
+    Une observation, une interprétation et une action doivent être identifiables séparément.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Retour au vote initial}
+  Comparez votre choix avec celui du début :
+  \begin{itemize}
+    \item l'action a-t-elle changé ?
+    \item la confiance a-t-elle augmenté ou diminué ?
+    \item quelle étape de la pipeline a produit ce changement ?
+    \item quelle information demanderiez-vous maintenant au système ou au terrain ?
+  \end{itemize}
+  \vfill
+  \alert{Une meilleure compréhension peut conduire à une confiance plus faible : c'est parfois un progrès.}
+\end{frame}
+
+\begin{frame}{Ce que cette première pipeline autorise}
+  \begin{block}{Nous pouvons déjà}
+    identifier les messages reçus, comparer les maxima observés, repérer une zone au-dessus d'un seuil pédagogique et demander une inspection ciblée.
+  \end{block}
+  \begin{alertblock}{Nous ne pouvons pas encore}
+    certifier la sécurité de la base, démontrer une tendance, mesurer une durée de dépassement ou remplacer une vérification terrain.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Transition vers la suite du cours}
+  Les prochaines séquences approfondiront progressivement :
+  \begin{enumerate}
+    \item la source MQTT et la qualité des messages ;
+    \item le parsing et la traçabilité ;
+    \item les données manquantes, doublons et incohérences ;
+    \item les indicateurs trompeurs ;
+    \item la visualisation, la sécurité et la robustesse.
+  \end{enumerate}
+  \vfill
+  Cette séance fournit la baseline à partir de laquelle nous mesurerons les améliorations et les risques.
+\end{frame}
+
+\begin{frame}{Synthèse individuelle}
+  Complétez les trois phrases :
+  \begin{enumerate}
+    \item La pipeline permet d'affirmer que ...
+    \item Elle ne permet pas d'affirmer que ...
+    \item Avant une action irréversible, je vérifierais ...
+  \end{enumerate}
+  \vfill
+  \alert{Technique $\rightarrow$ donnée $\rightarrow$ indicateur $\rightarrow$ décision $\rightarrow$ confiance.}
+\end{frame}
+
+\begin{frame}{Références et ressources}
+  \tiny
+  \begin{itemize}
+    \item OASIS, \emph{MQTT Version 5.0}: \url{https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html}
+    \item Eclipse Mosquitto, documentation: \url{https://mosquitto.org/man/mosquitto_sub-1.html}
+    \item Python, bibliothèques `json` et `csv`: \url{https://docs.python.org/3/library/json.html}
+    \item JCGM 100:2008, incertitude de mesure: \url{https://www.bipm.org/en/committees/jc/jcgm/publications}
+    \item NISTIR 8286A Rev. 1, gestion du risque: \url{https://doi.org/10.6028/NIST.IR.8286Ar1}
+    \item Matplotlib, visualisation: \url{https://matplotlib.org/stable/}
+  \end{itemize}
+\end{frame}
+
 \end{document}

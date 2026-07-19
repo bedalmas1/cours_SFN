@@ -12,4 +12,9 @@ dossier, le préambule est chargé avec :
 \input{../../../latex/common/preamble}
 ```
 
-Les fichiers produits par la compilation sont ignorés par Git.
+Pour chaque séquence, compiler depuis son dossier `slides/` et conserver le PDF
+livrable sous `sXX_nom_sequence.pdf`. Les fichiers intermédiaires produits par
+LaTeX (`.aux`, `.log`, `.nav`, `.out`, `.snm`, `.toc`, `.vrb`, `.bbl`, `.blg`,
+`.fls`, `.fdb_latexmk`, `.synctex.gz`) restent ignorés par Git. Une vérification
+PDF doit contrôler le nombre de pages, la lisibilité, les figures, les références
+et l'absence de texte hors cadre.

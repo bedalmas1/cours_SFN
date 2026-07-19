@@ -53,15 +53,44 @@ Les sources doivent être **fiables, récentes lorsque nécessaire, sourcées et
 
 Je veux préparer en détail la séquence suivante :
 
-**Séquence à préparer : [INSÉRER LE TITRE DE LA SÉQUENCE]**
+**Séquence à préparer : Introduction et pipeline baseline**
 
 Objectif général de la séquence :
 
-[INSÉRER L’OBJECTIF GÉNÉRAL]
+Comprendre le scénario opérationnel et construire une première pipeline simple de bout en bout.
 
 Déroulé indicatif prévu :
 
-[INSÉRER LE DÉROULÉ PRÉVU OU LE COPIER DEPUIS LE SYLLABUS]
+Temps                                Activité
+
+0:00-0:15                            Situation initiale : faut-il maintenir l'activité prévue sur la base
+                                     projetée ?
+
+0:15-0:45                            Concepts : donnée, indicateur, décision, confiance, incertitude
+
+0:45-1:10                            Démonstration : broker MQTT simulé et messages de température
+
+1:10-1:55                            TP : extraire les messages vers batch001_raw.jsonl
+
+1:55-2:05                            Pause
+
+2:05-2:30                            Concepts : brut, transformé, exploitable
+
+2:30-3:10                            TP : parser les JSON et produire un CSV propre minimal
+
+3:10-3:35                            Visualisation simple de la température par zone
+
+3:35-3:55                            Décision : peut-on maintenir l'activité ?
+
+3:55-4:00                            Synthèse
+
+Question décisionnelle : Que peut-on déjà décider avec cette pipeline minimale ? Et que ne peut-on pas encore
+conclure ?
+
+Livrables : batch001_raw.jsonl ; batch001_measurements.csv ; graphique simple ; première recommandation
+opérationnelle.
+
+Engagement : Vote initial puis vote final pour observer l’effet du pipeline sur la décision.
 
 ## Arborescence du projet et règles de lecture/écriture
 
@@ -116,12 +145,7 @@ Lire lorsqu'ils existent ou sont pertinents pour la séquence :
 Produire ou mettre à jour les livrables aux emplacements suivants :
 
 - `sessions/<session>/README.md` : vue d'ensemble et mode d'emploi de la séquence ;
-- `sessions/<session>/instructions_avant_seance.md` : checklist enseignant avant séance,
-  incluant installation, dépendances, broker/Docker, supports, matériel, plan de
-  repli et contrôles de dernière minute ;
 - `sessions/<session>/slides/<sXX_nom_sequence>.tex` : slides Beamer principales ;
-- `sessions/<session>/slides/<sXX_nom_sequence>.pdf` : PDF compilé et directement
-  projetable, produit depuis le `.tex` de la séquence ;
 - `sessions/<session>/slides/figures/` : figures propres aux slides ;
 - `sessions/<session>/guide_enseignant.md` : déroulé détaillé, timing, consignes,
   réponses attendues, points de vigilance et débriefs ;
@@ -150,13 +174,8 @@ Utiliser dans les slides le préambule commun avec
 `\input{../../../latex/common/preamble}` et placer les citations BibTeX dans
 `latex/common/references.bib`. Ne pas écrire ni versionner les fichiers générés par
 LaTeX (`.aux`, `.log`, `.nav`, `.out`, `.snm`, `.toc`, `.vrb`, `.bbl`,
-`.blg`, `.fls`, `.fdb_latexmk`, `.synctex.gz`). Le PDF compilé
-`slides/<sXX_nom_sequence>.pdf` est désormais un livrable obligatoire et peut
-être versionné; les autres intermédiaires restent exclus.
-
-Après chaque préparation, compiler le deck depuis `sessions/<session>/slides/`,
-rendre les pages du PDF et vérifier visuellement la lisibilité, les figures,
-les références, les transitions et l'absence de débordement.
+`.blg`, `.fls`, `.fdb_latexmk`, `.synctex.gz`) ni les PDF de compilation,
+sauf demande explicite.
 
 Contraintes :
 
