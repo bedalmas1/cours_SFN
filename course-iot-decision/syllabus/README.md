@@ -441,7 +441,3 @@ Journal des choix         Tracer les choix de rejet, correction, seuil,  Rendre 
 Les étudiants doivent comprendre que produire un graphique ne suffit pas. Il faut être capable d'expliquer ce que les
 données permettent d'affirmer, ce qu'elles ne permettent pas de conclure, les incertitudes restantes, les risques
 opérationnels, les vérifications nécessaires et le niveau de confiance de la recommandation.
-
----
-
-Source : [syllabus_iot_decision_operationnelle.pdf](./syllabus_iot_decision_operationnelle.pdf)
