@@ -4,7 +4,9 @@ Chaque activité se termine par mini-décision, confiance, preuve, incertitude e
 
 ## A. Situation initiale et vote — 15 min
 
-Sans données, notez décision, confiance, raison principale et information prioritaire manquante. Comparez en binôme les risques. **Trace:** journal “avant pipeline”.
+Une activité de maintenance drone est prévue à 14 h 00 sur une base aérienne projetée. La supervision signale une possible hausse de température dans le stockage batteries. Les données sont disponibles dans le broker MQTT, mais aucune analyse consolidée n’a encore été réalisée. Une vérification terrain prendrait 30 minutes; reporter l’activité a un coût opérationnel.
+
+Sans consulter les données, choisissez : **A. maintenir l’activité; B. déclencher une inspection terrain; C. mettre temporairement la zone en sécurité; D. données insuffisantes pour décider.** Notez décision, confiance, raison principale et information prioritaire manquante. Comparez en binôme les risques de chaque choix. **Trace:** journal “avant pipeline”.
 
 ## B. Lire la chaîne — 30 min
 
@@ -49,7 +51,7 @@ Vérifiez titre-question, unité, seuil et lisibilité. Écrivez séparément un
 
 ## H. Décider, voter, contester — 20 min
 
-Rédigez la recommandation, revotez avec confiance, puis identifiez l’hypothèse qui pourrait renverser la décision. Remettez la note ≤120 mots et expliquez l’écart entre votes.
+Rédigez la recommandation, revotez entre les mêmes options A à D avec confiance, puis identifiez l’hypothèse qui pourrait renverser la décision. Remettez la note ≤120 mots et expliquez l’écart entre votes.
 
 ## I. Exit ticket — 5 min
 

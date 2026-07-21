@@ -58,7 +58,7 @@ Ne pas distribuer `corrige.md` ni le prompt d’évaluation IA.
 ## 4. Préparer le matériel de séance
 
 - projeter le PDF compilé des slides ;
-- préparer cinq cartes de vote : maintenir, inspecter, protéger, différer, vérifier terrain ;
+- préparer quatre cartes de vote : A. maintenir l’activité, B. déclencher une inspection terrain, C. mettre temporairement la zone en sécurité, D. données insuffisantes pour décider ;
 - prévoir une feuille par binôme pour le journal de décision ;
 - distribuer le guide étudiant et les exercices ;
 - vérifier que chaque binôme peut ouvrir un terminal et écrire dans un espace de travail ;
@@ -92,7 +92,7 @@ Le démarrage est prêt si :
 - le test automatisé affiche `5 passed` ;
 - le validateur affiche `S01 valide` ;
 - le broker, s’il est utilisé, renvoie 15 messages ;
-- le PDF s’ouvre et comporte 25 pages ;
+- le PDF s’ouvre et comporte 47 pages ;
 - la figure montre le maximum par zone et le seuil ;
 - les cartes de vote, les supports étudiants et le chronomètre sont disponibles.
 

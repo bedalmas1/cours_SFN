@@ -2,7 +2,9 @@
 
 ## Mission
 
-À 10 h 05, le commandement doit décider si l’activité prévue peut être maintenue sur la base projetée Alpha. Vous allez construire une petite chaîne de données, puis expliquer exactement ce qu’elle permet — ou ne permet pas — de décider.
+Une activité de maintenance drone est prévue à 14 h 00 sur une base aérienne projetée. Un message de supervision signale une possible hausse de température dans le stockage batteries. Des données sont disponibles dans le broker MQTT, mais aucune analyse consolidée n’a encore été réalisée. Une vérification terrain prendrait 30 minutes et reporter l’activité aurait un coût opérationnel.
+
+Vous devez prendre une première décision avec ces seules informations, puis construire une petite chaîne de données et expliquer exactement ce qu’elle permet — ou ne permet pas — de décider.
 
 ## Parcours
 
@@ -39,7 +41,14 @@ Ne démarrez pas le broker sur un réseau partagé.
 
 ## Vote initial
 
-Avant les données, choisissez : maintenir / inspecter / protéger / différer / vérifier sur le terrain. Notez une confiance de 0 à 100 %, une raison et l’information qui vous manque le plus.
+Sans consulter les données, choisissez une seule réponse :
+
+- **A.** Maintenir l’activité.
+- **B.** Déclencher une inspection terrain.
+- **C.** Mettre temporairement la zone en sécurité.
+- **D.** Données insuffisantes pour décider.
+
+Notez une confiance de 0 à 100 %, votre raison principale et l’information qui vous manque le plus. Tenez compte du délai de 30 minutes pour l’inspection et du coût opérationnel d’un report, sans inventer de faits absents du message de supervision.
 
 ## TP 1 — Extraire le brut
 
@@ -113,7 +122,7 @@ Rédigez une note de 120 mots maximum contenant :
 - deux incertitudes importantes ;
 - une vérification prioritaire.
 
-Un membre du binôme joue le contradicteur : quelle hypothèse pourrait renverser votre décision ? Revotez ensuite avec votre niveau de confiance.
+Un membre du binôme joue le contradicteur : quelle hypothèse pourrait renverser votre décision ? Revotez ensuite entre les mêmes options A à D, avec votre niveau de confiance.
 
 ## Vérification finale à exécuter
 

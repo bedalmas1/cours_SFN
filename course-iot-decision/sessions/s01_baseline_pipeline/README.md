@@ -4,7 +4,7 @@ Séance de 4 h directement exploitable pour passer de messages MQTT retained à 
 
 ## Question directrice
 
-**À la fin, les étudiants doivent décider si les mesures justifient de maintenir l’activité, d’inspecter ou de demander une vérification terrain, avec un niveau de confiance et des limites explicites.**
+**À la fin, les étudiants doivent décider si les mesures justifient de maintenir l’activité de maintenance drone prévue à 14 h 00, de déclencher une inspection terrain, de mettre temporairement la zone en sécurité ou de déclarer les données insuffisantes, avec un niveau de confiance et des limites explicites.**
 
 ## Livrables et démarrage rapide
 

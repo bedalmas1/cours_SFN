@@ -8,7 +8,7 @@ Recommandation recevable: **inspection ciblée du stockage batteries et vérific
 
 ## Débriefs
 
-- **Vote initial:** accepter toute option honnêtement justifiée. La confiance mesure l’adéquation des preuves, pas l’assurance du décideur.
+- **Vote initial:** accepter toute option A à D honnêtement justifiée à partir du message de supervision, du délai d’inspection et du coût opérationnel du report. La confiance mesure l’adéquation des preuves, pas l’assurance du décideur.
 - **Chaîne:** message = contenu transmis; donnée = représentation contextualisée; indicateur = synthèse construite; décision = choix d’action. Un graphique n’est pas une preuve exhaustive.
 - **Broker:** retained signifie stocké puis remis au nouvel abonné, pas récent. `received_at` trace l’extraction; `measured_at` est l’événement déclaré par le capteur.
 - **Extraction:** 15 enveloppes; topic, réception et retained conservés. Refuser toute correction du brut. Reproductible ne signifie ni authentique ni exhaustif.

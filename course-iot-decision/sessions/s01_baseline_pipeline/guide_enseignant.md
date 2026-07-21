@@ -4,7 +4,7 @@
 
 Cette séquence installe le réflexe des huit séances: une pipeline transforme la portée des preuves qui soutiennent une action. La baseline est volontairement minimale pour rendre visibles, ensuite, les besoins de qualité, traçabilité, sécurité et robustesse.
 
-**Question directrice:** à la fin, les étudiants doivent décider si les mesures justifient maintien, inspection ou vérification terrain, avec confiance et limites explicites.
+**Question directrice:** à la fin, les étudiants doivent décider si les mesures justifient de maintenir l’activité de maintenance drone prévue à 14 h 00, de déclencher une inspection terrain, de mettre temporairement la zone en sécurité ou de déclarer les données insuffisantes, avec confiance et limites explicites.
 
 Compétence principale: décider sous incertitude sans confondre disponibilité d’un résultat, vérité de la situation et suffisance de la preuve. Pièges: retained = récent; CSV propre = vrai; 35 °C = norme; maximum = risque certain; pourcentage de confiance sans justification.
 
@@ -24,7 +24,7 @@ Conceptuels: identifier message/donnée/indicateur/décision; expliquer topic, r
    ```
 
 4. Tester une extraction temporaire; garder `extract-sample` en repli.
-5. Compiler/projeter les slides; préparer cinq cartes de vote.
+5. Compiler/projeter les slides; préparer quatre cartes de vote A à D.
 
 Le broker anonyme est strictement local (`127.0.0.1`). Ne jamais déployer cette configuration sur un VPS ou réseau partagé.
 
@@ -62,9 +62,11 @@ Les étapes ci-dessous sont destinées à l’enseignant. Les résultats de réf
 
 **Préparer.** Distribuer une fiche par étudiant avec quatre cases: action, confiance, raison, information manquante. Ne montrer ni fichier ni graphique.
 
-**Conduire.** Lire la situation une fois. Faire écrire en silence, puis demander aux binômes de comparer leurs hypothèses sans chercher à se convaincre. Faire voter les cinq options et noter séparément le choix et la confiance.
+**Situation à lire.** « Une activité de maintenance drone est prévue à 14 h 00 sur une base aérienne projetée. Un message de supervision signale une possible hausse de température dans le stockage batteries. Des données sont disponibles dans le broker MQTT, mais aucune analyse consolidée n’a encore été réalisée. Une vérification terrain prendrait 30 minutes. Reporter l’activité a un coût opérationnel. »
 
-**Relancer.** Si un étudiant demande “quelle est la bonne réponse?”, demander: “Quelle preuve avez-vous réellement?” puis “Quel serait le coût d’une erreur?”. Si tous choisissent maintenir, demander quelle information pourrait rendre ce choix dangereux.
+**Conduire.** Lire la situation une fois. Faire écrire en silence, puis demander aux binômes de comparer leurs hypothèses sans chercher à se convaincre. Faire voter entre **A. maintenir l’activité; B. déclencher une inspection terrain; C. mettre temporairement la zone en sécurité; D. données insuffisantes pour décider.** Noter séparément le choix et la confiance.
+
+**Relancer.** Si un étudiant demande “quelle est la bonne réponse?”, demander: “Quelle preuve avez-vous réellement?” puis “Quel serait le coût d’une erreur?”. Faire distinguer le coût certain de l’inspection (30 minutes), le coût annoncé mais non chiffré du report et les conséquences possibles d’une hausse non confirmée. Si tous choisissent maintenir, demander quelle information pourrait rendre ce choix dangereux.
 
 **Débloquer.** Proposer uniquement le canevas: action → preuve disponible → information manquante → niveau de confiance. Ne pas fournir de température.
 
@@ -152,7 +154,7 @@ Les étapes ci-dessous sont destinées à l’enseignant. Les résultats de réf
 
 **Préparer.** Distribuer le canevas décision–confiance–preuves–incertitudes–vérification. Désigner dans chaque groupe un rédacteur, un vérificateur des sources et un contradicteur.
 
-**Conduire.** Accorder une première rédaction silencieuse, puis demander au contradicteur de chercher l’hypothèse qui pourrait renverser la recommandation. Faire voter à nouveau individuellement avant la restitution.
+**Conduire.** Accorder une première rédaction silencieuse, puis demander au contradicteur de chercher l’hypothèse qui pourrait renverser la recommandation. Faire voter à nouveau individuellement entre les mêmes options A à D avant la restitution.
 
 **Relancer.** Exiger une citation de ligne, de zone ou de valeur pour chaque preuve. Demander si la vérification proposée est faisable avant l’action.
 
