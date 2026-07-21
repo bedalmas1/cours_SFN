@@ -16,6 +16,23 @@ Vous devez prendre une première décision avec ces seules informations, puis co
 
 À chaque étape, conservez une trace : action, confiance, preuve, incertitude, vérification.
 
+## Correspondance entre ce guide et les exercices
+
+Les lettres **A à I** dans `exercices.md` décrivent le déroulé complet de la séance. Les **TP 1 à 4** de ce guide sont les quatre productions techniques incluses dans ce déroulé. Il ne s’agit donc pas de deux séries d’activités différentes.
+
+| Dans `exercices.md` | Dans ce guide | Ce que vous faites |
+|---|---|---|
+| A | Vote initial | décider avant d’ouvrir les données |
+| B–C | Apports guidés puis début du TP 1 | comprendre la chaîne et observer le broker |
+| D | TP 1 | extraire et préserver le JSONL brut |
+| E | Transition entre TP 1 et TP 2 | distinguer brut, transformé et exploitable |
+| F | TP 2 | produire et contrôler le CSV |
+| G | TP 3 | générer et critiquer le graphique |
+| H | TP 4 puis vote final | rédiger, contester et réviser la décision |
+| I | Exit ticket | formuler la portée et les limites de la pipeline |
+
+Quand l’enseignant annonce une lettre, retrouvez la ligne correspondante ici. Les activités B, C et E sont des temps de compréhension et de discussion qui préparent les TP; elles ne produisent pas un livrable technique séparé.
+
 ## Règle d’exécution
 
 Les blocs `powershell` ci-dessous sont des commandes à copier-coller dans un terminal. Sauf indication contraire, exécutez-les depuis la racine du dépôt `course-iot-decision`. Les blocs `python` sont de petits contrôles à exécuter dans un notebook ou dans un fichier Python temporaire. Après chaque commande, vérifiez l’absence d’erreur et notez le fichier créé ou modifié.
@@ -52,6 +69,8 @@ Notez une confiance de 0 à 100 %, votre raison principale et l’information qu
 
 ## TP 1 — Extraire le brut
 
+**Correspondance : exercices C–D.** L’exercice C prépare l’observation du broker; l’exercice D correspond à l’extraction ci-dessous.
+
 Mode MQTT, à exécuter :
 
 ```powershell
@@ -80,6 +99,8 @@ print("dernière ligne :", lines[-1])
 
 ## TP 2 — Transformer en CSV
 
+**Correspondance : exercice F, après la transition E.**
+
 À exécuter :
 
 ```powershell
@@ -104,6 +125,8 @@ print("première ligne :", rows[0])
 
 ## TP 3 — Générer et critiquer le graphique
 
+**Correspondance : exercice G.**
+
 À exécuter :
 
 ```powershell
@@ -113,6 +136,8 @@ python -m iot_decision.visualize_baseline data/processed/batch001_measurements.c
 Ouvrez le fichier PNG. Écrivez séparément une observation directement visible, une interprétation prudente et une limite du maximum observé. Le graphique doit répondre à une question de décision explicite.
 
 ## TP 4 — Rédiger le brief décisionnel
+
+**Correspondance : exercice H.** Ce TP se termine par le vote final.
 
 Rédigez une note de 120 mots maximum contenant :
 
@@ -145,6 +170,8 @@ Avant de demander de l’aide, indiquez : l’étape, la commande ou le fichier,
 - **Vérification :** que faut-il vérifier avant une action difficilement réversible ?
 
 ## Exit ticket
+
+**Correspondance : exercice I.**
 
 1. « La pipeline permet d’affirmer que… »
 2. « Elle ne permet pas d’affirmer que… »

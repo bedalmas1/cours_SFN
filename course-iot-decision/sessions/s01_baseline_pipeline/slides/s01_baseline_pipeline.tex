@@ -180,6 +180,32 @@
   \alert{Chaque section alterne explication courte, manipulation, restitution et décision.}
 \end{frame}
 
+\begin{frame}{Deux repères pour un seul parcours}
+  \small
+  Les activités A à I structurent toute la séance; les TP 1 à 4 désignent uniquement les quatre productions techniques.
+  \begin{columns}[T]
+    \column{.47\textwidth}
+    \begin{block}{Avant et autour du TP 1}
+      \begin{description}
+        \item[A] vote initial ;
+        \item[B--C] comprendre la chaîne et observer le broker ;
+        \item[D] TP 1 : extraire le JSONL ;
+        \item[E] préparer la transformation.
+      \end{description}
+    \end{block}
+    \column{.47\textwidth}
+    \begin{block}{Produire puis décider}
+      \begin{description}
+        \item[F] TP 2 : produire le CSV ;
+        \item[G] TP 3 : produire le graphique ;
+        \item[H] TP 4 et vote final ;
+        \item[I] exit ticket.
+      \end{description}
+    \end{block}
+  \end{columns}
+  \alert{B, C et E préparent les TP : ce ne sont pas des TP supplémentaires.}
+\end{frame}
+
 \begin{frame}[plain]
   \centering
   \Huge Section 2\\[3mm]
@@ -294,7 +320,7 @@ python -m iot_decision.baseline_cli extract-sample \
   Avant de conclure, vérifier l'effectif, les zones, les dates et les métadonnées conservées.
 \end{frame}
 
-\begin{frame}{TP 1 -- Extraction contrôlée des messages}
+\begin{frame}{Activité D / TP 1 -- Extraction contrôlée}
   \begin{block}{Votre mission}
     Produire \texttt{data/raw/batch001\_raw.jsonl} à partir du broker ou du fichier de repli, sans modifier les payloads.
   \end{block}
@@ -385,7 +411,7 @@ python -m iot_decision.baseline_cli transform \
   Contrôler ensemble : nombre de lignes, cinq zones, unité unique, horodatages, \texttt{message\_id}, topic et réception.
 \end{frame}
 
-\begin{frame}{TP 2 -- Du JSONL vers le CSV}
+\begin{frame}{Activité F / TP 2 -- Du JSONL vers le CSV}
   \begin{block}{Votre mission}
     Produire \texttt{data/processed/batch001\_measurements.csv} et expliquer chaque colonne dérivée.
   \end{block}
@@ -437,7 +463,7 @@ python -m iot_decision.baseline_cli transform \
   \includegraphics[width=.88\textwidth]{batch001_max_by_zone.png}
 \end{frame}
 
-\begin{frame}{TP 3 -- Produire et critiquer le graphique}
+\begin{frame}{Activité G / TP 3 -- Produire et critiquer le graphique}
   \begin{block}{Votre mission}
     Produire un graphique qui répond à une question explicite, puis en tester la portée.
   \end{block}
@@ -496,7 +522,7 @@ python -m iot_decision.baseline_cli transform \
   \normalsize Nous revenons maintenant à la situation initiale avec une preuve construite collectivement.
 \end{frame}
 
-\begin{frame}{TP 4 -- Le brief décisionnel}
+\begin{frame}{Activité H / TP 4 -- Le brief décisionnel}
   \begin{block}{Votre mission}
     Rédiger une recommandation de 120 mots maximum à partir du JSONL, du CSV et du graphique.
   \end{block}
@@ -512,7 +538,7 @@ python -m iot_decision.baseline_cli transform \
   \end{alertblock}
 \end{frame}
 
-\begin{frame}{Retour au vote initial}
+\begin{frame}{Activité H -- Retour au vote initial}
   Revotez entre les mêmes options A à D, puis comparez avec votre choix du début :
   \begin{itemize}
     \item l'action a-t-elle changé ?
@@ -546,7 +572,7 @@ python -m iot_decision.baseline_cli transform \
   Cette séance fournit la baseline à partir de laquelle nous mesurerons les améliorations et les risques.
 \end{frame}
 
-\begin{frame}{Synthèse individuelle}
+\begin{frame}{Activité I -- Synthèse individuelle}
   Complétez les trois phrases :
   \begin{enumerate}
     \item La pipeline permet d'affirmer que ...

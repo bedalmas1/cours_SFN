@@ -28,27 +28,44 @@ Conceptuels: identifier message/donnée/indicateur/décision; expliquer topic, r
 
 Le broker anonyme est strictement local (`127.0.0.1`). Ne jamais déployer cette configuration sur un VPS ou réseau partagé.
 
+## Correspondance entre activités et TP
+
+Les activités **A à I** de `exercices.md` constituent le scénario pédagogique complet. Les **TP 1 à 4** du `guide_etudiant.md` en sont les quatre productions techniques. Annoncer les deux repères à chaque transition, par exemple : « activité D, TP 1 ».
+
+| Activité | Repère étudiant | Fonction pédagogique |
+|---|---|---|
+| A | Vote initial | décision avant les données |
+| B–C | Apports guidés + début du TP 1 | comprendre la chaîne et observer le broker |
+| D | TP 1 | extraire et préserver le JSONL |
+| E | Transition TP 1 → TP 2 | distinguer brut, transformé et exploitable |
+| F | TP 2 | produire et contrôler le CSV |
+| G | TP 3 | produire et critiquer le graphique |
+| H | TP 4 + vote final | recommander, contester et revoter |
+| I | Exit ticket | expliciter portée et limites |
+
+Les activités B, C et E ne sont pas des TP supplémentaires : elles apportent les concepts et les contrôles nécessaires aux productions.
+
 ## Déroulé exact (240 min)
 
 | Temps | Activité | Objectif | Modalité | Trace |
 |---|---|---|---|---|
-| 0:00–0:15 | situation + vote | révéler hypothèses/coût d’erreur | individuel/binôme | vote, confiance, manque |
-| 0:15–0:30 | message → décision | distinguer niveaux | apport dialogué | chaîne annotée |
+| 0:00–0:15 | A — situation + vote initial | révéler hypothèses/coût d’erreur | individuel/binôme | vote, confiance, manque |
+| 0:15–0:30 | B — message → décision | distinguer niveaux | apport dialogué | chaîne annotée |
 | 0:30–0:45 | confiance/incertitude | éviter certitude artificielle | classement | mini-décision |
-| 0:45–1:00 | broker/topics | comprendre source/retained | démo prédictive | observations/conclusions |
-| 1:00–1:10 | enveloppe | distinguer les horloges | lecture collective | deux temps repérés |
-| 1:10–1:40 | extraction | préserver le brut | binômes | JSONL + contrôles |
+| 0:45–1:00 | C — broker/topics | comprendre source/retained | démo prédictive | observations/conclusions |
+| 1:00–1:10 | C — enveloppe | distinguer les horloges | lecture collective | deux temps repérés |
+| 1:10–1:40 | D / TP 1 — extraction | préserver le brut | binômes | JSONL + contrôles |
 | 1:40–1:55 | incident/restitution | repérer fraîcheur | intergroupes | décision révisée |
 | 1:55–2:05 | pause | — | — | — |
-| 2:05–2:20 | brut/transformé/exploitable | lisibilité ≠ vérité | cartes | actions classées |
+| 2:05–2:20 | E — brut/transformé/exploitable | lisibilité ≠ vérité | cartes | actions classées |
 | 2:20–2:30 | exemple guidé | préparer parsing | live coding | mapping source→colonne |
-| 2:30–3:00 | transformation | CSV traçable | binômes | CSV + contrôles |
+| 2:30–3:00 | F / TP 2 — transformation | CSV traçable | binômes | CSV + contrôles |
 | 3:00–3:10 | contrôle croisé | tester portée | pairs | limite notée |
-| 3:10–3:25 | graphique | répondre à une question | exécution | PNG |
+| 3:10–3:25 | G / TP 3 — graphique | répondre à une question | exécution | PNG |
 | 3:25–3:35 | débat “que masque le max?” | contester | avocat contradicteur | limite |
-| 3:35–3:47 | recommandation | preuve → action | groupes | note ≤120 mots |
-| 3:47–3:55 | vote final | mesurer effet pipeline | comparaison | vote/confiance |
-| 3:55–4:00 | synthèse | fixer réflexe | individuel | exit ticket |
+| 3:35–3:47 | H / TP 4 — recommandation | preuve → action | groupes | note ≤120 mots |
+| 3:47–3:55 | H — vote final | mesurer effet pipeline | comparaison | vote/confiance |
+| 3:55–4:00 | I — exit ticket | fixer réflexe | individuel | exit ticket |
 
 ## Facilitation
 

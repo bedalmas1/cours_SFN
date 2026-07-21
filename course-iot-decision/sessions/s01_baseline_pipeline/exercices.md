@@ -2,6 +2,23 @@
 
 Chaque activité se termine par mini-décision, confiance, preuve, incertitude et limite.
 
+## Comment lire les exercices avec le guide étudiant
+
+Ce fichier organise toute la séance en activités **A à I**. Le `guide_etudiant.md` regroupe les quatre productions techniques sous les titres **TP 1 à TP 4**. Les correspondances sont les suivantes :
+
+| Activité | Section du guide étudiant | Rôle dans le parcours |
+|---|---|---|
+| A | Vote initial | décision avant les données |
+| B–C | Apports guidés + début du TP 1 | chaîne de données et observation du broker |
+| D | TP 1 | extraction du JSONL brut |
+| E | Transition TP 1 → TP 2 | brut, transformé, exploitable |
+| F | TP 2 | transformation et contrôle du CSV |
+| G | TP 3 | graphique et critique de l’indicateur |
+| H | TP 4 + vote final | recommandation et décision révisée |
+| I | Exit ticket | synthèse individuelle |
+
+Les activités B, C et E préparent ou encadrent les TP : elles ne constituent pas des TP supplémentaires.
+
 ## A. Situation initiale et vote — 15 min
 
 Une activité de maintenance drone est prévue à 14 h 00 sur une base aérienne projetée. La supervision signale une possible hausse de température dans le stockage batteries. Les données sont disponibles dans le broker MQTT, mais aucune analyse consolidée n’a encore été réalisée. Une vérification terrain prendrait 30 minutes; reporter l’activité a un coût opérationnel.

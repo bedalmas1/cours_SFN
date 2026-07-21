@@ -92,7 +92,7 @@ Le démarrage est prêt si :
 - le test automatisé affiche `5 passed` ;
 - le validateur affiche `S01 valide` ;
 - le broker, s’il est utilisé, renvoie 15 messages ;
-- le PDF s’ouvre et comporte 47 pages ;
+- le PDF s’ouvre et comporte 48 pages ;
 - la figure montre le maximum par zone et le seuil ;
 - les cartes de vote, les supports étudiants et le chronomètre sont disponibles.
 
