@@ -1,20 +1,38 @@
 # Guide étudiant — Séquence 2
 
-## Mission
+## Mission et résultat attendu
 
-Le broker répond, mais votre décision porte sur la **couverture de cinq zones critiques**, pas sur une connexion réussie.
+Le broker MQTT répond. Vous devez déterminer si son état observé couvre les cinq zones critiques attendues avant le briefing de 10 h.
 
-**Avant tout nettoyage, l’état observé du broker suffit-il pour soutenir une décision couvrant toute la base ?**
+**Question directrice : avant tout nettoyage, l’état observé du broker suffit-il pour soutenir une décision couvrant toute la base ?**
 
-## Règles
+À la fin, votre binôme remet quatre traces :
 
-- Binôme : équipe data / décideur critique, rôles inversés après la pause.
-- Séparez observation, interprétation et décision.
-- Une absence n’a de sens que par rapport à un attendu explicite.
-- Retained signifie disponible à l’abonnement, pas récent ni fonctionnel.
-- Après chaque TP : décision, confiance, preuve, incertitude, limite.
+1. une fiche « j’observe / je peux conclure » ;
+2. `data/processed/batch002_inventory.csv` ;
+3. une matrice attendu/observé et un diagnostic de complétude ;
+4. un brief décisionnel de 120 mots maximum.
 
-## Préparer
+Après chaque TP, complétez dans votre journal : **décision provisoire, confiance, preuve, incertitude, limite et prochaine vérification**.
+
+## Rôles du binôme
+
+- **Équipe data** : exécute les commandes, conserve les chemins et cite les traces.
+- **Décideur critique** : vérifie le périmètre, interdit les surconclusions et pose les questions indiquées.
+
+Inversez les rôles après la pause.
+
+## 0 — Préparer le terminal
+
+Ouvrez PowerShell à la racine du dépôt `course-iot-decision`. Vérifiez le dossier courant :
+
+```powershell
+Get-Location
+Test-Path sessions/s02_mqtt_broker_data_source
+Test-Path data/samples/batch002_retained_messages.jsonl
+```
+
+Les deux `Test-Path` doivent afficher `True`. Préparez Python :
 
 ```powershell
 python -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
@@ -22,42 +40,173 @@ $env:PYTHONPATH=src
 python -m pytest -q
 ```
 
-## TP 1 — Explorer les topics
+Résultat attendu : les tests se terminent sans échec. En cas d’erreur, notez la commande, le message exact et le dernier contrôle réussi.
+
+## TP 1 — Explorer les topics sans surinterpréter — 20 min
+
+### Étape 1 — Prédire avant d’exécuter
+
+Écrivez ce que vous pensez recevoir avec le filtre `airbase/batch002/#`. Répondez :
+
+1. Le symbole `#` appartient-il au topic publié ou au filtre d’abonnement ?
+2. Ce filtre renvoie-t-il l’historique complet ?
+3. Un retained reçu maintenant a-t-il forcément été mesuré maintenant ?
+4. Quelle information permettra de vérifier vos réponses ?
+
+### Étape 2 — Extraire
+
+Si l’enseignant a démarré le broker :
 
 ```powershell
 python -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
 ```
 
-En repli, utilisez `batch002_retained_messages.jsonl`. Relevez topic, zone, capteur, `measured_at`, `received_at`, retained. Le symbole `#` appartient au filtre, pas au topic publié.
-
-## TP 2 — Construire l’inventaire
+Sortie attendue : `4 messages extraits`. Si le broker n’est pas disponible, copiez l’échantillon sans le modifier :
 
 ```powershell
-python -m iot_decision.source_inventory_cli data/samples/batch002_retained_messages.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+Copy-Item data/samples/batch002_retained_messages.jsonl data/raw/batch002_observed.jsonl -Force
 ```
 
-Ouvrez d’abord le CSV sans regarder le JSON. Vérifiez effectif, unicité, zones et retained. Un inventaire décrit l’observé ; il ne prouve pas la complétude.
+### Étape 3 — Contrôler le fichier
 
-## TP 3 — Diagnostiquer la complétude
+```powershell
+Test-Path data/raw/batch002_observed.jsonl
+(Get-Content data/raw/batch002_observed.jsonl).Count
+Get-Content data/raw/batch002_observed.jsonl -First 1
+```
 
-Comparez l’inventaire au référentiel attendu. Une ligne par topic : criticité, observé, preuve, vérification si absent. Calculez la couverture, puis ouvrez le diagnostic JSON.
+Attendu : `True`, puis `4`, puis une enveloppe JSON contenant `topic`, `received_at`, `retained` et `payload`.
 
-Questions : filtre correct ? référentiel autorisé et à jour ? panne, non-publication, suppression ou erreur d’extraction ?
+### Étape 4 — Produire la trace
 
-## TP 4 — Brief de décision
+Pour chaque ligne, remplissez : topic complet ; niveaux du topic ; zone ; capteur ; `measured_at` ; `received_at` ; retained ; « j’observe » ; « je peux conclure ».
 
-120 mots maximum : décision et périmètre ; confiance justifiée ; deux preuves ; deux incertitudes ; vérification prioritaire. Le décideur demande quelle hypothèse renverserait la conclusion et quelle action réversible réduit le risque.
+Questions à rendre :
 
-## Validation
+1. Combien de topics avez-vous effectivement observés ?
+2. Quel filtre exact a défini votre champ de vision ?
+3. Quels champs viennent de l’enveloppe d’extraction ? Du payload ?
+4. Quelle différence constatez-vous entre `measured_at` et `received_at` ?
+5. Pouvez-vous déjà affirmer que le lot est complet ? Pourquoi ?
+
+**Fin du TP 1 :** vous savez décrire exactement ce qui a été reçu sans affirmer que tout l’attendu est présent.
+
+## TP 2 — Construire et vérifier l’inventaire — 30 min
+
+### Étape 1 — Générer les deux artefacts
+
+```powershell
+python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+```
+
+La commande annonce `4/5 topics attendus observés`. N’ouvrez pas encore le JSON de diagnostic : contrôlez d’abord l’inventaire.
+
+### Étape 2 — Vérifier le CSV
+
+```powershell
+Test-Path data/processed/batch002_inventory.csv
+Import-Csv data/processed/batch002_inventory.csv | Format-Table topic,zone,sensor,retained
+(Import-Csv data/processed/batch002_inventory.csv).Count
+(Import-Csv data/processed/batch002_inventory.csv | Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
+```
+
+Attendu : fichier présent ; quatre lignes ; quatre topics uniques ; une zone par ligne.
+
+### Étape 3 — Répondre à partir du CSV
+
+1. Quelles quatre zones sont observées ?
+2. Chaque ligne permet-elle de retrouver le topic source ?
+3. Pourquoi conserver `message_id`, `measured_at`, `received_at` et retained ?
+4. Que perdriez-vous en regroupant immédiatement toutes les lignes sous « température » ?
+5. L’inventaire prouve-t-il le fonctionnement actuel des quatre capteurs ?
+
+### Étape 4 — Mini-décision avant la pause
+
+Rédigez cinq lignes : action provisoire ; confiance ; preuve citée ; incertitude ; vérification suivante.
+
+**Fin du TP 2 :** `batch002_inventory.csv` comporte quatre topics uniques et votre formulation reste limitée à « quatre topics observés ».
+
+## TP 3 — Diagnostiquer la complétude — 55 min
+
+### Étape 1 — Examiner le référentiel attendu
+
+```powershell
+Import-Csv data/samples/batch002_expected_sensors.csv | Format-Table topic,zone,sensor,criticality
+(Import-Csv data/samples/batch002_expected_sensors.csv).Count
+```
+
+Attendu : cinq topics. Avant de calculer, répondez : qui devrait autoriser ce référentiel en situation réelle ? Pour quel site, quelle mission et quelle date serait-il valide ?
+
+### Étape 2 — Construire manuellement la matrice
+
+Créez une ligne par topic attendu avec : zone ; criticité ; présent/absent ; preuve dans l’inventaire ; vérification si absent. Ne vous contentez pas d’un pourcentage.
+
+### Étape 3 — Calculer puis contrôler
+
+Calculez : `topics attendus observés / topics attendus`. Ouvrez ensuite le diagnostic automatisé :
+
+```powershell
+Get-Content data/processed/batch002_completeness.json
+Get-Content data/processed/batch002_completeness.json | ConvertFrom-Json | Format-List
+```
+
+Attendu : `observed_count = 4`, `expected_count = 5`, `complete = False`, confiance faible et un topic optronique absent.
+
+### Étape 4 — Traiter l’incident sans inventer sa cause
+
+Pour l’absence optronique, complétez au moins quatre lignes : hypothèse ; observation compatible ; vérification discriminante ; conséquence sur la décision. Étudiez au minimum : panne équipement, non-publication, retained supprimé, filtre incorrect, extraction interrompue et référentiel obsolète.
+
+Questions à rendre :
+
+1. Que signifie exactement `4/5` ?
+2. Pourquoi `80 %` ne signifie-t-il pas « 80 % du risque couvert » ?
+3. Quelle zone a une couverture nulle ? Quelle est sa criticité ?
+4. L’absence prouve-t-elle une panne ? une température normale ?
+5. Quelle vérification départage le plus vite filtre incorrect et absence réelle dans le broker ?
+6. Quelle autre vérification renseigne l’état physique réel ?
+
+**Fin du TP 3 :** vous pouvez citer le topic absent, expliquer la portée de `4/5` et proposer une vérification qui distingue plusieurs causes.
+
+## TP 4 — Rédiger et contester le brief — 15 min
+
+### Étape 1 — Rédiger
+
+En 120 mots maximum, incluez obligatoirement :
+
+- action et périmètre géographique exact ;
+- confiance faible, moyenne ou élevée, avec justification ;
+- deux preuves retrouvables dans les fichiers ;
+- deux incertitudes susceptibles de changer la décision ;
+- une vérification prioritaire réalisable avant l’action.
+
+### Étape 2 — Contradiction
+
+Le décideur critique pose successivement :
+
+1. « Votre recommandation vaut-elle pour quatre zones ou pour cinq ? »
+2. « Dans quel fichier puis-je retrouver chacune de vos preuves ? »
+3. « Quelle hypothèse pourrait renverser votre décision ? »
+4. « Que proposez-vous pour l’abri optronique avant 10 h ? »
+5. « Votre action est-elle réversible si le diagnostic change ? »
+
+### Étape 3 — Réviser et voter
+
+Corrigez le brief, puis revotez entre A couverture suffisante, B inspection ciblée, C suspendre la conclusion globale, D impossible sans inventaire. Notez le changement de choix ou de confiance.
+
+**Fin du TP 4 :** aucune phrase ne généralise les quatre zones observées à toute la base.
+
+## Validation finale
 
 ```powershell
 python tests/validate_s02_artifacts.py
 ```
 
-Le validateur ne valide ni l’autorité du référentiel ni votre décision.
+Attendu : `S02 valide`. Le validateur confirme le calcul et les fichiers ; il ne confirme ni l’autorité du référentiel ni votre décision.
 
 ## Exit ticket
 
-1. Le broker permet d’affirmer que…
-2. Il ne permet pas d’affirmer que…
-3. Pour qualifier l’absence optronique, je vérifierais d’abord…
+Sans écran, complétez :
+
+1. « Avec le filtre …, le broker permet d’affirmer que… »
+2. « Ces données ne permettent pas d’affirmer que… »
+3. « Pour qualifier l’absence optronique, je vérifierais d’abord… parce que… »

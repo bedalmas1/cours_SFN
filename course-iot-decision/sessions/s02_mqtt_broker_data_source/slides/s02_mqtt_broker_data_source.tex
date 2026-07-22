@@ -38,7 +38,7 @@ Chaque TP se clôt par décision, confiance, preuve, incertitude et limite.
 
 \section{Accroche}
 \begin{frame}{Activité A -- Le broker répond : que décidez-vous ?}
-Une relève doit confirmer la couverture thermique de cinq zones critiques avant 10 h. Un opérateur annonce : « le broker répond et contient des retained ».
+Une relève doit confirmer la couverture thermique de cinq zones critiques avant 10 h. Un opérateur annonce : `` le broker répond et contient des retained ''.
 \begin{block}{Vote individuel}
 A couverture suffisante \quad B inspection ciblée \quad C suspendre \quad D impossible sans inventaire
 \end{block}
@@ -130,7 +130,7 @@ Conserver les deux : la donnée métier sans son contexte de réception perd une
 \end{block}
 \end{frame}
 
-\begin{frame}{Retained signifie « dernier état disponible », pas « état actuel garanti »}
+\begin{frame}{Retained signifie `` dernier état disponible '', pas `` état actuel garanti ''}
 À la publication avec retain, le broker conserve le message associé au topic. Un nouvel abonnement correspondant peut le recevoir immédiatement.
 \begin{alertblock}{Trois non-conclusions}
 Ce n'est pas un historique complet ; ce n'est pas une preuve de fraîcheur ; ce n'est pas une preuve que le publisher fonctionne encore.
@@ -140,7 +140,7 @@ Ce n'est pas un historique complet ; ce n'est pas une preuve de fraîcheur ; ce 
 
 \begin{frame}{Vrai ou faux -- retained}
 \begin{enumerate}
-\item « reçu maintenant » implique « mesuré maintenant » ;
+\item `` reçu maintenant '' implique `` mesuré maintenant '' ;
 \item un topic peut avoir au plus un message retained courant ;
 \item un nouvel abonné peut recevoir un retained immédiatement ;
 \item retained fournit la liste des capteurs attendus ;
@@ -152,7 +152,7 @@ Répondez avec une conséquence décisionnelle.
 \section{TP 1 -- Explorer}
 \begin{frame}{TP 1 -- Votre objectif est d'observer, pas encore de conclure}
 \begin{block}{Production}
-Une table à deux colonnes : « j'observe » / « je peux conclure » pour quatre messages.
+Une table à deux colonnes : `` j'observe '' / `` je peux conclure '' pour quatre messages.
 \end{block}
 Relevez topic, niveaux, zone, capteur, measured\_at, received\_at et retained. Consignez le filtre exact utilisé.
 \end{frame}
@@ -168,6 +168,30 @@ python -m iot_decision.mqtt_tools extract `
 Plan B : ouvrir \texttt{data/samples/batch002\_retained\_messages.jsonl}.
 \end{frame}
 
+\begin{frame}[fragile]{TP 1 -- Vérifiez avant d'interpréter}
+\small
+\begin{verbatim}
+Test-Path data/raw/batch002_observed.jsonl
+(Get-Content data/raw/batch002_observed.jsonl).Count
+Get-Content data/raw/batch002_observed.jsonl -First 1
+\end{verbatim}
+\begin{block}{Sortie attendue}
+\texttt{True}, puis \texttt{4}, puis une enveloppe contenant topic, received\_at, retained et payload.
+\end{block}
+\end{frame}
+
+\begin{frame}{TP 1 -- Répondez avant de passer à l'inventaire}
+\small
+\begin{enumerate}
+\item Quel filtre exact définit votre champ de vision ?
+\item Combien de topics avez-vous effectivement observés ?
+\item Quels champs viennent de l'enveloppe ? Du payload ?
+\item Quelle horloge décrit la mesure ? La réception ?
+\item Quelle phrase pouvez-vous défendre sans référentiel attendu ?
+\end{enumerate}
+\textbf{Trace :} une ligne `` j'observe / je peux conclure '' par message.
+\end{frame}
+
 \begin{frame}{TP 1 -- Contrôles avant interprétation}
 \begin{enumerate}
 \item le fichier existe et n'est pas vide ;
@@ -179,9 +203,9 @@ Plan B : ouvrir \texttt{data/samples/batch002\_retained\_messages.jsonl}.
 \end{frame}
 
 \begin{frame}{Point d'étape -- quatre messages répondent à une question limitée}
-Vous pouvez dire : « avec ce filtre et cette extraction, quatre topics ont été observés ».
+Vous pouvez dire : `` avec ce filtre et cette extraction, quatre topics ont été observés ''.
 \begin{alertblock}{Vous ne pouvez pas encore dire}
-« les quatre capteurs fonctionnent », « toutes les zones sont couvertes » ou « aucun message ne manque ».
+`` les quatre capteurs fonctionnent '', `` toutes les zones sont couvertes '' ou `` aucun message ne manque ''.
 \end{alertblock}
 \end{frame}
 
@@ -194,7 +218,7 @@ L'objectif n'est pas de nettoyer les valeurs ; il est de décrire le champ de pr
 \end{frame}
 
 \begin{frame}{Le topic complet empêche une agrégation prématurée}
-Si vous ne gardez que « température », vous perdez lot, site et zone. Si vous ne gardez que la zone, vous perdez la branche effectivement interrogée.
+Si vous ne gardez que `` température '', vous perdez lot, site et zone. Si vous ne gardez que la zone, vous perdez la branche effectivement interrogée.
 \decisionquestion{Quelle colonne permet à un tiers de vérifier que votre inventaire porte sur le bon périmètre ?}
 \end{frame}
 
@@ -208,6 +232,30 @@ python -m iot_decision.source_inventory_cli `
  data/processed/batch002_completeness.json
 \end{verbatim}
 Ouvrez d'abord le CSV. Gardez le diagnostic JSON fermé.
+\end{frame}
+
+\begin{frame}[fragile]{TP 2 -- Contrôlez quatre lignes et quatre topics uniques}
+\scriptsize
+\begin{verbatim}
+Import-Csv data/processed/batch002_inventory.csv |
+  Format-Table topic,zone,sensor,retained
+(Import-Csv data/processed/batch002_inventory.csv).Count
+(Import-Csv data/processed/batch002_inventory.csv |
+  Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
+\end{verbatim}
+Les deux comptages doivent afficher \texttt{4}.
+\end{frame}
+
+\begin{frame}{TP 2 -- Les cinq réponses à remettre}
+\small
+\begin{enumerate}
+\item Quelles quatre zones sont observées ?
+\item Quelle colonne permet de retrouver le périmètre interrogé ?
+\item Pourquoi conserver message\_id et les deux horloges ?
+\item Que perdez-vous en regroupant immédiatement par capteur ?
+\item L'inventaire prouve-t-il le fonctionnement actuel ?
+\end{enumerate}
+\textbf{Fin du TP :} CSV contrôlé + mini-décision en six champs.
 \end{frame}
 
 \begin{frame}{TP 2 -- Revue croisée de l'inventaire}
@@ -225,7 +273,7 @@ Le binôme voisin vérifie :
 \begin{block}{À remettre}
 Décision provisoire ; confiance ; une preuve ; une incertitude ; une limite.
 \end{block}
-Question : avez-vous assez d'information pour parler de « lot complet » ?
+Question : avez-vous assez d'information pour parler de `` lot complet '' ?
 \end{frame}
 
 \begin{frame}{Pause -- 10 minutes}
@@ -311,11 +359,47 @@ optronique & haute & ? & topic/ligne \\
 \end{enumerate}
 \end{frame}
 
+\begin{frame}[fragile]{TP 3 -- Affichez d'abord les cinq attendus}
+\small
+\begin{verbatim}
+Import-Csv data/samples/batch002_expected_sensors.csv |
+  Format-Table topic,zone,sensor,criticality
+(Import-Csv data/samples/batch002_expected_sensors.csv).Count
+\end{verbatim}
+\begin{block}{Avant le calcul}
+Qui autorise ce référentiel ? Pour quel site, quelle mission et quelle date est-il valide ?
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{TP 3 -- Contrôlez votre matrice avec le diagnostic}
+\small
+\begin{verbatim}
+Get-Content data/processed/batch002_completeness.json |
+  ConvertFrom-Json | Format-List
+\end{verbatim}
+Attendu : 4 observés, 5 attendus, \texttt{complete=False}, confiance faible et topic optronique absent.
+\begin{alertblock}{Formulation exacte}
+`` 80 \% des topics attendus observés '', pas `` 80 \% de la base sûre ''.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{TP 3 -- Six questions pour qualifier le manque}
+\small
+\begin{enumerate}
+\item Que signifie exactement 4/5 ?
+\item Pourquoi 80 \% ne mesure-t-il pas le risque couvert ?
+\item Quelle zone a une couverture nulle ?
+\item L'absence prouve-t-elle panne ou température normale ?
+\item Quel test départage filtre erroné et absence broker ?
+\item Quel contrôle renseigne l'état physique réel ?
+\end{enumerate}
+\end{frame}
+
 \begin{frame}{Le résultat numérique est 4/5, mais la décision dépend de la zone}
 \centering\Huge 80\,\%\\[.5em]
 \normalsize Quatre topics attendus sur cinq sont observés. L'optronique, de criticité haute, n'est pas couverte.
 \begin{alertblock}{Conséquence}
-80 \% global ne signifie pas « base couverte à 80 \% du risque ».
+80 \% global ne signifie pas `` base couverte à 80 \% du risque ''.
 \end{alertblock}
 \end{frame}
 
@@ -358,9 +442,22 @@ mesure terrain & silence data vs état physique \\
 \end{tabular}
 \end{frame}
 
+\begin{frame}{Incident -- Documentez chaque hypothèse avant de choisir}
+\small
+Pour au moins quatre hypothèses, renseignez :
+\begin{enumerate}
+\item observation compatible ;
+\item vérification discriminante ;
+\item résultat qui renforce l'hypothèse ;
+\item résultat qui l'affaiblit ;
+\item action provisoire et réversible.
+\end{enumerate}
+\decisionquestion{Quelle vérification réduit l'incertitude le plus vite sans transformer le silence en mesure ?}
+\end{frame}
+
 \begin{frame}{L'absence ne vaut jamais une température normale}
 \begin{alertblock}{Surconclusion interdite}
-« Aucun message » ne fournit aucune valeur thermique pour l'abri optronique.
+`` Aucun message '' ne fournit aucune valeur thermique pour l'abri optronique.
 \end{alertblock}
 La décision prudente réduit le périmètre, diminue la confiance et priorise une vérification.
 \end{frame}
@@ -377,6 +474,28 @@ La décision prudente réduit le périmètre, diminue la confiance et priorise u
 120 mots maximum.
 \end{frame}
 
+\begin{frame}{TP 4 -- Procédez en trois passes, 15 minutes}
+\begin{enumerate}
+\item \textbf{5 min :} rédiger avec action, périmètre, confiance, preuves, incertitudes et vérification ;
+\item \textbf{4 min :} répondre aux cinq questions du décideur critique ;
+\item \textbf{6 min :} réviser, citer les fichiers, voter et expliquer l'écart.
+\end{enumerate}
+\begin{block}{Critère de fin}
+Aucune phrase ne généralise les quatre zones observées à toute la base.
+\end{block}
+\end{frame}
+
+\begin{frame}{TP 4 -- Le décideur doit obtenir cinq réponses précises}
+\small
+\begin{enumerate}
+\item Votre recommandation vaut-elle pour quatre zones ou cinq ?
+\item Dans quel fichier retrouve-t-on chaque preuve ?
+\item Quelle hypothèse pourrait renverser la décision ?
+\item Que faites-vous pour l'optronique avant 10 h ?
+\item L'action reste-t-elle réversible si le diagnostic change ?
+\end{enumerate}
+\end{frame}
+
 \begin{frame}{Une recommandation recevable sépare analyse partielle et décision globale}
 \begin{block}{Structure possible}
 Poursuivre l'analyse pour les quatre zones observées, sans généraliser à toute la base. Confiance faible pour la couverture globale. Vérifier en priorité la chaîne optronique ou le terrain.
@@ -386,11 +505,11 @@ Poursuivre l'analyse pour les quatre zones observées, sans généraliser à tou
 
 \begin{frame}{Le décideur critique teste la portée de chaque phrase}
 \begin{itemize}
-\item « Pour quelles zones cette phrase est-elle vraie ? »
-\item « Quelle preuve puis-je retrouver ? »
-\item « Quelle hypothèse renverserait l'action ? »
-\item « Quelle vérification est possible avant 10 h ? »
-\item « L'action proposée est-elle réversible ? »
+\item `` Pour quelles zones cette phrase est-elle vraie ? ''
+\item `` Quelle preuve puis-je retrouver ? ''
+\item `` Quelle hypothèse renverserait l'action ? ''
+\item `` Quelle vérification est possible avant 10 h ? ''
+\item `` L'action proposée est-elle réversible ? ''
 \end{itemize}
 \end{frame}
 
