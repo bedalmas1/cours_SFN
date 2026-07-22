@@ -4,6 +4,9 @@ Le cours comprend huit séquences de quatre heures. Chaque dossier reçoit les
 slides Beamer, leur PDF compilé, un guide enseignant, un guide étudiant, les
 exercices, l'évaluation et une checklist `instructions_avant_seance.md`.
 
+## Convention d’exécution Linux
+
+Tous les guides, exercices et slides doivent fournir des commandes Bash exécutables sous Linux : `python3`, chemins POSIX, variables avec `export` et outils CLI POSIX. Les nouvelles séquences ne doivent pas introduire de commandes PowerShell ou de chemins Windows.
 ## Convention pour les slides
 
 Chaque dossier de séquence contient :

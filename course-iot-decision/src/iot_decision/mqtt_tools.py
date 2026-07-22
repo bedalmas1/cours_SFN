@@ -13,7 +13,7 @@ def _mqtt():
     try:
         import paho.mqtt.client as mqtt
     except ImportError as exc:
-        raise SystemExit("Installer paho-mqtt: python -m pip install paho-mqtt") from exc
+        raise SystemExit("Installer paho-mqtt: python3 -m pip install paho-mqtt") from exc
     return mqtt
 
 

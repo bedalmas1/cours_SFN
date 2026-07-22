@@ -34,23 +34,23 @@ Ce guide est votre support unique. Il alterne compréhension, manipulation, déb
 
 ## Règle d’exécution
 
-Les blocs `powershell` ci-dessous sont des commandes à copier-coller dans un terminal. Sauf indication contraire, exécutez-les depuis la racine du dépôt `course-iot-decision`. Les blocs `python` sont de petits contrôles à exécuter dans un notebook ou dans un fichier Python temporaire. Après chaque commande, vérifiez l’absence d’erreur et notez le fichier créé ou modifié.
+Les blocs `bash` ci-dessous sont des commandes à copier-coller dans un terminal. Sauf indication contraire, exécutez-les depuis la racine du dépôt `course-iot-decision`. Les blocs `python` sont de petits contrôles à exécuter dans un notebook ou dans un fichier Python temporaire. Après chaque commande, vérifiez l’absence d’erreur et notez le fichier créé ou modifié.
 
 ## Préparer l’environnement
 
 À exécuter par chaque binôme :
 
-```powershell
-python -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
-$env:PYTHONPATH="src"
-python -m pytest -q
+```bash
+python3 -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
+export PYTHONPATH=src
+python3 -m pytest -q
 ```
 
 Si l’enseignant utilise Docker :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml up -d --wait
-python -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
+python3 -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
 ```
 
 Ne démarrez pas le broker sur un réseau partagé.
@@ -82,14 +82,14 @@ Sur un message montré par l'enseignant ou lu dans l'échantillon, repérez topi
 
 Mode MQTT, à exécuter :
 
-```powershell
-python -m iot_decision.mqtt_tools extract data/raw/batch001_raw.jsonl
+```bash
+python3 -m iot_decision.mqtt_tools extract data/raw/batch001_raw.jsonl
 ```
 
 Mode échantillon si le broker est indisponible, à exécuter à la place :
 
-```powershell
-python -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
+```bash
+python3 -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
 ```
 
 Ensuite, exécutez éventuellement ce contrôle Python :
@@ -116,8 +116,8 @@ Incident : les mesures ont-elles une fraîcheur comparable ? Une donnée ancienn
 
 À exécuter :
 
-```powershell
-python -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
+```bash
+python3 -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
 ```
 
 Contrôle Python optionnel :
@@ -140,8 +140,8 @@ print("première ligne :", rows[0])
 
 À exécuter :
 
-```powershell
-python -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
+```bash
+python3 -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
 ```
 
 Ouvrez le fichier PNG. Vérifiez titre-question, unité, seuil et lisibilité. Écrivez séparément une observation directement visible, une interprétation prudente et une limite du maximum observé. Proposez un indicateur alternatif pour une autre incertitude. Le graphique doit répondre à une question de décision explicite.
@@ -162,8 +162,8 @@ Un membre du binôme joue le contradicteur : quelle hypothèse pourrait renverse
 
 ## Vérification finale à exécuter
 
-```powershell
-python tests/validate_s01_artifacts.py
+```bash
+python3 tests/validate_s01_artifacts.py
 ```
 
 Cette commande vérifie les artefacts et le notebook ; elle ne rédige pas votre recommandation.

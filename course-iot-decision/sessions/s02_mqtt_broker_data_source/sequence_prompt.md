@@ -187,6 +187,8 @@ les références, les transitions et l'absence de débordement.
 
 Contraintes :
 
+- Tout le cours s’exécute sous Linux dans Bash : utiliser python3, python3 -m pip, des chemins POSIX, export et des outils CLI POSIX ; proscrire PowerShell et les chemins Windows.
+
 - La séquence dure 4 h.
 - Elle doit alterner théorie, concepts, exemples, exercices pratiques, discussions, débats et restitutions.
 - Il faut maintenir l’engagement des étudiants.

@@ -6,22 +6,22 @@
 
 Toutes les commandes partent de la racine du dépôt. Les commandes de préparation sont :
 
-```powershell
-python -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
-$env:PYTHONPATH=src
-python -m pytest -q
-python tests/validate_s01_artifacts.py
+```bash
+python3 -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
+export PYTHONPATH=src
+python3 -m pytest -q
+python3 tests/validate_s01_artifacts.py
 docker compose -f docker/docker-compose.yml up -d --wait
-python -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
-python -m iot_decision.mqtt_tools extract C:\tmp\s01_teacher_check.jsonl
-(Get-Content C:\tmp\s01_teacher_check.jsonl).Count
-Get-Content C:\tmp\s01_teacher_check.jsonl -First 1
+python3 -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
+python3 -m iot_decision.mqtt_tools extract /tmp/s01_teacher_check.jsonl
+wc -l /tmp/s01_teacher_check.jsonl
+head -n 1 /tmp/s01_teacher_check.jsonl
 ```
 
 Attendus : tests sans échec, validateur `S01 valide`, 15 enveloppes JSONL et cinq zones. Repli broker :
 
-```powershell
-python -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
+```bash
+python3 -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
 ```
 
 Fin de séance : `docker compose -f docker/docker-compose.yml down`.
@@ -37,45 +37,45 @@ Cette séquence installe le réflexe du cours : une pipeline transforme la port�
 Une réponse recevable associe action, confiance argumentée, deux preuves retrouvables, deux incertitudes et vérification prioritaire. Une inspection ou un maintien sous réserve peuvent être défendus ; une certitude fondée sur le seul maximum, un seuil supposé normatif ou un retained ancien ne le peut pas.
 
 - Les numéros renvoient au PDF de 48 diapositives.
-- Toutes les commandes partent de la racine du dépôt dans PowerShell.
+- Toutes les commandes partent de la racine du dépôt dans un terminal Bash.
 - Chaque question ci-dessous possède une direction d'animation et une réponse argumentée.
 - Après chaque activité : **décision, confiance, preuve, incertitude, limite, vérification**.
 
 ## Préparation technique complète
 
-```powershell
-python -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
-$env:PYTHONPATH=src
-python -m pytest -q
-python tests/validate_s01_artifacts.py
+```bash
+python3 -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
+export PYTHONPATH=src
+python3 -m pytest -q
+python3 tests/validate_s01_artifacts.py
 ```
 
-Référence : `8 passed`, puis `15 messages conservés`, `15 mesures écrites` et `S01 valide: données, pipeline, figure et notebook exécutables.` Un avertissement `zmq` sous Windows est non bloquant si `S01 valide` apparaît.
+Référence : `8 passed`, puis `15 messages conservés`, `15 mesures écrites` et `S01 valide: données, pipeline, figure et notebook exécutables.` Un avertissement `zmq` est non bloquant si `S01 valide` apparaît.
 
 Mode MQTT :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml up -d --wait
-python -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
-python -m iot_decision.mqtt_tools extract C:\tmp\s01_teacher_check.jsonl
-(Get-Content C:\tmp\s01_teacher_check.jsonl).Count
-Get-Content C:\tmp\s01_teacher_check.jsonl -First 1
+python3 -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
+python3 -m iot_decision.mqtt_tools extract /tmp/s01_teacher_check.jsonl
+wc -l /tmp/s01_teacher_check.jsonl
+head -n 1 /tmp/s01_teacher_check.jsonl
 ```
 
 Attendu : 15 enveloppes. Le broker anonyme reste sur `127.0.0.1`. Arrêt :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml down
 ```
 
 Plan de repli :
 
-```powershell
-$env:PYTHONPATH=src
-python -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
-python -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
-python -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
-python tests/validate_s01_artifacts.py
+```bash
+export PYTHONPATH=src
+python3 -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
+python3 -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
+python3 -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
+python3 tests/validate_s01_artifacts.py
 ```
 
 Consigner le changement de provenance si le repli remplace le broker.
@@ -135,26 +135,26 @@ Consigner le changement de provenance si le repli remplace le broker.
 
 **Afficher :** 24 pour la démonstration, 25 pour le travail, 26–28 au débrief.
 
-```powershell
-$env:PYTHONPATH=src
-python -m iot_decision.mqtt_tools extract data/raw/batch001_raw.jsonl
-Test-Path data/raw/batch001_raw.jsonl
-(Get-Content data/raw/batch001_raw.jsonl).Count
-Get-Content data/raw/batch001_raw.jsonl -First 1
-Get-Content data/raw/batch001_raw.jsonl | Select-Object -Last 1
+```bash
+export PYTHONPATH=src
+python3 -m iot_decision.mqtt_tools extract data/raw/batch001_raw.jsonl
+test -f data/raw/batch001_raw.jsonl && echo "présent"
+wc -l data/raw/batch001_raw.jsonl
+head -n 1 data/raw/batch001_raw.jsonl
+tail -n 1 data/raw/batch001_raw.jsonl
 ```
 
 Repli :
 
-```powershell
-python -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
+```bash
+python3 -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
 ```
 
 Attendu : fichier présent, 15 lignes. Ne jamais l'éditer pour corriger une anomalie.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
-| Quel contrôle prouve une trace produite ? | Exiger chemin, existence, effectif. | `Test-Path`, nombre de lignes et lecture d'une ligne établissent existence et forme ; le code retour seul ne décrit pas le contenu. |
+| Quel contrôle prouve une trace produite ? | Exiger chemin, existence, effectif. | `test -e`, nombre de lignes et lecture d'une ligne établissent existence et forme ; le code retour seul ne décrit pas le contenu. |
 | Quelle métadonnée retrouve la source ? | Faire citer le champ exact. | Topic complet, horodatages et identifiant relient la donnée à l'observation. |
 | Pourquoi ne pas éditer le brut ? | Imaginer une contestation. | Une correction silencieuse détruit la preuve et confond source, transformation et jugement. |
 | Les zones sont-elles temporellement comparables ? | Révéler 27 après extraction. | Non sans comparer les horloges. Une mesure ancienne informe l'historique mais soutient moins une décision actuelle. |
@@ -174,13 +174,13 @@ Attendu : fichier présent, 15 lignes. Ne jamais l'éditer pour corriger une ano
 
 **Afficher :** 33–34.
 
-```powershell
-$env:PYTHONPATH=src
-python -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
-Test-Path data/processed/batch001_measurements.csv
-(Import-Csv data/processed/batch001_measurements.csv).Count
-Import-Csv data/processed/batch001_measurements.csv | Format-Table -AutoSize
-Import-Csv data/processed/batch001_measurements.csv | Group-Object zone | Select-Object Name,Count
+```bash
+export PYTHONPATH=src
+python3 -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
+test -f data/processed/batch001_measurements.csv && echo "présent"
+tail -n +2 data/processed/batch001_measurements.csv | wc -l
+head -n 6 data/processed/batch001_measurements.csv
+awk -F, 'NR > 1 {count[$3]++} END {for (zone in count) print zone, count[zone]}' data/processed/batch001_measurements.csv
 ```
 
 Attendu : 15 lignes, cinq zones ; relier une ligne CSV à son JSONL.
@@ -196,9 +196,9 @@ Attendu : 15 lignes, cinq zones ; relier une ligne CSV à son JSONL.
 
 **Afficher :** 35 avant l'exécution, 37–39 pour lire, 40 pour contredire.
 
-```powershell
-python -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
-Test-Path sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
+```bash
+python3 -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
+test -f sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png && echo "présent"
 ```
 
 | Question | Direction | Réponse et arguments |
@@ -236,16 +236,16 @@ Test-Path sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
 
 | Symptôme | Commande ou contrôle | Décision pédagogique |
 |---|---|---|
-| Import impossible | `Get-Location`, puis `$env:PYTHONPATH=src` | Après deux essais, passer au repli et consigner la provenance. |
+| Import impossible | `pwd`, puis `export PYTHONPATH=src` | Après deux essais, passer au repli et consigner la provenance. |
 | Broker inaccessible | `docker compose -f docker/docker-compose.yml ps` | Utiliser `extract-sample` ; préserver le raisonnement. |
-| JSONL vide | `Test-Path data/raw/batch001_raw.jsonl`, puis comptage | Rejouer l'extraction ; ne pas analyser un fichier non contrôlé. |
+| JSONL vide | `test -f data/raw/batch001_raw.jsonl && echo "présent"`, puis comptage | Rejouer l'extraction ; ne pas analyser un fichier non contrôlé. |
 | CSV absent | vérifier entrée et `PYTHONPATH` | Relier l'incident à la rupture de traçabilité. |
 | Figure impossible | vérifier dépendance et chemin ; utiliser la figure fournie | Maintenir la critique de l'indicateur. |
 
 Validation finale à exécuter :
 
-```powershell
-python tests/validate_s01_artifacts.py
+```bash
+python3 tests/validate_s01_artifacts.py
 ```
 
 ## Critères observables
@@ -263,7 +263,7 @@ L'étudiant distingue observation, interprétation et décision ; conserve le br
 | Le topic est-il la mesure ? | Non, c'est une adresse ; la mesure est dans le payload. |
 | Que signifie retained ? | Dernier message conservé disponible, pas forcément récent ni actuel. |
 | `measured_at` contre `received_at` ? | Temps déclaré de mesure contre temps de réception ; l'écart borne la fraîcheur. |
-| Quel contrôle prouve une trace ? | `Test-Path`, comptage, lecture d'une ligne, puis contrôle des champs. |
+| Quel contrôle prouve une trace ? | `test -e`, comptage, lecture d'une ligne, puis contrôle des champs. |
 | Le CSV est-il plus vrai ? | Non, seulement plus lisible et comparable. |
 | Que perd le maximum ? | Durée, ordre, trous et fraîcheur ; il ne montre qu'un pic observé. |
 | Le seuil de 35 °C est-il une norme ? | Non, seuil pédagogique à faire valider par le métier. |
@@ -271,15 +271,15 @@ L'étudiant distingue observation, interprétation et décision ; conserve le br
 
 Commandes à exécuter et commenter :
 
-```powershell
-python -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
-Test-Path data/processed/batch001_measurements.csv
-(Import-Csv data/processed/batch001_measurements.csv).Count
-Import-Csv data/processed/batch001_measurements.csv | Format-Table -AutoSize
-Import-Csv data/processed/batch001_measurements.csv | Group-Object zone | Select-Object Name,Count
-python -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
-Test-Path sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
-python tests/validate_s01_artifacts.py
+```bash
+python3 -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
+test -f data/processed/batch001_measurements.csv && echo "présent"
+tail -n +2 data/processed/batch001_measurements.csv | wc -l
+head -n 6 data/processed/batch001_measurements.csv
+awk -F, 'NR > 1 {count[$3]++} END {for (zone in count) print zone, count[zone]}' data/processed/batch001_measurements.csv
+python3 -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
+test -f sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png && echo "présent"
+python3 tests/validate_s01_artifacts.py
 ```
 
 Références complètes dans `latex/common/references.bib` et slide 48 : MQTT 5.0 (OASIS), RFC 8259, ISO 8601, JCGM 100, documentation pandas/matplotlib et NISTIR 8286A.

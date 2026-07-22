@@ -6,40 +6,40 @@ Ce document est destiné à l’enseignant. Prévoir environ 30 à 45 minutes de
 
 Depuis la racine `course-iot-decision`, utiliser Python 3.10 ou plus récent :
 
-```powershell
-python -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
-$env:PYTHONPATH="src"
+```bash
+python3 -m pip install -r sessions/s01_baseline_pipeline/requirements.txt
+export PYTHONPATH=src
 ```
 
 Vérifier ensuite :
 
-```powershell
-python -m pytest -q
-python tests/validate_s01_artifacts.py
+```bash
+python3 -m pytest -q
+python3 tests/validate_s01_artifacts.py
 ```
 
 Le second script reconstruit les fichiers dans un répertoire temporaire, vérifie les 15 messages, les cinq zones, la figure et l’exécution du notebook.
 
 ## 2. Préparer le broker MQTT
 
-Docker Desktop doit être démarré. Depuis la racine :
+Docker Engine doit être démarré. Depuis la racine :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml up -d --wait
-python -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
+python3 -m iot_decision.mqtt_tools seed data/samples/batch001_messages.jsonl
 ```
 
 Tester une extraction dans un fichier temporaire :
 
-```powershell
-python -m iot_decision.mqtt_tools extract C:\tmp\s01_teacher_check.jsonl
+```bash
+python3 -m iot_decision.mqtt_tools extract /tmp/s01_teacher_check.jsonl
 ```
 
 Le fichier doit contenir 15 enveloppes JSONL et cinq zones. Ne pas exposer ce broker sur un réseau partagé : la configuration est anonyme et strictement locale (`127.0.0.1`).
 
 Après le test, arrêter l’environnement si aucun autre groupe ne l’utilise :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml down
 ```
 
@@ -77,10 +77,10 @@ Ne pas distribuer `corrige.md` ni le prompt d’évaluation IA.
 
 Si le broker, Docker ou `paho-mqtt` est indisponible, exécuter :
 
-```powershell
-python -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
-python -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
-python -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
+```bash
+python3 -m iot_decision.baseline_cli extract-sample data/samples/batch001_messages.jsonl data/raw/batch001_raw.jsonl
+python3 -m iot_decision.baseline_cli transform data/raw/batch001_raw.jsonl data/processed/batch001_measurements.csv
+python3 -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
 ```
 
 La discussion reste identique : disponibilité d’un message, fraîcheur, traçabilité, seuil, confiance et vérification terrain.

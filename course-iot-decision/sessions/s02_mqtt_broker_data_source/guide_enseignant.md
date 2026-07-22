@@ -13,43 +13,43 @@ La séquence revient à la source : avant nettoyage, il faut établir ce qui fut
 Décision de référence : poursuivre l'analyse sur les quatre zones observées, ne pas généraliser à toute la base, vérifier en priorité la chaîne ou le terrain optronique. Confiance faible pour la couverture globale. Une autre action est recevable si son périmètre, ses preuves et son coût d'erreur sont défendus.
 
 - Les numéros renvoient au PDF de 56 diapositives.
-- Toutes les commandes partent de la racine du dépôt dans PowerShell.
+- Toutes les commandes partent de la racine du dépôt dans un terminal Bash.
 - Ne révéler ni les cinq attendus ni l'absence optronique avant les moments indiqués.
 - Chaque question possède ci-dessous direction et réponse argumentée.
 
 ## Préparation technique complète
 
-```powershell
-python -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
-$env:PYTHONPATH=src
-python -m pytest -q
-python tests/validate_s02_artifacts.py
+```bash
+python3 -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
+export PYTHONPATH=src
+python3 -m pytest -q
+python3 tests/validate_s02_artifacts.py
 ```
 
 Référence : `8 passed`; puis `4/5 topics attendus observés`, `lot complet: non; confiance: faible`, le topic optronique absent et `S02 valide: inventaire reproductible et capteur optronique absent détecté.`
 
 Mode broker :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml up -d --wait
-python -m iot_decision.mqtt_tools seed data/samples/batch002_retained_messages.jsonl
-python -m iot_decision.mqtt_tools extract C:\tmp\s02_teacher_check.jsonl --topic airbase/batch002/#
-(Get-Content C:\tmp\s02_teacher_check.jsonl).Count
-Get-Content C:\tmp\s02_teacher_check.jsonl -First 1
+python3 -m iot_decision.mqtt_tools seed data/samples/batch002_retained_messages.jsonl
+python3 -m iot_decision.mqtt_tools extract /tmp/s02_teacher_check.jsonl --topic airbase/batch002/#
+wc -l /tmp/s02_teacher_check.jsonl
+head -n 1 /tmp/s02_teacher_check.jsonl
 ```
 
 Attendu : quatre enveloppes. Ne pas annoncer « quatre sur cinq ». Arrêt :
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml down
 ```
 
 Plan de repli complet :
 
-```powershell
+```bash
 Copy-Item data/samples/batch002_retained_messages.jsonl data/raw/batch002_observed.jsonl -Force
-python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
-python tests/validate_s02_artifacts.py
+python3 -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+python3 tests/validate_s02_artifacts.py
 ```
 
 ## Conducteur — 240 minutes
@@ -108,17 +108,17 @@ python tests/validate_s02_artifacts.py
 
 **Afficher :** 16–21. Faire prédire, extraire, contrôler, puis interpréter.
 
-```powershell
-$env:PYTHONPATH=src
-python -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
-Test-Path data/raw/batch002_observed.jsonl
-(Get-Content data/raw/batch002_observed.jsonl).Count
-Get-Content data/raw/batch002_observed.jsonl -First 1
+```bash
+export PYTHONPATH=src
+python3 -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
+test -f data/raw/batch002_observed.jsonl && echo "présent"
+wc -l data/raw/batch002_observed.jsonl
+head -n 1 data/raw/batch002_observed.jsonl
 ```
 
 Repli :
 
-```powershell
+```bash
 Copy-Item data/samples/batch002_retained_messages.jsonl data/raw/batch002_observed.jsonl -Force
 ```
 
@@ -136,12 +136,12 @@ Attendu : `4 messages extraits`, `True`, `4`, puis une enveloppe avec topic, ré
 
 **Afficher :** 22–28. La CLI produit déjà le diagnostic ; demander de contrôler le CSV avant d'ouvrir le JSON.
 
-```powershell
-python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
-Test-Path data/processed/batch002_inventory.csv
-Import-Csv data/processed/batch002_inventory.csv | Format-Table topic,zone,sensor,retained
-(Import-Csv data/processed/batch002_inventory.csv).Count
-(Import-Csv data/processed/batch002_inventory.csv | Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
+```bash
+python3 -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+test -f data/processed/batch002_inventory.csv && echo "présent"
+head -n 5 data/processed/batch002_inventory.csv
+tail -n +2 data/processed/batch002_inventory.csv | wc -l
+tail -n +2 data/processed/batch002_inventory.csv | cut -d, -f1 | sort -u | wc -l
 ```
 
 Attendu : quatre lignes et quatre topics uniques, zones batteries, transmissions, informatique et maintenance. Masquer encore le référentiel affiché et la zone absente.
@@ -173,11 +173,11 @@ Attendu : quatre lignes et quatre topics uniques, zones batteries, transmissions
 
 **Afficher :** 35–41. Faire construire la matrice manuellement avant le diagnostic automatisé.
 
-```powershell
-Import-Csv data/samples/batch002_expected_sensors.csv | Format-Table topic,zone,sensor,criticality
-(Import-Csv data/samples/batch002_expected_sensors.csv).Count
-Get-Content data/processed/batch002_completeness.json
-Get-Content data/processed/batch002_completeness.json | ConvertFrom-Json | Format-List
+```bash
+head -n 6 data/samples/batch002_expected_sensors.csv
+tail -n +2 data/samples/batch002_expected_sensors.csv | wc -l
+python3 -m json.tool data/processed/batch002_completeness.json
+python3 -m json.tool data/processed/batch002_completeness.json
 ```
 
 Attendu : cinq topics attendus, quatre observés, `complete=False`, confiance faible, topic optronique absent. Formulation : « 80 % des topics attendus observés », jamais « 80 % de la base sûre ».
@@ -231,14 +231,14 @@ Attendu : cinq topics attendus, quatre observés, `complete=False`, confiance fa
 
 | Symptôme | Commande ou contrôle | Décision pédagogique |
 |---|---|---|
-| Import impossible | `Get-Location`, puis `$env:PYTHONPATH=src` | Deux essais, puis repli en consignant la provenance. |
+| Import impossible | `pwd`, puis `export PYTHONPATH=src` | Deux essais, puis repli en consignant la provenance. |
 | Broker inaccessible | `docker compose -f docker/docker-compose.yml ps` | Copier l'échantillon ; conserver le filtre dans le journal. |
 | Extraction vide | vérifier seed, port et filtre | Ne pas révéler le référentiel pour résoudre un problème technique. |
-| CSV absent | `Test-Path` sur JSONL et les quatre arguments CLI | Diagnostiquer dans l'ordre chemin, entrée, environnement. |
+| CSV absent | `test -e` sur JSONL et les quatre arguments CLI | Diagnostiquer dans l'ordre chemin, entrée, environnement. |
 | JSON incohérent | reconstruire via `source_inventory_cli` | Ne pas éditer manuellement le diagnostic. |
 
-```powershell
-python tests/validate_s02_artifacts.py
+```bash
+python3 tests/validate_s02_artifacts.py
 ```
 
 ## Critères observables
@@ -264,20 +264,20 @@ L'étudiant borne le champ de vision par le filtre ; distingue enveloppe et payl
 
 Commandes à exécuter et commenter :
 
-```powershell
-python -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
-Test-Path data/raw/batch002_observed.jsonl
-(Get-Content data/raw/batch002_observed.jsonl).Count
-Get-Content data/raw/batch002_observed.jsonl -First 1
-python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
-Test-Path data/processed/batch002_inventory.csv
-Import-Csv data/processed/batch002_inventory.csv | Format-Table topic,zone,sensor,retained
-(Import-Csv data/processed/batch002_inventory.csv).Count
-(Import-Csv data/processed/batch002_inventory.csv | Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
-Import-Csv data/samples/batch002_expected_sensors.csv | Format-Table topic,zone,sensor,criticality
-(Import-Csv data/samples/batch002_expected_sensors.csv).Count
-Get-Content data/processed/batch002_completeness.json | ConvertFrom-Json | Format-List
-python tests/validate_s02_artifacts.py
+```bash
+python3 -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
+test -f data/raw/batch002_observed.jsonl && echo "présent"
+wc -l data/raw/batch002_observed.jsonl
+head -n 1 data/raw/batch002_observed.jsonl
+python3 -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+test -f data/processed/batch002_inventory.csv && echo "présent"
+head -n 5 data/processed/batch002_inventory.csv
+tail -n +2 data/processed/batch002_inventory.csv | wc -l
+tail -n +2 data/processed/batch002_inventory.csv | cut -d, -f1 | sort -u | wc -l
+head -n 6 data/samples/batch002_expected_sensors.csv
+tail -n +2 data/samples/batch002_expected_sensors.csv | wc -l
+python3 -m json.tool data/processed/batch002_completeness.json
+python3 tests/validate_s02_artifacts.py
 ```
 
 Références complètes dans `latex/common/references.bib` et slide 56 : MQTT 5.0 (OASIS) et documentation officielle Eclipse Mosquitto pour topics, filtres, abonnements et retained.

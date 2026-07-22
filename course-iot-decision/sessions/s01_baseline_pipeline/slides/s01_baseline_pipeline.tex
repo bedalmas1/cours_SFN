@@ -306,12 +306,12 @@ airbase/batch001/battery-shelter-01/temperature/0002
 \begin{frame}[fragile]{Démonstration : extraire les messages}
   \scriptsize
   \begin{verbatim}
-python -m iot_decision.mqtt_tools extract \
+python3 -m iot_decision.mqtt_tools extract \
   data/raw/batch001_raw.jsonl
   \end{verbatim}
   \begin{block}{Si le broker n'est pas disponible}
   \begin{verbatim}
-python -m iot_decision.baseline_cli extract-sample \
+python3 -m iot_decision.baseline_cli extract-sample \
   data/samples/batch001_messages.jsonl \
   data/raw/batch001_raw.jsonl
   \end{verbatim}
@@ -403,7 +403,7 @@ python -m iot_decision.baseline_cli extract-sample \
 \begin{frame}[fragile]{Démonstration : produire la table}
   \scriptsize
   \begin{verbatim}
-python -m iot_decision.baseline_cli transform \
+python3 -m iot_decision.baseline_cli transform \
   data/raw/batch001_raw.jsonl \
   data/processed/batch001_measurements.csv
   \end{verbatim}

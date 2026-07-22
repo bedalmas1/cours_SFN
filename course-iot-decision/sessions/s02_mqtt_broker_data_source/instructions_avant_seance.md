@@ -4,21 +4,21 @@ Prévoir 30 à 45 minutes la veille, puis dix minutes juste avant l’accueil.
 
 ## 1. Dépendances et contrôles
 
-```powershell
-python -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
-$env:PYTHONPATH=src
-python -m pytest -q
-python tests/validate_s02_artifacts.py
+```bash
+python3 -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
+export PYTHONPATH=src
+python3 -m pytest -q
+python3 tests/validate_s02_artifacts.py
 ```
 
 Le validateur doit détecter 4 topics sur 5 et l’absence optronique.
 
 ## 2. Broker local
 
-```powershell
+```bash
 docker compose -f docker/docker-compose.yml up -d --wait
-python -m iot_decision.mqtt_tools seed data/samples/batch002_retained_messages.jsonl
-python -m iot_decision.mqtt_tools extract C:\tmp\s02_teacher_check.jsonl --topic airbase/batch002/#
+python3 -m iot_decision.mqtt_tools seed data/samples/batch002_retained_messages.jsonl
+python3 -m iot_decision.mqtt_tools extract /tmp/s02_teacher_check.jsonl --topic airbase/batch002/#
 ```
 
 Le test produit quatre enveloppes. Le broker anonyme écoute uniquement sur `127.0.0.1` ; ne pas l’exposer. Pour arrêter : `docker compose -f docker/docker-compose.yml down`.
@@ -43,8 +43,8 @@ Le test produit quatre enveloppes. Le broker anonyme écoute uniquement sur `127
 
 ## 5. Plan B
 
-```powershell
-python -m iot_decision.source_inventory_cli data/samples/batch002_retained_messages.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+```bash
+python3 -m iot_decision.source_inventory_cli data/samples/batch002_retained_messages.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
 ```
 
 Un échec d’accès à la source devient une trace qui diminue la confiance.

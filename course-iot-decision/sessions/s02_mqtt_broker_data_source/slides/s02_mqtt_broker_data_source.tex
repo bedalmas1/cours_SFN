@@ -160,9 +160,9 @@ Relevez topic, niveaux, zone, capteur, measured\_at, received\_at et retained. C
 \begin{frame}[fragile]{TP 1 -- Extraire la branche batch002}
 \small
 \begin{verbatim}
-$env:PYTHONPATH=src
-python -m iot_decision.mqtt_tools extract `
-  data/raw/batch002_observed.jsonl `
+export PYTHONPATH=src
+python3 -m iot_decision.mqtt_tools extract \
+  data/raw/batch002_observed.jsonl \
   --topic airbase/batch002/#
 \end{verbatim}
 Plan B : ouvrir \texttt{data/samples/batch002\_retained\_messages.jsonl}.
@@ -171,12 +171,12 @@ Plan B : ouvrir \texttt{data/samples/batch002\_retained\_messages.jsonl}.
 \begin{frame}[fragile]{TP 1 -- Vérifiez avant d'interpréter}
 \small
 \begin{verbatim}
-Test-Path data/raw/batch002_observed.jsonl
-(Get-Content data/raw/batch002_observed.jsonl).Count
-Get-Content data/raw/batch002_observed.jsonl -First 1
+test -f data/raw/batch002_observed.jsonl && echo "présent"
+wc -l data/raw/batch002_observed.jsonl
+head -n 1 data/raw/batch002_observed.jsonl
 \end{verbatim}
 \begin{block}{Sortie attendue}
-\texttt{True}, puis \texttt{4}, puis une enveloppe contenant topic, received\_at, retained et payload.
+\texttt{présent}, puis \texttt{4}, puis une enveloppe contenant topic, received\_at, retained et payload.
 \end{block}
 \end{frame}
 
@@ -225,10 +225,10 @@ Si vous ne gardez que `` température '', vous perdez lot, site et zone. Si vous
 \begin{frame}[fragile]{TP 2 -- Produire l'inventaire reproductible}
 \scriptsize
 \begin{verbatim}
-python -m iot_decision.source_inventory_cli `
- data/samples/batch002_retained_messages.jsonl `
- data/samples/batch002_expected_sensors.csv `
- data/processed/batch002_inventory.csv `
+python3 -m iot_decision.source_inventory_cli \
+ data/samples/batch002_retained_messages.jsonl \
+ data/samples/batch002_expected_sensors.csv \
+ data/processed/batch002_inventory.csv \
  data/processed/batch002_completeness.json
 \end{verbatim}
 Ouvrez d'abord le CSV. Gardez le diagnostic JSON fermé.
@@ -237,11 +237,9 @@ Ouvrez d'abord le CSV. Gardez le diagnostic JSON fermé.
 \begin{frame}[fragile]{TP 2 -- Contrôlez quatre lignes et quatre topics uniques}
 \scriptsize
 \begin{verbatim}
-Import-Csv data/processed/batch002_inventory.csv |
-  Format-Table topic,zone,sensor,retained
-(Import-Csv data/processed/batch002_inventory.csv).Count
-(Import-Csv data/processed/batch002_inventory.csv |
-  Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
+head -n 5 data/processed/batch002_inventory.csv
+tail -n +2 data/processed/batch002_inventory.csv | wc -l
+tail -n +2 data/processed/batch002_inventory.csv | cut -d, -f1 | sort -u | wc -l
 \end{verbatim}
 Les deux comptages doivent afficher \texttt{4}.
 \end{frame}
@@ -362,9 +360,8 @@ optronique & haute & ? & topic/ligne \\
 \begin{frame}[fragile]{TP 3 -- Affichez d'abord les cinq attendus}
 \small
 \begin{verbatim}
-Import-Csv data/samples/batch002_expected_sensors.csv |
-  Format-Table topic,zone,sensor,criticality
-(Import-Csv data/samples/batch002_expected_sensors.csv).Count
+head -n 6 data/samples/batch002_expected_sensors.csv
+tail -n +2 data/samples/batch002_expected_sensors.csv | wc -l
 \end{verbatim}
 \begin{block}{Avant le calcul}
 Qui autorise ce référentiel ? Pour quel site, quelle mission et quelle date est-il valide ?
@@ -374,8 +371,7 @@ Qui autorise ce référentiel ? Pour quel site, quelle mission et quelle date es
 \begin{frame}[fragile]{TP 3 -- Contrôlez votre matrice avec le diagnostic}
 \small
 \begin{verbatim}
-Get-Content data/processed/batch002_completeness.json |
-  ConvertFrom-Json | Format-List
+python3 -m json.tool data/processed/batch002_completeness.json
 \end{verbatim}
 Attendu : 4 observés, 5 attendus, \texttt{complete=False}, confiance faible et topic optronique absent.
 \begin{alertblock}{Formulation exacte}

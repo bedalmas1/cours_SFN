@@ -52,20 +52,20 @@ Répondez ensuite : qui choisit le topic ? qui conserve éventuellement un retai
 
 ## Préparer le terminal avant le TP 1
 
-Ouvrez PowerShell à la racine du dépôt `course-iot-decision`. Vérifiez le dossier courant :
+Ouvrez un terminal Bash à la racine du dépôt `course-iot-decision`. Vérifiez le dossier courant :
 
-```powershell
+```bash
 Get-Location
-Test-Path sessions/s02_mqtt_broker_data_source
-Test-Path data/samples/batch002_retained_messages.jsonl
+test -d sessions/s02_mqtt_broker_data_source && echo "présent"
+test -f data/samples/batch002_retained_messages.jsonl && echo "présent"
 ```
 
-Les deux `Test-Path` doivent afficher `True`. Préparez Python :
+Les deux `test -e` doivent afficher `True`. Préparez Python :
 
-```powershell
-python -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
-$env:PYTHONPATH=src
-python -m pytest -q
+```bash
+python3 -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
+export PYTHONPATH=src
+python3 -m pytest -q
 ```
 
 Résultat attendu : les tests se terminent sans échec. En cas d’erreur, notez la commande, le message exact et le dernier contrôle réussi.
@@ -85,22 +85,22 @@ Résultat attendu : les tests se terminent sans échec. En cas d’erreur, notez
 
 Si l’enseignant a démarré le broker :
 
-```powershell
-python -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
+```bash
+python3 -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
 ```
 
 Sortie attendue : `4 messages extraits`. Si le broker n’est pas disponible, copiez l’échantillon sans le modifier :
 
-```powershell
+```bash
 Copy-Item data/samples/batch002_retained_messages.jsonl data/raw/batch002_observed.jsonl -Force
 ```
 
 ### Étape 3 — Contrôler le fichier
 
-```powershell
-Test-Path data/raw/batch002_observed.jsonl
-(Get-Content data/raw/batch002_observed.jsonl).Count
-Get-Content data/raw/batch002_observed.jsonl -First 1
+```bash
+test -f data/raw/batch002_observed.jsonl && echo "présent"
+wc -l data/raw/batch002_observed.jsonl
+head -n 1 data/raw/batch002_observed.jsonl
 ```
 
 Attendu : `True`, puis `4`, puis une enveloppe JSON contenant `topic`, `received_at`, `retained` et `payload`.
@@ -123,19 +123,19 @@ Questions à rendre :
 
 ### Étape 1 — Générer les deux artefacts
 
-```powershell
-python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+```bash
+python3 -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
 ```
 
 La commande annonce `4/5 topics attendus observés`. N’ouvrez pas encore le JSON de diagnostic : contrôlez d’abord l’inventaire.
 
 ### Étape 2 — Vérifier le CSV
 
-```powershell
-Test-Path data/processed/batch002_inventory.csv
-Import-Csv data/processed/batch002_inventory.csv | Format-Table topic,zone,sensor,retained
-(Import-Csv data/processed/batch002_inventory.csv).Count
-(Import-Csv data/processed/batch002_inventory.csv | Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
+```bash
+test -f data/processed/batch002_inventory.csv && echo "présent"
+head -n 5 data/processed/batch002_inventory.csv
+tail -n +2 data/processed/batch002_inventory.csv | wc -l
+tail -n +2 data/processed/batch002_inventory.csv | cut -d, -f1 | sort -u | wc -l
 ```
 
 Attendu : fichier présent ; quatre lignes ; quatre topics uniques ; une zone par ligne.
@@ -162,9 +162,9 @@ Classez comme **directement observable**, **vérifiable seulement avec un réfé
 
 ### Étape 1 — Examiner le référentiel attendu
 
-```powershell
-Import-Csv data/samples/batch002_expected_sensors.csv | Format-Table topic,zone,sensor,criticality
-(Import-Csv data/samples/batch002_expected_sensors.csv).Count
+```bash
+head -n 6 data/samples/batch002_expected_sensors.csv
+tail -n +2 data/samples/batch002_expected_sensors.csv | wc -l
 ```
 
 Attendu : cinq topics. Avant de calculer, répondez : qui devrait autoriser ce référentiel en situation réelle ? Pour quel site, quelle mission et quelle date serait-il valide ?
@@ -177,9 +177,9 @@ Créez une ligne par topic attendu avec : zone ; criticité ; présent/absent ; 
 
 Calculez : `topics attendus observés / topics attendus`. Ouvrez ensuite le diagnostic automatisé :
 
-```powershell
-Get-Content data/processed/batch002_completeness.json
-Get-Content data/processed/batch002_completeness.json | ConvertFrom-Json | Format-List
+```bash
+python3 -m json.tool data/processed/batch002_completeness.json
+python3 -m json.tool data/processed/batch002_completeness.json
 ```
 
 Attendu : `observed_count = 4`, `expected_count = 5`, `complete = False`, confiance faible et un topic optronique absent.
@@ -229,8 +229,8 @@ Corrigez le brief, puis revotez entre A couverture suffisante, B inspection cibl
 
 ## Validation finale
 
-```powershell
-python tests/validate_s02_artifacts.py
+```bash
+python3 tests/validate_s02_artifacts.py
 ```
 
 Attendu : `S02 valide`. Le validateur confirme le calcul et les fichiers ; il ne confirme ni l’autorité du référentiel ni votre décision.

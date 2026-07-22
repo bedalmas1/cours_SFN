@@ -13,4 +13,4 @@
 
 Niveaux: 17–20 décision défendable et traçable; 13–16 décision argumentée, limites peu hiérarchisées; 10–12 pipeline exploitable, confiance/vérification faibles; <10 preuve altérée, surconclusion ou aucun lien résultat-action.
 
-Attribuer les points techniques seulement si `python tests/validate_s01_artifacts.py` réussit. Une aide IA via `prompts/s01_assessment_prompt.md` reste une pré-évaluation: l’enseignant vérifie les citations, protège les données et décide de la note.
+Attribuer les points techniques seulement si `python3 tests/validate_s01_artifacts.py` réussit. Une aide IA via `prompts/s01_assessment_prompt.md` reste une pré-évaluation: l’enseignant vérifie les citations, protège les données et décide de la note.

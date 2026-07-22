@@ -8,6 +8,9 @@ Le cours étudie comment des données de capteurs imparfaites traversent une pip
 
 Cette première étape installe uniquement l’arborescence. Les contenus seront ajoutés progressivement : syllabus, puis une séquence complète à la fois, scripts testés et vérification finale.
 
+## Environnement d’exécution
+
+L’ensemble du cours s’exécute sous Linux dans un terminal Bash. Les commandes utilisent `python3`, `python3 -m pip`, des chemins POSIX et Docker Engine avec le plugin Compose. PowerShell, les chemins Windows et le lanceur `python.exe` ne font pas partie de l’environnement pédagogique.
 ## Organisation
 
 - `syllabus/` : syllabus général et bibliographie ;
