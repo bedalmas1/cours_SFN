@@ -15,6 +15,22 @@ Le broker MQTT répond. Vous devez déterminer si son état observé couvre les 
 
 Après chaque TP, complétez dans votre journal : **décision provisoire, confiance, preuve, incertitude, limite et prochaine vérification**.
 
+## Parcours pédagogique — 4 h
+
+Ce guide est votre support unique : mission, réflexion, manipulations et livrables. Une commande réussie n'est jamais une réponse suffisante : interprétez ce qu'elle prouve et bornez ce qu'elle ne prouve pas.
+
+| Temps | Étape | Production attendue |
+|---|---|---|
+| 0:00–0:15 | Décider avant l'inventaire | vote, confiance, preuve manquante |
+| 0:15–0:45 | Comprendre qui sait quoi dans MQTT | tableau des rôles et risques |
+| 0:45–1:25 | TP 1 — explorer | fiche « j'observe / je peux conclure » |
+| 1:25–1:55 | TP 2 — inventorier | CSV contrôlé et mini-décision |
+| 1:55–2:05 | Pause | — |
+| 2:05–2:30 | Définir la complétude | classement des affirmations |
+| 2:30–3:40 | TP 3 — comparer et traiter l'incident | matrice, taux, hypothèses et vérification |
+| 3:40–3:55 | TP 4 — briefer et contester | brief révisé et vote final |
+| 3:55–4:00 | Exit ticket | trois phrases individuelles |
+
 ## Rôles du binôme
 
 - **Équipe data** : exécute les commandes, conserve les chemins et cite les traces.
@@ -22,7 +38,19 @@ Après chaque TP, complétez dans votre journal : **décision provisoire, confia
 
 Inversez les rôles après la pause.
 
-## 0 — Préparer le terminal
+## 1 — Décider avant l'inventaire — 15 min
+
+La situation affirme seulement que cinq zones critiques doivent être couvertes avant 10 h, que le broker répond et qu'il contient des messages retained. Sans ouvrir de fichier, choisissez : **A. couverture suffisante ; B. inspection ciblée ; C. suspendre toute conclusion globale ; D. impossible de décider sans inventaire.**
+
+Notez individuellement : choix, confiance de 0 à 100 %, seule preuve disponible, information manquante décisive et coût possible d'une zone oubliée. Comparez ensuite vos raisonnements en binôme sans chercher une « bonne réponse » prématurée.
+
+## 2 — Qui sait quoi dans MQTT ? — 30 min
+
+Pour **publisher**, **broker** et **subscriber**, complétez : entrée reçue ; sortie produite ; information connue ; information ignorée ; erreur possible ; effet sur la décision.
+
+Répondez ensuite : qui choisit le topic ? qui conserve éventuellement un retained ? qui connaît la liste métier attendue ? le broker valide-t-il automatiquement le sens et la qualité du payload ? Distinguez **acheminer**, **conserver**, **interpréter** et **vérifier l'exhaustivité**.
+
+## Préparer le terminal avant le TP 1
 
 Ouvrez PowerShell à la racine du dépôt `course-iot-decision`. Vérifiez le dossier courant :
 
@@ -128,6 +156,10 @@ Rédigez cinq lignes : action provisoire ; confiance ; preuve citée ; incertitu
 
 ## TP 3 — Diagnostiquer la complétude — 55 min
 
+### Avant le calcul — Complet par rapport à quoi ?
+
+Classez comme **directement observable**, **vérifiable seulement avec un référentiel** ou **non démontrable ici** : toutes les zones attendues sont présentes ; aucun message n'a été perdu ; chaque retained est récent ; le filtre couvre `batch002` ; tous les capteurs fonctionnent ; quatre topics uniques ont été inventoriés. Pour chaque phrase, citez le fichier ou la métadonnée nécessaire et nommez le dénominateur de la complétude.
+
 ### Étape 1 — Examiner le référentiel attendu
 
 ```powershell
@@ -154,7 +186,7 @@ Attendu : `observed_count = 4`, `expected_count = 5`, `complete = False`, confia
 
 ### Étape 4 — Traiter l’incident sans inventer sa cause
 
-Pour l’absence optronique, complétez au moins quatre lignes : hypothèse ; observation compatible ; vérification discriminante ; conséquence sur la décision. Étudiez au minimum : panne équipement, non-publication, retained supprimé, filtre incorrect, extraction interrompue et référentiel obsolète.
+Pour l'absence optronique, construisez un tableau d'au moins quatre hypothèses parmi : panne, non-publication, retained supprimé, filtre erroné, extraction interrompue, référentiel obsolète. Pour chacune : observation possible ; vérification ; résultat qui la renforce ; résultat qui l'affaiblit ; action provisoire. Choisissez la vérification qui réduit l'incertitude le plus vite, sans transformer le silence en mesure.
 
 Questions à rendre :
 

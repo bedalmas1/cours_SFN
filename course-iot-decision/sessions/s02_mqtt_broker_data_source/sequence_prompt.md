@@ -153,8 +153,7 @@ Produire ou mettre à jour les livrables aux emplacements suivants :
 - `sessions/<session>/slides/figures/` : figures propres aux slides ;
 - `sessions/<session>/guide_enseignant.md` : déroulé détaillé, timing, consignes,
   réponses attendues, points de vigilance et débriefs ;
-- `sessions/<session>/guide_etudiant.md` : consignes et supports distribuables ;
-- `sessions/<session>/exercices.md` : énoncés des activités ;
+- `sessions/<session>/guide_etudiant.md` : support étudiant unique réunissant consignes, activités et exercices ;
 - `sessions/<session>/corrige.md` : éléments de correction séparés des énoncés ;
 - `sessions/<session>/evaluation.md` : modalités, critères et barème de
   l'évaluation de la séquence ;

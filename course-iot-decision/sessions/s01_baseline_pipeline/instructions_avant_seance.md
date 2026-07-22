@@ -48,7 +48,7 @@ docker compose -f docker/docker-compose.yml down
 Ouvrir les fichiers suivants avant la séance :
 
 - `guide_enseignant.md` pour le déroulé et les réponses attendues ;
-- `guide_etudiant.md` et `exercices.md` pour préparer la distribution ;
+- `guide_etudiant.md`, support étudiant unique, pour préparer la distribution ;
 - `corrige.md` pour le débrief ;
 - `evaluation.md` et `prompts/s01_assessment_prompt.md` pour la correction ;
 - `slides/s01_baseline_pipeline.tex` pour les transitions et le timing.
@@ -60,7 +60,7 @@ Ne pas distribuer `corrige.md` ni le prompt d’évaluation IA.
 - projeter le PDF compilé des slides ;
 - préparer quatre cartes de vote : A. maintenir l’activité, B. déclencher une inspection terrain, C. mettre temporairement la zone en sécurité, D. données insuffisantes pour décider ;
 - prévoir une feuille par binôme pour le journal de décision ;
-- distribuer le guide étudiant et les exercices ;
+- distribuer le guide étudiant ;
 - vérifier que chaque binôme peut ouvrir un terminal et écrire dans un espace de travail ;
 - garder le mode hors broker disponible si Docker ou le réseau échoue.
 

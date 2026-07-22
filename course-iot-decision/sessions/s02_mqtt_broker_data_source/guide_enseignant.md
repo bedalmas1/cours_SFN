@@ -12,7 +12,9 @@ Pièges : broker accessible = source fiable ; retained = récent ; silence = ét
 
 Conceptuels : expliquer publisher/broker/subscriber ; distinguer topic, filtre, payload et retained ; définir lot et complétude relativement à un attendu. Pratiques : explorer une branche ; inventorier les métadonnées ; comparer observé/attendu ; détecter une absence. Décisionnels : borner le périmètre ; qualifier la confiance ; proposer une vérification discriminante et une action réversible.
 
-## Correspondance activités / TP
+## Repères du parcours étudiant
+
+Le `guide_etudiant.md` est le support étudiant unique : réflexion, TP, traces et exit ticket y sont réunis.
 
 | Activité | Repère | Fonction |
 |---|---|---|

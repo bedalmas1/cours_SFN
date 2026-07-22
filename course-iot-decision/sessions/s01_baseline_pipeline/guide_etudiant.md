@@ -16,22 +16,21 @@ Vous devez prendre une première décision avec ces seules informations, puis co
 
 À chaque étape, conservez une trace : action, confiance, preuve, incertitude, vérification.
 
-## Correspondance entre ce guide et les exercices
+## Parcours pédagogique — 4 h
 
-Les lettres **A à I** dans `exercices.md` décrivent le déroulé complet de la séance. Les **TP 1 à 4** de ce guide sont les quatre productions techniques incluses dans ce déroulé. Il ne s’agit donc pas de deux séries d’activités différentes.
+Ce guide est votre support unique. Il alterne compréhension, manipulation, débat et décision ; les TP ne sont pas des recettes techniques isolées.
 
-| Dans `exercices.md` | Dans ce guide | Ce que vous faites |
+| Temps | Étape | Trace attendue |
 |---|---|---|
-| A | Vote initial | décider avant d’ouvrir les données |
-| B–C | Apports guidés puis début du TP 1 | comprendre la chaîne et observer le broker |
-| D | TP 1 | extraire et préserver le JSONL brut |
-| E | Transition entre TP 1 et TP 2 | distinguer brut, transformé et exploitable |
-| F | TP 2 | produire et contrôler le CSV |
-| G | TP 3 | générer et critiquer le graphique |
-| H | TP 4 puis vote final | rédiger, contester et réviser la décision |
-| I | Exit ticket | formuler la portée et les limites de la pipeline |
-
-Quand l’enseignant annonce une lettre, retrouvez la ligne correspondante ici. Les activités B, C et E sont des temps de compréhension et de discussion qui préparent les TP; elles ne produisent pas un livrable technique séparé.
+| 0:00–0:15 | Situation et vote initial | choix, confiance, information manquante |
+| 0:15–0:45 | Lire la chaîne et qualifier l'incertitude | chaîne annotée et mini-décision |
+| 0:45–1:55 | Observer puis extraire le brut | fiche observe/conclus et JSONL contrôlé |
+| 1:55–2:05 | Pause | — |
+| 2:05–2:30 | Distinguer brut, transformé et exploitable | opérations classées |
+| 2:30–3:10 | Transformer et contrôler | CSV traçable et revue croisée |
+| 3:10–3:35 | Visualiser et critiquer | PNG, observation et limite |
+| 3:35–3:55 | Décider, contester et revoter | brief de 120 mots maximum |
+| 3:55–4:00 | Exit ticket | trois phrases individuelles |
 
 ## Règle d’exécution
 
@@ -67,9 +66,19 @@ Sans consulter les données, choisissez une seule réponse :
 
 Notez une confiance de 0 à 100 %, votre raison principale et l’information qui vous manque le plus. Tenez compte du délai de 30 minutes pour l’inspection et du coût opérationnel d’un report, sans inventer de faits absents du message de supervision.
 
+## Comprendre la chaîne avant de manipuler — 30 min
+
+Représentez la chaîne **capteur → message → donnée structurée → indicateur → décision**. Pour chaque flèche, indiquez une transformation, une erreur plausible, la preuve qui permettrait de la détecter et l'effet possible sur l'action.
+
+Classez ensuite vos affirmations en trois catégories : **observation**, **interprétation**, **hypothèse**. Terminez par une mini-décision : peut-on agir sur la seule présence de messages ? Avec quelle confiance et quelle vérification prioritaire ?
+
 ## TP 1 — Extraire le brut
 
-**Correspondance : exercices C–D.** L’exercice C prépare l’observation du broker; l’exercice D correspond à l’extraction ci-dessous.
+### Observer avant d'extraire
+
+Sur un message montré par l'enseignant ou lu dans l'échantillon, repérez topic, payload, zone, unité, `measured_at`, `received_at` et retained. Complétez deux colonnes « j'observe » / « je peux conclure ». Expliquez pourquoi « reçu maintenant » ne signifie pas « mesuré maintenant ».
+
+### Extraire sans altérer
 
 Mode MQTT, à exécuter :
 
@@ -95,11 +104,15 @@ print("première ligne :", lines[0])
 print("dernière ligne :", lines[-1])
 ```
 
-À faire : repérer topic, zone, valeur, unité, `measured_at`, `received_at` et retained. Notez ce que vous observez et ce que vous pouvez en déduire. Ne modifiez jamais le brut.
+Contrôlez l'effectif, la première et la dernière ligne, puis relevez trois métadonnées de traçabilité. Notez ce que vous observez et ce que vous pouvez en déduire. Ne modifiez jamais le brut. Avant la pause, comparez la fraîcheur des zones et révisez votre décision provisoire sans supprimer une donnée gênante.
+
+## Brut, transformé, exploitable — 25 min
+
+Classez les actions suivantes : conserver le payload ; renommer une zone ; convertir une unité ; calculer un maximum ; supprimer une ligne ; tracer un seuil. Pour chacune, indiquez si elle préserve la preuve, si elle est réversible et ce qu'elle peut changer dans la décision.
+
+Incident : les mesures ont-elles une fraîcheur comparable ? Une donnée ancienne est-elle fausse, inutilisable, ou utilisable avec réserve ? Justifiez sans la « corriger ».
 
 ## TP 2 — Transformer en CSV
-
-**Correspondance : exercice F, après la transition E.**
 
 À exécuter :
 
@@ -125,19 +138,17 @@ print("première ligne :", rows[0])
 
 ## TP 3 — Générer et critiquer le graphique
 
-**Correspondance : exercice G.**
-
 À exécuter :
 
 ```powershell
 python -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
 ```
 
-Ouvrez le fichier PNG. Écrivez séparément une observation directement visible, une interprétation prudente et une limite du maximum observé. Le graphique doit répondre à une question de décision explicite.
+Ouvrez le fichier PNG. Vérifiez titre-question, unité, seuil et lisibilité. Écrivez séparément une observation directement visible, une interprétation prudente et une limite du maximum observé. Proposez un indicateur alternatif pour une autre incertitude. Le graphique doit répondre à une question de décision explicite.
 
 ## TP 4 — Rédiger le brief décisionnel
 
-**Correspondance : exercice H.** Ce TP se termine par le vote final.
+Ce TP se termine par le vote final.
 
 Rédigez une note de 120 mots maximum contenant :
 
@@ -170,8 +181,6 @@ Avant de demander de l’aide, indiquez : l’étape, la commande ou le fichier,
 - **Vérification :** que faut-il vérifier avant une action difficilement réversible ?
 
 ## Exit ticket
-
-**Correspondance : exercice I.**
 
 1. « La pipeline permet d’affirmer que… »
 2. « Elle ne permet pas d’affirmer que… »

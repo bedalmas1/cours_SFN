@@ -28,9 +28,9 @@ Conceptuels: identifier message/donnée/indicateur/décision; expliquer topic, r
 
 Le broker anonyme est strictement local (`127.0.0.1`). Ne jamais déployer cette configuration sur un VPS ou réseau partagé.
 
-## Correspondance entre activités et TP
+## Repères du parcours étudiant
 
-Les activités **A à I** de `exercices.md` constituent le scénario pédagogique complet. Les **TP 1 à 4** du `guide_etudiant.md` en sont les quatre productions techniques. Annoncer les deux repères à chaque transition, par exemple : « activité D, TP 1 ».
+Le `guide_etudiant.md` est désormais le support étudiant unique : il contient les activités conceptuelles, les manipulations et les productions. Annoncer le nom de l'étape puis le TP associé lorsqu'il existe.
 
 | Activité | Repère étudiant | Fonction pédagogique |
 |---|---|---|
@@ -43,7 +43,7 @@ Les activités **A à I** de `exercices.md` constituent le scénario pédagogiqu
 | H | TP 4 + vote final | recommander, contester et revoter |
 | I | Exit ticket | expliciter portée et limites |
 
-Les activités B, C et E ne sont pas des TP supplémentaires : elles apportent les concepts et les contrôles nécessaires aux productions.
+Les étapes B, C et E apportent les concepts et les contrôles nécessaires aux productions techniques.
 
 ## Déroulé exact (240 min)
 
