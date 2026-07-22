@@ -1,15 +1,434 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
 \graphicspath{{figures/}}
-
-\title{Séquence 2 -- Broker, topics et messages}
-\subtitle{Comprendre la source MQTT}
+\title{Séquence 2 -- Comprendre la source}
+\subtitle{Broker MQTT, topics, messages et complétude}
 \author{École de l'air et de l'espace}
 \date{}
-
+\newcommand{\sourcefoot}[1]{\vfill\tiny\color{gray}Source : #1}
 \begin{document}
+
 \begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Comprendre le contenu réel du broker et les risques d'interprétation dès l'extraction.
+
+\begin{frame}{La connexion réussit ; la couverture reste à démontrer}
+\large Un broker qui répond prouve une disponibilité technique ponctuelle.\\[1em]
+Il ne prouve pas que les cinq zones critiques sont représentées, que les messages sont récents, ni que les capteurs fonctionnent.
+\decisionquestion{L'état observé du broker suffit-il pour soutenir une décision couvrant toute la base ?}
 \end{frame}
+
+\begin{frame}{À la fin, vous saurez borner une décision à la preuve disponible}
+\begin{itemize}
+\item distinguer broker, topic, filtre, payload et retained ;
+\item inventorier ce qui est effectivement observé ;
+\item comparer cet inventaire à un référentiel attendu ;
+\item qualifier une absence sans inventer sa cause ;
+\item recommander une action, une confiance et une vérification.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{La séance suit quatre productions clairement identifiées}
+\begin{enumerate}
+\item \textbf{TP 1} -- explorer les topics sans surinterpréter ;
+\item \textbf{TP 2} -- construire l'inventaire des messages ;
+\item \textbf{TP 3} -- diagnostiquer la complétude attendu/observé ;
+\item \textbf{TP 4} -- rédiger et contester le brief décisionnel.
+\end{enumerate}
+Chaque TP se clôt par décision, confiance, preuve, incertitude et limite.
+\end{frame}
+
+\section{Accroche}
+\begin{frame}{Activité A -- Le broker répond : que décidez-vous ?}
+Une relève doit confirmer la couverture thermique de cinq zones critiques avant 10 h. Un opérateur annonce : « le broker répond et contient des retained ».
+\begin{block}{Vote individuel}
+A couverture suffisante \quad B inspection ciblée \quad C suspendre \quad D impossible sans inventaire
+\end{block}
+Notez votre confiance, votre preuve et l'information prioritaire manquante.
+\end{frame}
+
+\begin{frame}{Votre confiance doit mesurer la suffisance de la preuve}
+\begin{columns}
+\column{.48\textwidth}\textbf{Confiance utile}\begin{itemize}\item liée au périmètre ;\item justifiée par des traces ;\item révisable.\end{itemize}
+\column{.48\textwidth}\textbf{Fausse confiance}\begin{itemize}\item liée à l'aisance technique ;\item exprimée sans attendu ;\item confondue avec certitude.\end{itemize}
+\end{columns}
+\end{frame}
+
+\section{Modèle MQTT}
+\begin{frame}{MQTT sépare publication, distribution et consommation}
+\centering\Large Publisher $\rightarrow$ Broker $\rightarrow$ Subscriber\\[1em]
+\normalsize Le publisher choisit un topic et un payload. Le broker distribue selon les abonnements. Le subscriber interprète dans un contexte métier.
+\sourcefoot{OASIS, MQTT Version 5.0, 2019.}
+\end{frame}
+
+\begin{frame}{Le broker sait router ; il ne connaît pas votre intention opérationnelle}
+\begin{itemize}
+\item Il associe publications et abonnements.
+\item Il peut conserver un dernier message retained par topic.
+\item Il ne sait pas spontanément qu'une base doit avoir cinq capteurs.
+\item Il ne certifie ni calibration, ni exhaustivité métier, ni vérité terrain.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Un topic est une adresse applicative, pas une preuve}
+\small\texttt{airbase/batch002/battery-shelter-01/temperature}
+\begin{itemize}
+\item chaque niveau est séparé par \texttt{/} ;
+\item la hiérarchie est une convention du système ;
+\item un nom cohérent aide l'inventaire ;
+\item un nom plausible peut néanmoins être faux ou incomplet.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Le filtre définit votre champ de vision}
+\begin{tabular}{ll}
+\toprule
+Filtre & Ce qu'il peut couvrir \\
+\midrule
+\texttt{airbase/batch002/\#} & toute la branche batch002 \\
+\texttt{airbase/+/+/temperature} & trois niveaux après airbase \\
+\texttt{airbase/batch001/\#} & le mauvais lot \\
+\bottomrule
+\end{tabular}
+\begin{alertblock}{Risque}
+Un filtre trop étroit produit une absence apparente sans qu'aucun capteur ne soit en panne.
+\end{alertblock}
+\sourcefoot{OASIS MQTT 5.0, Topic Names and Topic Filters.}
+\end{frame}
+
+\begin{frame}{Prédiction -- que recevra cet abonnement ?}
+\large\texttt{airbase/batch002/\#}
+\begin{enumerate}
+\item tous les messages jamais publiés ?
+\item les publications futures correspondantes ?
+\item les retained correspondants au moment de l'abonnement ?
+\item la liste des capteurs qui devraient exister ?
+\end{enumerate}
+Justifiez chaque réponse par le mécanisme, pas par intuition.
+\end{frame}
+
+\begin{frame}{Le payload transporte la mesure et son contexte déclaré}
+\small
+\begin{tabular}{ll}
+\toprule
+Champ & Question utile \\
+\midrule
+\texttt{zone} & où la mesure prétend-elle s'appliquer ? \\
+\texttt{sensor} & quelle grandeur est annoncée ? \\
+\texttt{measured\_at} & quand le capteur déclare-t-il avoir mesuré ? \\
+\texttt{message\_id} & peut-on retrouver cette publication ? \\
+\texttt{value}, \texttt{unit} & quelle valeur est déclarée ? \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Enveloppe et payload ne répondent pas aux mêmes questions}
+\begin{columns}
+\column{.48\textwidth}\textbf{Enveloppe d'extraction}\begin{itemize}\item topic ;\item received\_at ;\item retained.\end{itemize}
+\column{.48\textwidth}\textbf{Payload publié}\begin{itemize}\item zone et capteur ;\item measured\_at ;\item valeur et unité.\end{itemize}
+\end{columns}
+\begin{block}{Réflexe}
+Conserver les deux : la donnée métier sans son contexte de réception perd une partie de sa portée.
+\end{block}
+\end{frame}
+
+\begin{frame}{Retained signifie « dernier état disponible », pas « état actuel garanti »}
+À la publication avec retain, le broker conserve le message associé au topic. Un nouvel abonnement correspondant peut le recevoir immédiatement.
+\begin{alertblock}{Trois non-conclusions}
+Ce n'est pas un historique complet ; ce n'est pas une preuve de fraîcheur ; ce n'est pas une preuve que le publisher fonctionne encore.
+\end{alertblock}
+\sourcefoot{OASIS MQTT 5.0, Retain flag and retained messages ; Eclipse Mosquitto, mosquitto\_sub manual.}
+\end{frame}
+
+\begin{frame}{Vrai ou faux -- retained}
+\begin{enumerate}
+\item « reçu maintenant » implique « mesuré maintenant » ;
+\item un topic peut avoir au plus un message retained courant ;
+\item un nouvel abonné peut recevoir un retained immédiatement ;
+\item retained fournit la liste des capteurs attendus ;
+\item supprimer un retained peut créer un silence observable.
+\end{enumerate}
+Répondez avec une conséquence décisionnelle.
+\end{frame}
+
+\section{TP 1 -- Explorer}
+\begin{frame}{TP 1 -- Votre objectif est d'observer, pas encore de conclure}
+\begin{block}{Production}
+Une table à deux colonnes : « j'observe » / « je peux conclure » pour quatre messages.
+\end{block}
+Relevez topic, niveaux, zone, capteur, measured\_at, received\_at et retained. Consignez le filtre exact utilisé.
+\end{frame}
+
+\begin{frame}[fragile]{TP 1 -- Extraire la branche batch002}
+\small
+\begin{verbatim}
+$env:PYTHONPATH=src
+python -m iot_decision.mqtt_tools extract `
+  data/raw/batch002_observed.jsonl `
+  --topic airbase/batch002/#
+\end{verbatim}
+Plan B : ouvrir \texttt{data/samples/batch002\_retained\_messages.jsonl}.
+\end{frame}
+
+\begin{frame}{TP 1 -- Contrôles avant interprétation}
+\begin{enumerate}
+\item le fichier existe et n'est pas vide ;
+\item chaque ligne est une enveloppe JSON ;
+\item le topic commence par la branche demandée ;
+\item retained et les deux horloges sont conservés ;
+\item l'effectif est une observation, pas une preuve de complétude.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Point d'étape -- quatre messages répondent à une question limitée}
+Vous pouvez dire : « avec ce filtre et cette extraction, quatre topics ont été observés ».
+\begin{alertblock}{Vous ne pouvez pas encore dire}
+« les quatre capteurs fonctionnent », « toutes les zones sont couvertes » ou « aucun message ne manque ».
+\end{alertblock}
+\end{frame}
+
+\section{TP 2 -- Inventorier}
+\begin{frame}{TP 2 -- Un inventaire conserve le lien entre message et contexte}
+\begin{block}{Une ligne par topic observé}
+topic, site, zone, capteur, message\_id, measured\_at, received\_at, retained.
+\end{block}
+L'objectif n'est pas de nettoyer les valeurs ; il est de décrire le champ de preuve.
+\end{frame}
+
+\begin{frame}{Le topic complet empêche une agrégation prématurée}
+Si vous ne gardez que « température », vous perdez lot, site et zone. Si vous ne gardez que la zone, vous perdez la branche effectivement interrogée.
+\decisionquestion{Quelle colonne permet à un tiers de vérifier que votre inventaire porte sur le bon périmètre ?}
+\end{frame}
+
+\begin{frame}[fragile]{TP 2 -- Produire l'inventaire reproductible}
+\scriptsize
+\begin{verbatim}
+python -m iot_decision.source_inventory_cli `
+ data/samples/batch002_retained_messages.jsonl `
+ data/samples/batch002_expected_sensors.csv `
+ data/processed/batch002_inventory.csv `
+ data/processed/batch002_completeness.json
+\end{verbatim}
+Ouvrez d'abord le CSV. Gardez le diagnostic JSON fermé.
+\end{frame}
+
+\begin{frame}{TP 2 -- Revue croisée de l'inventaire}
+Le binôme voisin vérifie :
+\begin{itemize}
+\item une ligne par topic et aucun doublon ;
+\item quatre zones nommées ;
+\item les deux horloges et retained ;
+\item la branche batch002 ;
+\item une affirmation strictement limitée à l'observé.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Avant la pause -- formulez votre mini-décision}
+\begin{block}{À remettre}
+Décision provisoire ; confiance ; une preuve ; une incertitude ; une limite.
+\end{block}
+Question : avez-vous assez d'information pour parler de « lot complet » ?
+\end{frame}
+
+\begin{frame}{Pause -- 10 minutes}
+\centering\Large Au retour : complet par rapport à quoi ?
+\end{frame}
+
+\section{Complétude}
+\begin{frame}{Un lot est un périmètre défini, pas un objet natif de MQTT}
+Dans cette séance, le lot est borné par :
+\begin{itemize}
+\item le site et la branche \texttt{batch002} ;
+\item l'instant et la durée d'extraction ;
+\item le filtre d'abonnement ;
+\item la liste autorisée des topics attendus.
+\end{itemize}
+Changer un de ces éléments change la portée du diagnostic.
+\end{frame}
+
+\begin{frame}{La complétude exige un dénominateur explicite}
+\centering\Large Couverture $= \frac{\text{topics attendus observés}}{\text{topics attendus}}$
+\vspace{1em}
+\normalsize Le numérateur vient de l'inventaire. Le dénominateur vient d'un référentiel métier, avec autorité et date.
+\end{frame}
+
+\begin{frame}{Trois questions précèdent tout pourcentage}
+\begin{enumerate}
+\item Attendu par qui et pour quelle mission ?
+\item Référentiel valide à quelle date et pour quel site ?
+\item La présence de chaque zone a-t-elle la même importance ?
+\end{enumerate}
+Un taux exact peut soutenir une mauvaise décision si son périmètre est faux.
+\end{frame}
+
+\begin{frame}{Les métadonnées rendent le diagnostic contestable et vérifiable}
+\begin{tabular}{ll}
+\toprule
+Métadonnée & Ce qu'elle permet de contester \\
+\midrule
+filtre & champ de vision incomplet \\
+instant de réception & extraction trop tôt ou trop courte \\
+topic complet & mauvaise branche ou mauvaise zone \\
+référentiel/version & attendu obsolète \\
+retained & confusion avec un flux vivant \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Activité E -- Classez les affirmations}
+Observable, vérifiable avec un référentiel, ou non démontrable ici ?
+\begin{itemize}
+\item toutes les zones attendues sont présentes ;
+\item aucun message n'a été perdu ;
+\item chaque retained est récent ;
+\item les capteurs observés fonctionnent correctement ;
+\item le filtre a couvert la branche batch002.
+\end{itemize}
+\end{frame}
+
+\section{TP 3 -- Comparer}
+\begin{frame}{TP 3 -- La matrice attendu/observé localise le manque}
+\small
+\begin{tabular}{llll}
+\toprule
+Zone attendue & Criticité & Observée ? & Preuve \\
+\midrule
+batteries & haute & ? & topic/ligne \\
+transmissions & haute & ? & topic/ligne \\
+informatique & haute & ? & topic/ligne \\
+maintenance & moyenne & ? & topic/ligne \\
+optronique & haute & ? & topic/ligne \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{TP 3 -- Travail avant l'automatisation}
+\begin{enumerate}
+\item ouvrez le référentiel attendu ;
+\item cherchez chaque topic dans l'inventaire ;
+\item notez présent ou absent et la preuve ;
+\item calculez le taux global ;
+\item qualifiez la couverture zone par zone ;
+\item seulement ensuite, comparez au JSON produit.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Le résultat numérique est 4/5, mais la décision dépend de la zone}
+\centering\Huge 80\,\%\\[.5em]
+\normalsize Quatre topics attendus sur cinq sont observés. L'optronique, de criticité haute, n'est pas couverte.
+\begin{alertblock}{Conséquence}
+80 \% global ne signifie pas « base couverte à 80 \% du risque ».
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Revue croisée -- attaquez le diagnostic, pas les personnes}
+Le décideur critique vérifie : filtre, instant, branche, unicité, référentiel, criticité et formulation.
+\begin{block}{Question rouge}
+Quelle hypothèse non testée pourrait transformer une absence réelle en absence seulement apparente ?
+\end{block}
+\end{frame}
+
+\section{Incident}
+\begin{frame}{Incident injecté -- le capteur optronique attendu est absent}
+\large Aucun topic \texttt{optronics-shelter-01/temperature} n'apparaît dans l'inventaire.
+\decisionquestion{Que savons-nous, que supposons-nous, et quelle vérification départage les causes ?}
+\end{frame}
+
+\begin{frame}{Le silence admet plusieurs causes concurrentes}
+\begin{enumerate}
+\item capteur ou passerelle en panne ;
+\item aucune publication retained ;
+\item retained supprimé ;
+\item filtre ou branche incorrecte ;
+\item extraction interrompue ;
+\item référentiel obsolète.
+\end{enumerate}
+Une cause plausible n'est pas encore une cause démontrée.
+\end{frame}
+
+\begin{frame}{Une bonne vérification discrimine au moins deux hypothèses}
+\begin{tabular}{ll}
+\toprule
+Vérification & Hypothèses séparées \\
+\midrule
+répéter avec branche large & filtre vs absence broker \\
+journaux publisher/passerelle & publication vs transport \\
+contrôle de configuration & retained attendu vs non configuré \\
+contact responsable parc & référentiel valide vs obsolète \\
+mesure terrain & silence data vs état physique \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{L'absence ne vaut jamais une température normale}
+\begin{alertblock}{Surconclusion interdite}
+« Aucun message » ne fournit aucune valeur thermique pour l'abri optronique.
+\end{alertblock}
+La décision prudente réduit le périmètre, diminue la confiance et priorise une vérification.
+\end{frame}
+
+\section{TP 4 -- Décider}
+\begin{frame}{TP 4 -- Le brief tient en cinq éléments vérifiables}
+\begin{enumerate}
+\item action et périmètre ;
+\item confiance justifiée ;
+\item deux preuves retrouvables ;
+\item deux incertitudes qui pourraient changer la décision ;
+\item vérification prioritaire et faisable.
+\end{enumerate}
+120 mots maximum.
+\end{frame}
+
+\begin{frame}{Une recommandation recevable sépare analyse partielle et décision globale}
+\begin{block}{Structure possible}
+Poursuivre l'analyse pour les quatre zones observées, sans généraliser à toute la base. Confiance faible pour la couverture globale. Vérifier en priorité la chaîne optronique ou le terrain.
+\end{block}
+À vous de citer les preuves et les incertitudes exactes.
+\end{frame}
+
+\begin{frame}{Le décideur critique teste la portée de chaque phrase}
+\begin{itemize}
+\item « Pour quelles zones cette phrase est-elle vraie ? »
+\item « Quelle preuve puis-je retrouver ? »
+\item « Quelle hypothèse renverserait l'action ? »
+\item « Quelle vérification est possible avant 10 h ? »
+\item « L'action proposée est-elle réversible ? »
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Vote final -- votre choix ou votre confiance ont-ils changé ?}
+A couverture suffisante \quad B inspection ciblée \quad C suspendre \quad D impossible sans inventaire
+\begin{block}{À comparer au vote initial}
+Choix, confiance, preuve nouvelle et limite mieux comprise.
+\end{block}
+Une baisse de confiance peut signaler un meilleur diagnostic.
+\end{frame}
+
+\section{Synthèse}
+\begin{frame}{Le réflexe à conserver tient en quatre verbes}
+\centering\Large Observer $\rightarrow$ Inventorier $\rightarrow$ Comparer $\rightarrow$ Borner\\[1em]
+\normalsize Observer avec un filtre explicite ; inventorier sans perdre le contexte ; comparer à un attendu autorisé ; borner la décision au périmètre démontré.
+\end{frame}
+
+\begin{frame}{Exit ticket -- trois phrases, sans écran}
+\begin{enumerate}
+\item Le broker permet d'affirmer que...
+\item Il ne permet pas d'affirmer que...
+\item Pour qualifier l'absence optronique, je vérifierais d'abord...
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Réponse à la question directrice}
+\decisionquestion{Avant nettoyage, peut-on savoir si le lot est suffisant ?}
+Oui, si l'on définit le périmètre et compare l'observé à un attendu explicite. Ici, le lot n'est pas suffisant pour conclure sur toute la base : 4 topics sur 5 sont observés et l'optronique manque.
+\confidencelevel{faible pour une décision globale ; moyenne au mieux pour décrire l'instantané observé.}
+\end{frame}
+
+\begin{frame}{Références}
+\small
+\begin{itemize}
+\item OASIS Open, \emph{MQTT Version 5.0}, 2019. \url{https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html}
+\item Eclipse Mosquitto, \emph{mosquitto\_sub manual}. \url{https://mosquitto.org/man/mosquitto_sub-1.html}
+\item Eclipse Mosquitto, \emph{mosquitto\_pub manual}. \url{https://mosquitto.org/man/mosquitto_pub-1.html}
+\end{itemize}
+\end{frame}
+
 \end{document}
