@@ -1,198 +1,283 @@
 # Guide enseignant — Séquence 2
 
-## Intention et compétence décisionnelle
+> **Conducteur opérationnel.** Afficher la diapositive indiquée, poser la question, faire justifier par un champ ou un fichier, puis exécuter la commande. Les réponses attendues donnent les arguments de débrief.
 
-La séquence 1 montrait qu’une pipeline produit une preuve limitée. La séquence 2 revient à la source : avant parsing et nettoyage, il faut établir ce que l’on a réellement observé et par rapport à quel attendu. La compétence principale est de **borner une décision par la couverture démontrée**, sans confondre réponse du broker, présence d’un retained, fonctionnement du capteur et complétude métier.
+## Carte des diapositives
 
-**Question directrice : à la fin, les étudiants doivent être capables de décider si l’état observé du broker couvre suffisamment les zones critiques pour soutenir une analyse, avec confiance et limites explicites.**
+Afficher successivement : **« Activité A — Le broker répond : que décidez-vous ? »**, **« MQTT sépare publication, distribution et consommation »**, **« Le filtre définit votre champ de vision »**, **« Retained signifie “dernier état disponible” »**, **« TP 1 — Extraire la branche batch002 »**, **« TP 2 — Produire l'inventaire reproductible »**, **« Activité E — Classez les affirmations »**, **« TP 3 — Affichez d'abord les cinq attendus »**, **« Incident injecté — le capteur optronique attendu est absent »**, **« Le silence admet plusieurs causes concurrentes »**, **« TP 4 — Le brief tient en cinq éléments vérifiables »**, **« Vote final »**, **« Exit ticket »**.
 
-Pièges : broker accessible = source fiable ; retained = récent ; silence = état normal ou panne certaine ; filtre = topic ; quatre messages = lot complet ; 80 % = suffisant indépendamment de la criticité ; référentiel supposé parfait.
+## Finalité et usage
 
-## Objectifs évaluables
+La séquence revient à la source : avant nettoyage, il faut établir ce qui fut réellement observé et par rapport à quel attendu. Les étudiants doivent décider si l'état observé du broker couvre suffisamment les zones critiques pour soutenir une analyse, sans confondre connexion, retained, fonctionnement du capteur et complétude métier.
 
-Conceptuels : expliquer publisher/broker/subscriber ; distinguer topic, filtre, payload et retained ; définir lot et complétude relativement à un attendu. Pratiques : explorer une branche ; inventorier les métadonnées ; comparer observé/attendu ; détecter une absence. Décisionnels : borner le périmètre ; qualifier la confiance ; proposer une vérification discriminante et une action réversible.
+Décision de référence : poursuivre l'analyse sur les quatre zones observées, ne pas généraliser à toute la base, vérifier en priorité la chaîne ou le terrain optronique. Confiance faible pour la couverture globale. Une autre action est recevable si son périmètre, ses preuves et son coût d'erreur sont défendus.
 
-## Repères du parcours étudiant
+- Les numéros renvoient au PDF de 56 diapositives.
+- Toutes les commandes partent de la racine du dépôt dans PowerShell.
+- Ne révéler ni les cinq attendus ni l'absence optronique avant les moments indiqués.
+- Chaque question possède ci-dessous direction et réponse argumentée.
 
-Le `guide_etudiant.md` est le support étudiant unique : réflexion, TP, traces et exit ticket y sont réunis.
+## Préparation technique complète
 
-| Activité | Repère | Fonction |
-|---|---|---|
-| A | Vote initial | révéler les critères implicites de fiabilité |
-| B–C | Apports + TP 1 | modèle MQTT et observation contrôlée |
-| D | TP 2 | inventaire reproductible |
-| E | Transition | construire le dénominateur de complétude |
-| F–G | TP 3 | comparer puis injecter l’absence |
-| H | TP 4 | brief, contradiction et vote final |
-| I | Exit ticket | fixer portée, non-conclusion et vérification |
+```powershell
+python -m pip install -r sessions/s02_mqtt_broker_data_source/requirements.txt
+$env:PYTHONPATH=src
+python -m pytest -q
+python tests/validate_s02_artifacts.py
+```
 
-## Déroulé exact — 240 min
+Référence : `8 passed`; puis `4/5 topics attendus observés`, `lot complet: non; confiance: faible`, le topic optronique absent et `S02 valide: inventaire reproductible et capteur optronique absent détecté.`
 
-| Temps | Activité | Objectif | Modalité | Trace |
-|---|---|---|---|---|
-| 0:00–0:15 | A — situation + vote | révéler les hypothèses | individuel/binôme | choix, confiance, manque |
-| 0:15–0:35 | B — architecture MQTT | attribuer les rôles | apport dialogué | schéma annoté |
-| 0:35–0:45 | topic vs filtre | éviter l’absence fabriquée | prédiction | filtres testés |
-| 0:45–1:05 | retained et limites | séparer disponibilité/fraîcheur | exemple guidé | vrai/faux justifié |
-| 1:05–1:25 | C / TP 1 — exploration | observer sans surconclure | binômes | observe/conclus |
-| 1:25–1:55 | D / TP 2 — inventaire | décrire le broker | manipulation | CSV + matrice zones |
-| 1:55–2:05 | pause | — | — | — |
-| 2:05–2:30 | E — lot/attendu/métadonnées | définir complétude | cartes + débat | définition bornée |
-| 2:30–3:00 | F / TP 3 — comparaison | construire attendu/observé | binômes | matrice + taux |
-| 3:00–3:15 | revue croisée | tester filtre et preuve | pairs | objection écrite |
-| 3:15–3:40 | G — incident optronique | raisonner sur le silence | injection | hypothèses/vérifications |
-| 3:40–3:52 | H / TP 4 — brief | recommander sans généraliser | rôles data/décideur | note ≤120 mots |
-| 3:52–3:55 | vote final | mesurer la révision | individuel | choix + confiance |
-| 3:55–4:00 | I — exit ticket | stabiliser le réflexe | individuel | trois phrases |
-
-## Conduite détaillée
-
-### A — Situation et vote
-
-**Préparer :** cartes A–D et fiche action/confiance/preuve/manque. **Conduire :** lire la situation sans afficher les fichiers ; vote silencieux puis échange. **Relancer :** « quelle propriété du broker soutient votre choix ? » et « quel coût aurait une zone oubliée ? ». **Débloquer :** proposer le canevas sans révéler cinq topics attendus. **Débriefer :** distinguer disponibilité technique et suffisance opérationnelle.
-
-### B — Modèle MQTT
-
-**Préparer :** schéma publisher → broker → subscriber. **Conduire :** attribuer à chaque binôme un composant et lui faire nommer entrée, sortie, connaissance et ignorance. **Relancer :** « qui connaît la liste des capteurs attendus ? ». **Débloquer :** donner les étiquettes, pas les définitions. **Débriefer :** MQTT transporte et distribue ; le contrat métier vient d’ailleurs.
-
-### C / TP 1 — Explorer
-
-**Préparer :** broker seedé ou JSONL ; masquer le référentiel. **Conduire :** faire prédire le résultat de `airbase/batch002/#`, puis extraire. Exiger le filtre dans le journal. **Relancer :** « ceci est-il dans le topic, l’enveloppe ou le payload ? ». **Blocage technique :** vérifier `PYTHONPATH`, Docker, port, topic, puis passer au JSONL après deux essais. **Débriefer :** un filtre définit le champ de vision.
-
-### D / TP 2 — Inventorier
-
-**Préparer :** matrice vierge. **Conduire :** une ligne par topic ; contrôler unicité, zone, capteur, deux horloges, retained. **Relancer :** « que perdez-vous si vous ne gardez que la zone ? ». **Débloquer :** montrer une ligne exemplaire, pas le tableau complet. **Débriefer :** l’inventaire est une preuve sur l’observé, pas sur l’exhaustivité.
-
-### E — Définir lot et complétude
-
-**Préparer :** cartes d’affirmations et référentiel encore fermé. **Conduire :** classer observable / nécessite attendu / non démontrable. Révéler ensuite le CSV attendu et son rôle. **Relancer :** « qui autorise ce référentiel et à quelle date ? ». **Débloquer :** écrire `complétude = observé ∩ attendu`, puis faire nommer le dénominateur. **Débriefer :** un taux sans périmètre masque les zones critiques.
-
-### F / TP 3 — Comparer
-
-**Préparer :** commande CLI testée. **Conduire :** faire produire la matrice manuellement, puis comparer au JSON. **Relancer :** « 4/5 décrit quoi exactement ? ». **Blocage :** vérifier chemins, en-têtes CSV et topic complet. **Débriefer :** valider 80 % global et 0 % optronique ; séparer exactitude du calcul et autorité de l’attendu.
-
-### G — Incident absent
-
-**Préparer :** garder le nom optronique jusqu’à 3:15. **Conduire :** révéler l’absence et imposer au moins trois hypothèses concurrentes. **Relancer :** « quelle observation départagerait panne et filtre erroné ? ». **Débloquer :** proposer catégories équipement / publication / transport / extraction / référentiel. **Débriefer :** le silence n’indique pas sa cause et n’est jamais une mesure normale.
-
-### H / TP 4 — Brief et contradiction
-
-**Préparer :** canevas décision-confiance-preuves-incertitudes-vérification. **Conduire :** rédaction silencieuse, interrogation par le décideur, inversion des rôles, vote final. **Relancer :** « votre phrase vaut-elle pour quatre zones ou cinq ? ». **Débloquer :** amorce « nous pouvons décrire…, mais pas conclure… ». **Débriefer :** accepter analyse partielle + vérification ciblée ; refuser généralisation à la base.
-
-### I — Exit ticket
-
-Faire répondre sans écran. Si « prouve » apparaît, demander le topic ou champ exact. Conserver les tickets pour ouvrir la séquence 3 sur la traçabilité.
-
-## Script opérationnel détaillé des TP
-
-Cette section sert de conducteur terminal. Toutes les commandes partent de la racine du dépôt. Ne projeter la sortie attendue qu’après la prédiction des étudiants.
-
-### Avant TP 1 — Préparer la source sans révéler l’incident
-
-Lancer et alimenter le broker avant l’arrivée des étudiants :
+Mode broker :
 
 ```powershell
 docker compose -f docker/docker-compose.yml up -d --wait
-$env:PYTHONPATH=src
 python -m iot_decision.mqtt_tools seed data/samples/batch002_retained_messages.jsonl
-```
-
-**Sortie attendue :** `4 messages publiés`. Ne pas annoncer « quatre sur cinq » et ne pas ouvrir `batch002_expected_sensors.csv`.
-
-Contrôle enseignant :
-
-```powershell
 python -m iot_decision.mqtt_tools extract C:\tmp\s02_teacher_check.jsonl --topic airbase/batch002/#
 (Get-Content C:\tmp\s02_teacher_check.jsonl).Count
+Get-Content C:\tmp\s02_teacher_check.jsonl -First 1
 ```
 
-Attendu : quatre lignes. Si zéro : vérifier Docker, le port 1883, le seed et le filtre. Si Docker reste indisponible après deux essais, annoncer le passage au fichier de repli ; faire noter que ce changement de mode modifie la provenance de la trace.
-
-### TP 1 — Chronologie d’animation, 20 min
-
-1. **0–3 min, prédiction silencieuse.** Faire écrire effectif attendu et signification de `#`.
-2. **3–8 min, extraction.** Les étudiants exécutent la commande du guide. Circuler et vérifier le dossier courant avant de corriger autre chose.
-3. **8–12 min, contrôles.** Exiger `Test-Path`, nombre de lignes et première ligne.
-4. **12–17 min, lecture.** Faire colorer mentalement topic, enveloppe et payload ; demander une preuve textuelle pour chaque réponse.
-5. **17–20 min, mini-décision.** Faire compléter les six champs du journal.
-
-Questions à poser dans cet ordre : « quel filtre avez-vous réellement utilisé ? », « combien de lignes avez-vous reçues ? », « où voyez-vous retained ? », « quelle horloge vient du capteur ? », « quelle phrase pouvez-vous défendre sans référentiel ? ».
-
-Réponses attendues : filtre `airbase/batch002/#` ; quatre enveloppes ; retained dans l’enveloppe ; `measured_at` déclaré par le payload ; seule conclusion sûre : quatre topics observés avec ce filtre et cette extraction.
-
-### TP 2 — Chronologie d’animation, 30 min
-
-1. **0–5 min.** Faire lancer la CLI sur `data/raw/batch002_observed.jsonl`.
-2. **5–10 min.** Faire confirmer la création des deux sorties avec `Test-Path`.
-3. **10–18 min.** Faire afficher le CSV avec `Import-Csv`; interdire l’ouverture du JSON.
-4. **18–24 min.** Faire compter lignes et topics uniques.
-5. **24–30 min.** Revue croisée et mini-décision.
-
-Commandes de diagnostic à projeter seulement si nécessaire :
+Attendu : quatre enveloppes. Ne pas annoncer « quatre sur cinq ». Arrêt :
 
 ```powershell
+docker compose -f docker/docker-compose.yml down
+```
+
+Plan de repli complet :
+
+```powershell
+Copy-Item data/samples/batch002_retained_messages.jsonl data/raw/batch002_observed.jsonl -Force
+python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+python tests/validate_s02_artifacts.py
+```
+
+## Conducteur — 240 minutes
+
+| Temps | Conduite | Slides | Trace |
+|---|---|---|---|
+| 0:00–0:15 | situation et vote | 2–6 | choix, confiance, manque |
+| 0:15–0:45 | rôles MQTT, topic et filtre | 7–11 | tableau des responsabilités |
+| 0:45–1:05 | payload, enveloppe, retained | 12–15 | vrai/faux argumenté |
+| 1:05–1:25 | TP 1 : extraction | 16–21 | observe/conclus |
+| 1:25–1:55 | TP 2 : inventaire | 22–28 | CSV + mini-décision |
+| 1:55–2:05 | pause | 29 | — |
+| 2:05–2:30 | lot, attendu, complétude | 30–34 | classement |
+| 2:30–3:15 | TP 3 : matrice et revue | 35–41 | matrice + taux |
+| 3:15–3:40 | incident optronique | 42–46 | hypothèses/vérification |
+| 3:40–3:55 | TP 4 : brief et vote | 47–52 | brief révisé |
+| 3:55–4:00 | synthèse | 53–55 | exit ticket |
+
+## 1. Vote initial — 15 min
+
+**Afficher :** 2 à 6. Ne montrer aucun fichier. Choix A couverture suffisante, B inspection ciblée, C suspendre la conclusion globale, D impossible sans inventaire.
+
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Que décidez-vous ? | Exiger choix et confiance séparés. | C ou D sont les plus prudents, mais B peut être défendu. Une connexion et des retained ne démontrent pas le périmètre observé. |
+| Quelle preuve est disponible ? | Interdire les faits non lus. | Le broker répond et contient des retained ; ni nombre, zones, fraîcheur ni exhaustivité ne sont connus. |
+| Quelle information manque en priorité ? | Exiger un dénominateur ou périmètre. | La liste autorisée des topics/zones attendus et l'inventaire observé ; sans comparaison, « complet » n'a pas de sens. |
+| Quel coût aurait une zone oubliée ? | Relier au scénario. | Une conclusion globale pourrait ignorer un risque matériel localisé ; le pourcentage global peut masquer une zone critique à 0 %. |
+
+## 2. Qui sait quoi dans MQTT ? — 30 min
+
+**Afficher :** 7 à 11. Attribuer publisher, broker et subscriber à des groupes ; faire compléter entrée, sortie, sait, ignore, erreur et effet décisionnel.
+
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Qui choisit le topic ? | Faire remonter à la publication. | Le publisher ou sa configuration choisit le topic ; le broker le route sans vérifier sa vérité métier. |
+| Qui conserve un retained ? | Distinguer décision de publication et stockage. | Le publisher demande le retained ; le broker conserve le dernier message retained du topic selon le protocole. |
+| Qui connaît la liste métier attendue ? | Demander si MQTT possède ce concept. | Ni le protocole ni le broker ; un référentiel métier externe définit les capteurs/zones attendus. |
+| Le broker valide-t-il le payload ? | Opposer transport et sémantique. | Non par défaut. Il transporte des octets ; schéma, unité, cohérence et plausibilité relèvent de la chaîne applicative. |
+| Topic et filtre sont-ils identiques ? | Faire écrire un exemple de chaque. | Non. Le topic est publié sans joker ; le filtre d'abonnement peut utiliser `+` ou `#` et définit le champ de vision du subscriber. |
+| Que recevra `airbase/batch002/#` ? | Faire prédire avant l'extraction. | Les messages disponibles dont le topic commence par cette branche, notamment les retained correspondants ; pas un historique complet ni des topics hors branche. |
+
+## 3. Payload, enveloppe et retained — 20 min
+
+**Afficher :** 12 à 15. Faire répondre au vrai/faux avant de révéler les arguments.
+
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Quel champ vient du capteur et lequel de l'extraction ? | Faire pointer les deux niveaux. | `measured_at` est déclaré dans le payload ; `received_at` est ajouté lors de l'observation. Ils répondent à deux horloges différentes. |
+| Retained signifie-t-il récent ? | Demander la preuve temporelle. | Faux. Il indique le dernier message retained disponible, sans borne d'âge. La fraîcheur exige un horodatage fiable et une règle métier. |
+| Un retained prouve-t-il que le capteur fonctionne maintenant ? | Proposer un capteur éteint après publication. | Non. Le broker peut encore servir son dernier état après l'arrêt du capteur. |
+| Un abonnement rejoue-t-il tout l'historique ? | Distinguer retained et journal. | Non. MQTT n'est pas par lui-même un stockage historique ; on reçoit les publications futures et les retained correspondants. |
+| Qu'autorise une enveloppe bien formée ? | Borner la conclusion. | Elle autorise parsing et traçabilité de l'observation, pas validation physique ou complétude métier. |
+
+## 4. TP 1 — Explorer — 20 min
+
+**Afficher :** 16–21. Faire prédire, extraire, contrôler, puis interpréter.
+
+```powershell
+$env:PYTHONPATH=src
+python -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
+Test-Path data/raw/batch002_observed.jsonl
+(Get-Content data/raw/batch002_observed.jsonl).Count
+Get-Content data/raw/batch002_observed.jsonl -First 1
+```
+
+Repli :
+
+```powershell
+Copy-Item data/samples/batch002_retained_messages.jsonl data/raw/batch002_observed.jsonl -Force
+```
+
+Attendu : `4 messages extraits`, `True`, `4`, puis une enveloppe avec topic, réception, retained et payload. Ne pas encore dire « 4/5 ».
+
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Combien de topics avez-vous observés ? | Exiger commande et effectif. | Quatre enveloppes/topics dans cette extraction ; la formulation reste liée au filtre et à l'instant d'observation. |
+| Quel filtre définit le champ de vision ? | Faire recopier exactement. | `airbase/batch002/#`. Toute conclusion hors de cette branche serait sans preuve. |
+| Quels champs appartiennent à l'enveloppe ou au payload ? | Faire annoter une ligne. | Topic, réception et retained décrivent l'observation ; zone/capteur/mesure et `measured_at` sont déclarés dans le payload. |
+| Peut-on conclure à la complétude ? | Interdire le comptage sans attendu. | Non. Quatre est un numérateur sans dénominateur métier autorisé. |
+| Quelle phrase est défendable ? | Imposer « observé avec… ». | « Quatre topics ont été observés avec le filtre `airbase/batch002/#` lors de cette extraction. » |
+
+## 5. TP 2 — Construire l'inventaire — 30 min
+
+**Afficher :** 22–28. La CLI produit déjà le diagnostic ; demander de contrôler le CSV avant d'ouvrir le JSON.
+
+```powershell
+python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+Test-Path data/processed/batch002_inventory.csv
 Import-Csv data/processed/batch002_inventory.csv | Format-Table topic,zone,sensor,retained
 (Import-Csv data/processed/batch002_inventory.csv).Count
 (Import-Csv data/processed/batch002_inventory.csv | Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
 ```
 
-Attendu : quatre lignes, quatre topics uniques, zones batteries/transmissions/informatique/maintenance. Si le CSV manque : vérifier `PYTHONPATH`, les quatre arguments et l’existence du JSONL. Si la CLI annonce 4/5, rappeler qu’elle produit déjà le diagnostic mais que la démarche manuelle doit précéder son interprétation.
+Attendu : quatre lignes et quatre topics uniques, zones batteries, transmissions, informatique et maintenance. Masquer encore le référentiel affiché et la zone absente.
 
-Questions de débrief : « quelle colonne permet de réexécuter la contestation ? », « que prouve retained ? », « pourquoi le CSV ne prouve-t-il pas que le capteur fonctionne maintenant ? », « quelle formulation bornée inscrivez-vous dans le journal ? ».
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Quelles quatre zones sont observées ? | Faire citer CSV et topics. | Batteries, transmissions, informatique, maintenance ; chaque affirmation doit être reliée à sa ligne/topic. |
+| Quelle colonne conserve le périmètre interrogé ? | Faire distinguer topic et zone. | Le topic complet conserve la branche et l'identité logique ; la zone seule agrégerait trop tôt. |
+| Pourquoi conserver les deux horloges ? | Demander quel délai elles permettent d'étudier. | Elles séparent temps déclaré de mesure et temps d'observation, donc permettent d'évaluer fraîcheur et latence apparente. |
+| Pourquoi « topics observés » plutôt que « capteurs fonctionnels » ? | Demander ce que l'extraction teste physiquement. | L'extraction constate des messages disponibles ; elle ne teste ni alimentation, calibration ni fonctionnement actuel. |
+| Que perd-on en regroupant sous « température » ? | Faire supprimer mentalement topic/zone. | Localisation, identité du capteur, provenance, criticité et possibilité de contester l'agrégation. |
+| L'inventaire est-il exhaustif ? | Exiger un référentiel avant réponse. | Il est exhaustif pour les quatre lignes effectivement extraites, pas nécessairement pour le besoin métier. |
 
-### Activité E — Révéler le dénominateur, 25 min
+## 6. Lot et complétude — 25 min
 
-Pendant les dix premières minutes, laisser le référentiel fermé. Faire classer les six affirmations des exercices. Exiger pour chacune : source nécessaire et verdict possible.
+**Afficher :** 30–34. Garder le CSV attendu fermé pendant le classement, puis le révéler.
 
-Révéler ensuite :
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Qu'est-ce qu'un lot MQTT ? | Refuser l'idée d'un objet protocolaire natif. | Un périmètre construit par filtre, fenêtre d'observation et règle de collecte ; MQTT ne fournit pas seul début, fin ou exhaustivité. |
+| Complet par rapport à quoi ? | Écrire numérateur/dénominateur. | Aux topics attendus d'un référentiel autorisé, pour un site, une mission et une date définis. |
+| « Quatre topics uniques » est-il observable ? | Faire citer le CSV. | Oui, comptage direct de l'inventaire. |
+| « Toutes les zones attendues sont présentes » est-il observable ? | Exiger le dénominateur. | Vérifiable seulement par comparaison avec un référentiel attendu. |
+| « Aucun message perdu » est-il démontrable ? | Chercher une preuve d'émission indépendante. | Non ici : il faudrait journaux publisher, séquences ou accusés permettant de comparer émis et reçu. |
+| « Tous les retained sont récents » est-il démontrable ? | Chercher horloge et règle. | Pas par retained seul ; il faut `measured_at` fiable et seuil de fraîcheur métier. |
+| Qui autorise le référentiel ? | Relier gouvernance et mission. | Responsable métier/technique compétent pour le site et la période ; le CSV est supposé valide ici, mais cette hypothèse reste une limite. |
+
+## 7. TP 3 — Comparer attendu et observé — 45 min
+
+**Afficher :** 35–41. Faire construire la matrice manuellement avant le diagnostic automatisé.
 
 ```powershell
 Import-Csv data/samples/batch002_expected_sensors.csv | Format-Table topic,zone,sensor,criticality
-```
-
-Questions : « attendu par qui ? », « valide pour quel site ? », « à quelle date ? », « cinq lignes ont-elles le même poids opérationnel ? ». Réponse attendue : la complétude est relative à un référentiel métier autorisé ; la séance suppose ce CSV valide, mais cette hypothèse doit rester dans les limites.
-
-### TP 3 — Chronologie d’animation, 55 min
-
-1. **0–10 min.** Lire et questionner le référentiel, sans afficher le JSON diagnostic.
-2. **10–25 min.** Construire manuellement la matrice cinq lignes.
-3. **25–30 min.** Calculer 4/5 et couverture par zone.
-4. **30–35 min.** Ouvrir le JSON et comparer.
-5. **35–47 min.** Injecter officiellement l’absence optronique et construire les hypothèses.
-6. **47–55 min.** Choisir une vérification prioritaire et écrire la mini-décision.
-
-Commande de contrôle :
-
-```powershell
+(Import-Csv data/samples/batch002_expected_sensors.csv).Count
+Get-Content data/processed/batch002_completeness.json
 Get-Content data/processed/batch002_completeness.json | ConvertFrom-Json | Format-List
 ```
 
-Attendu : 4 observés, 5 attendus, `complete=False`, topic optronique absent, confiance faible. Faire écrire explicitement : « 80 % des topics attendus observés » et non « 80 % de la base sûre ».
+Attendu : cinq topics attendus, quatre observés, `complete=False`, confiance faible, topic optronique absent. Formulation : « 80 % des topics attendus observés », jamais « 80 % de la base sûre ».
 
-Pour l’incident, ne valider une hypothèse que si elle est accompagnée d’une vérification discriminante. Exemples : élargir/rejouer le filtre pour tester l’extraction ; consulter journaux publisher/passerelle pour la publication ; confirmer la configuration retained ; joindre le responsable du référentiel ; réaliser une mesure terrain pour l’état physique.
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Quel est le numérateur ? | Faire pointer les intersections. | Quatre topics attendus effectivement observés. Un topic inattendu ne devrait pas augmenter ce numérateur. |
+| Quel est le dénominateur ? | Faire citer source et autorité. | Cinq topics du référentiel supposé valide pour ce site et cette mission. |
+| Quelle zone est absente ? | Exiger le topic complet. | Optronique : `airbase/batch002/optronics-shelter-01/temperature`. |
+| Pourquoi 80 % peut-il tromper ? | Comparer global et zone. | Le taux global masque 0 % de couverture optronique ; la criticité n'est pas uniformément distribuée. |
+| Le calcul exact rend-il le référentiel vrai ? | Séparer calcul et hypothèse. | Non. Le calcul peut être reproductible tout en reposant sur un référentiel obsolète ou non autorisé. |
+| Que doit attaquer la revue croisée ? | Interdire l'attaque personnelle. | Filtre, fichiers, dénominateur, unicité, autorité du référentiel et formulation de la conclusion. |
 
-### TP 4 — Chronologie d’animation, 15 min
+## 8. Incident optronique — 25 min
 
-1. **0–5 min.** Rédaction silencieuse avec le canevas obligatoire.
-2. **5–9 min.** Le décideur pose les cinq questions du guide, sans proposer la réponse.
-3. **9–12 min.** Révision du brief ; chaque preuve reçoit un nom de fichier ou un topic.
-4. **12–15 min.** Vote final, confiance et écart avec le vote initial.
+**Afficher :** 42 seulement à 3:15, puis 43–46. Imposer plusieurs causes concurrentes avant toute action.
 
-Critères immédiats : périmètre limité ; deux preuves retrouvables ; absence non assimilée à panne ; vérification optronique priorisée ; action réversible ou conditionnelle. Si un groupe écrit « toute la base », demander de surligner les cinq preuves correspondantes : l’absence de cinquième preuve doit conduire à la reformulation.
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Le capteur est-il en panne ? | Refuser la cause unique. | C'est une hypothèse compatible, pas une conclusion. Non-publication, retained supprimé, filtre, extraction ou référentiel peuvent produire le même silence. |
+| Que prouve exactement le silence ? | Faire revenir à la matrice. | L'absence du topic dans cette observation avec ce filtre ; ni cause, ni température, ni état physique. |
+| Quelle vérification distingue filtre et non-publication ? | Exiger deux hypothèses départagées. | Rejouer/élargir l'abonnement et consulter les journaux publisher/passerelle. Une observation hors filtre renforce l'erreur d'extraction ; aucune publication enregistrée renforce la non-publication. |
+| Quelle vérification distingue chaîne et état thermique ? | Opposer données et terrain. | Journaux/configuration testent la chaîne ; mesure terrain indépendante teste l'état physique. L'une ne remplace pas l'autre. |
+| Quelle vérification faire en premier ? | Comparer délai, valeur d'information et risque. | Une mesure terrain optronique est prioritaire si l'état matériel conditionne l'action immédiate ; en parallèle, journaux et filtre réduisent l'incertitude de chaîne à faible coût. |
+| Peut-on remplacer l'absence par une température normale ? | Faire verbaliser la donnée inventée. | Non. Imputer « normal » transformerait un manque en preuve rassurante et créerait un faux négatif possible. |
 
-### Questions et réponses pour la synthèse
+## 9. TP 4 — Brief contradictoire — 15 min
 
-1. **Que prouve la connexion ?** Une disponibilité technique ponctuelle, pas la complétude métier.
-2. **Que prouve un retained ?** Un dernier message retained disponible pour un topic correspondant, pas la fraîcheur.
-3. **Que prouve l’inventaire ?** Le périmètre effectivement observé avec ce filtre et cette extraction.
-4. **Comment établir la complétude ?** En comparant observé et attendu, avec un référentiel borné et autorisé.
-5. **Que prouve le silence optronique ?** L’absence de topic dans l’observation, pas sa cause ni l’état thermique.
-6. **Décision attendue ?** Continuer l’analyse sur quatre zones, ne pas généraliser, vérifier l’optronique, confiance faible pour la couverture globale.
+**Afficher :** 47–52. Cinq minutes d'écriture, quatre d'interrogation, trois de révision, trois de vote. Le brief de 120 mots contient action, périmètre, confiance, deux preuves, deux incertitudes et vérification.
 
-## Résultat et décision attendus
+| Question | Direction | Réponse et arguments |
+|---|---|---|
+| Votre phrase vaut-elle pour quatre zones ou cinq ? | Faire surligner les preuves correspondantes. | Seulement quatre zones sont observées ; toute conclusion sur cinq généralise au-delà de la preuve. |
+| Où retrouvez-vous vos deux preuves ? | Exiger fichier et champ/topic. | Inventaire CSV pour les quatre observés ; diagnostic/référentiel pour 4/5 et le topic absent. |
+| Que signifie votre confiance ? | Relier au périmètre. | Confiance raisonnable dans l'inventaire limité ; faible pour la couverture globale, car une zone critique manque et la cause est inconnue. |
+| Que ne savez-vous toujours pas ? | Chercher deux incertitudes décisionnelles. | Cause du silence et état thermique optronique ; également fraîcheur/autorité du référentiel selon le brief. |
+| Quelle action reste réversible ? | Refuser l'inaction vague. | Continuer l'analyse des quatre zones, suspendre la conclusion globale et lancer une vérification optronique ciblée. |
+| Quelle objection renverse votre recommandation ? | Faire jouer le décideur critique. | Si le référentiel est obsolète, l'absence peut être artificielle ; si l'optronique est critique et chaude, poursuivre sans terrain devient dangereux. |
 
-Quatre topics retained sont observés contre cinq attendus ; l’optronique manque. Décision recommandée : poursuivre l’analyse limitée aux quatre zones, ne pas conclure pour toute la base, vérifier en priorité la chaîne ou le terrain optronique. Confiance faible pour la couverture globale. Preuves : inventaire 4/5 et topic attendu absent. Incertitudes : cause du silence et autorité/fraîcheur du référentiel.
+## 10. Synthèse et exit ticket — 5 min
+
+**Afficher :** 53–55. Réponse individuelle sans écran.
+
+| Amorce | Direction | Réponse et argument |
+|---|---|---|
+| L'inventaire permet d'affirmer que… | Exiger filtre et périmètre. | Quatre topics précis ont été observés dans `airbase/batch002/#` et conservés de façon reproductible. |
+| Il ne permet pas d'affirmer que… | Rejeter panne ou normalité sans preuve. | Ni complétude globale, ni fonctionnement actuel, ni température optronique, ni cause du silence. |
+| Avant de conclure pour toute la base… | Exiger une action. | Vérifier le topic/chaîne optronique et, si l'enjeu l'impose, effectuer une mesure terrain. |
+
+## Dépannage et validation finale
+
+| Symptôme | Commande ou contrôle | Décision pédagogique |
+|---|---|---|
+| Import impossible | `Get-Location`, puis `$env:PYTHONPATH=src` | Deux essais, puis repli en consignant la provenance. |
+| Broker inaccessible | `docker compose -f docker/docker-compose.yml ps` | Copier l'échantillon ; conserver le filtre dans le journal. |
+| Extraction vide | vérifier seed, port et filtre | Ne pas révéler le référentiel pour résoudre un problème technique. |
+| CSV absent | `Test-Path` sur JSONL et les quatre arguments CLI | Diagnostiquer dans l'ordre chemin, entrée, environnement. |
+| JSON incohérent | reconstruire via `source_inventory_cli` | Ne pas éditer manuellement le diagnostic. |
+
+```powershell
+python tests/validate_s02_artifacts.py
+```
+
+## Critères observables
+
+L'étudiant borne le champ de vision par le filtre ; distingue enveloppe et payload ; formule « topics observés » ; construit le dénominateur ; localise le manque ; sépare absence et cause ; choisit une vérification discriminante ; produit une recommandation limitée et traçable.
 
 ## Sources
 
-MQTT 5.0, OASIS Open (2019), sections topics, subscriptions et retained messages ; manuels officiels `mosquitto_sub` et `mosquitto_pub`, Eclipse Mosquitto. Les slides citent les URL et la bibliographie commune.
+## Questions étudiantes — réponses argumentées
+
+| Question | Argument attendu |
+|---|---|
+| Que prouve la connexion ? | Une disponibilité ponctuelle, jamais la complétude métier. |
+| `#` est-il publié ? | Non, c'est un joker du filtre. |
+| Le filtre donne-t-il tout l'historique ? | Non ; seulement les messages disponibles correspondant au filtre. |
+| Que prouve retained ? | Un dernier message conservé disponible, pas sa fraîcheur. |
+| Que prouve l'inventaire ? | Quatre topics observés avec ce filtre et cette extraction, pas quatre capteurs fonctionnels. |
+| Complet par rapport à quoi ? | À un référentiel métier autorisé et daté. |
+| Pourquoi 4/5 ne suffit pas ? | Une zone critique peut être à 0 % malgré 80 % global. |
+| Le silence prouve-t-il une panne ? | Non : panne, publication, filtre, extraction et référentiel sont des hypothèses concurrentes. |
+| Quelle vérification discrimine ? | Rejouer/élargir le filtre, consulter les journaux, vérifier retained/référentiel, puis terrain. |
+| Décision finale ? | Analyse limitée aux quatre zones ; pas de conclusion globale ; vérification optronique prioritaire. |
+
+Commandes à exécuter et commenter :
+
+```powershell
+python -m iot_decision.mqtt_tools extract data/raw/batch002_observed.jsonl --topic airbase/batch002/#
+Test-Path data/raw/batch002_observed.jsonl
+(Get-Content data/raw/batch002_observed.jsonl).Count
+Get-Content data/raw/batch002_observed.jsonl -First 1
+python -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
+Test-Path data/processed/batch002_inventory.csv
+Import-Csv data/processed/batch002_inventory.csv | Format-Table topic,zone,sensor,retained
+(Import-Csv data/processed/batch002_inventory.csv).Count
+(Import-Csv data/processed/batch002_inventory.csv | Select-Object -ExpandProperty topic | Sort-Object -Unique).Count
+Import-Csv data/samples/batch002_expected_sensors.csv | Format-Table topic,zone,sensor,criticality
+(Import-Csv data/samples/batch002_expected_sensors.csv).Count
+Get-Content data/processed/batch002_completeness.json | ConvertFrom-Json | Format-List
+python tests/validate_s02_artifacts.py
+```
+
+Références complètes dans `latex/common/references.bib` et slide 56 : MQTT 5.0 (OASIS) et documentation officielle Eclipse Mosquitto pour topics, filtres, abonnements et retained.
