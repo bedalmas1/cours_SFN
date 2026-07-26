@@ -1,14 +1,300 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
-\graphicspath{{figures/}}
-
 \title{Séquence 3 -- Parsing, structuration et traçabilité}
+\subtitle{De la ligne brute à la décision contestable}
 \author{École de l'air et de l'espace}
 \date{}
-
+\newcommand{\sourcefoot}[1]{\vfill\tiny\color{gray}Source : #1}
 \begin{document}
 \begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Transformer des messages techniques en données structurées tout en conservant le lien avec la source.
+
+\begin{frame}{Une décision contestée doit remonter à sa source}
+\large ``35,4\,°C dans le shelter batteries : inspection déclenchée.''
+\decisionquestion{Quel message, quelle transformation et quelles limites permettent de justifier cette décision plus tard ?}
+\end{frame}
+
+\begin{frame}{À la fin, vous saurez décider si l'indicateur est défendable}
+\begin{itemize}
+\item parser sans correction silencieuse ;
+\item structurer sous un schéma explicite ;
+\item relier chaque ligne au message brut ;
+\item distinguer intégrité, authenticité et vérité physique ;
+\item traiter un quasi-doublon sans détruire la preuve ;
+\item qualifier confiance technique et opérationnelle.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quatre productions rythment les 240 minutes}
+\begin{enumerate}
+\item TP 1 : produire \texttt{batch001\_structured.csv} ;
+\item TP 2 : défendre un schéma commenté ;
+\item TP 3 : rejouer le lien table $\rightarrow$ brut ;
+\item incident, débat de rétention et brief décisionnel.
+\end{enumerate}
+Chaque étape : action, confiance, preuve, incertitude, limite.
+\end{frame}
+
+\section{Situation}
+\begin{frame}{Vote initial -- la décision est-elle justifiée ?}
+A justifiée \quad B plausible mais non auditable\\[.5em]
+C maintenir par prudence \quad D annuler
+\begin{block}{À noter}Confiance 0--100\,\%, fait disponible, preuve prioritaire, coût d'erreur.\end{block}
+\end{frame}
+
+\begin{frame}{Une chaîne de justification comporte quatre niveaux}
+\centering\Large Message brut $\rightarrow$ ligne structurée\\
+$\rightarrow$ indicateur $\rightarrow$ action\\[1em]
+\normalsize Chaque flèche doit nommer sa règle, sa version et sa trace.
+\end{frame}
+
+\begin{frame}{La prudence opérationnelle ne remplace pas la preuve}
+Une inspection peut être rationnelle si le coût d'un faux négatif est élevé. Cela ne démontre pas que la mesure est exacte.
+\begin{alertblock}{Deux questions distinctes}L'action est-elle prudente ? La justification data est-elle auditée ?\end{alertblock}
+\end{frame}
+
+\section{Concepts}
+\begin{frame}{Le brut est conservé au plus près de la réception}
+\begin{itemize}
+\item il possède déjà une enveloppe et un payload ;
+\item il peut contenir des métadonnées de collecte ;
+\item il n'est ni pur, ni automatiquement vrai ;
+\item il permet de reparsing avec une règle nouvelle.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Structurer, c'est projeter sous un contrat}
+\begin{columns}
+\column{.47\textwidth}\textbf{Gain}\begin{itemize}\item colonnes stables ;\item calculs ;\item contrôles.\end{itemize}
+\column{.47\textwidth}\textbf{Risque}\begin{itemize}\item champs omis ;\item types forcés ;\item contexte perdu.\end{itemize}
+\end{columns}
+\decisionquestion{Quelle contestation devient impossible si ce champ disparaît ?}
+\end{frame}
+
+\begin{frame}{La provenance relie entités, activités et responsabilités}
+La provenance décrit ce qui a servi, ce qui a été produit et par quelle activité.
+\begin{block}{Version S03 minimale}Fichier source, ligne, empreinte, version de schéma, code et commande.\end{block}
+\sourcefoot{W3C, PROV-Overview et PROV-DM, 2013.}
+\end{frame}
+
+\begin{frame}{Auditabilité ne signifie pas exactitude}
+\begin{tabular}{ll}\toprule
+Auditabilité permet & Elle ne garantit pas \\\midrule
+retrouver une source & vérité physique \\
+rejouer une transformation & calibration \\
+détecter un changement & identité de l'auteur \\
+contester une règle & exhaustivité du lot \\\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Enveloppe, payload et pipeline ont des autorités différentes}
+\small
+\begin{tabular}{lll}\toprule
+Niveau & Exemples & Question \\\midrule
+enveloppe & topic, received\_at & qu'a observé la collecte ? \\
+payload & measured\_at, value & que déclare l'émetteur ? \\
+pipeline & source\_line, hash & comment retrouver le brut ? \\\bottomrule
+\end{tabular}
+\end{frame}
+
+\section{TP 1}
+\begin{frame}{TP 1 -- Prédire avant de parser}
+\begin{enumerate}\item combien d'enveloppes ?\item quels champs par niveau ?\item que faire d'une ligne incomplète ?\item quelle phrase défendre ?\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{TP 1 -- Produire le CSV structuré}
+\scriptsize
+\begin{verbatim}
+export PYTHONPATH=src
+python3 -m iot_decision.traceability_cli parse \
+ data/samples/batch001_messages.jsonl \
+ data/processed/batch001_structured.csv
+\end{verbatim}
+\begin{block}{Attendu}15 lignes structurées ; 0 anomalie isolée.\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{TP 1 -- Contrôler avant d'interpréter}
+\small
+\begin{verbatim}
+head -n 3 data/processed/batch001_structured.csv
+tail -n +2 data/processed/batch001_structured.csv | wc -l
+\end{verbatim}
+Attendu : en-tête complet puis 15 lignes de données.
+\end{frame}
+
+\begin{frame}{Le mode strict rend l'échec visible}
+Un payload incomplet arrête le lot. Un mode tolérant doit isoler l'erreur et produire une trace.
+\begin{alertblock}{Interdit}Remplacer silencieusement un champ obligatoire par une chaîne vide.\end{alertblock}
+\end{frame}
+
+\begin{frame}{Point d'étape -- formulation exacte}
+``15 enveloppes conformes au contrat \texttt{s03-v1} ont été structurées.''
+\begin{alertblock}{Non démontré}Exhaustivité, exactitude physique, authenticité et qualité des horloges.\end{alertblock}
+\end{frame}
+
+\section{TP 2}
+\begin{frame}{TP 2 -- Défendre le schéma champ par champ}
+\small
+\begin{tabular}{llll}\toprule
+Champ & Origine & Contrôle & Risque si supprimé \\\midrule
+topic & enveloppe & non vide & périmètre perdu \\
+unit & payload & vocabulaire & comparaison fausse \\
+source\_line & pipeline & entier $\geq1$ & retour ambigu \\
+schema\_version & pipeline & valeur connue & règle inconnue \\\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Pourquoi garder deux horloges ?}
+\texttt{measured\_at} est déclaré par l'émetteur.\\
+\texttt{received\_at} est observé par la collecte.
+\begin{block}{Utilité}Comparer les deux étudie un délai apparent ; cela ne valide aucune horloge.\end{block}
+\sourcefoot{IETF, RFC 3339, 2002.}
+\end{frame}
+
+\begin{frame}{Pourquoi message\_id et source\_line ?}
+\begin{itemize}
+\item \texttt{message\_id} est une identité déclarée ;
+\item \texttt{source\_line} est une adresse dans le fichier ;
+\item aucun des deux ne prouve l'auteur ;
+\item leur désaccord déclenche une enquête.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pause -- 10 minutes}\centering\Large Au retour : que prouve vraiment une empreinte ?\end{frame}
+
+\section{Portée des métadonnées}
+\begin{frame}{Une empreinte détecte une différence avec une référence}
+\texttt{raw\_sha256} est calculé sur le contenu exact de la ligne, sans saut final.
+\begin{block}{Elle prouve}La ligne comparée produit ou non la même empreinte.\end{block}
+\begin{alertblock}{Elle ne prouve pas}Auteur, antériorité, authenticité ou vérité physique.\end{alertblock}
+\end{frame}
+
+\begin{frame}{Canoniser et préserver sont deux stratégies}
+\begin{itemize}
+\item préserver : empreinte des octets reçus, sensible à tout changement ;
+\item canoniser : représentation stable avant cryptographie ;
+\item S03 préserve la ligne brute et documente la convention ;
+\item re-sérialiser JSON peut changer les octets sans changer les valeurs.
+\end{itemize}
+\sourcefoot{IETF, RFC 8785, JSON Canonicalization Scheme, 2020.}
+\end{frame}
+
+\begin{frame}{Classement -- démontré, plausible ou non démontré ?}
+\begin{enumerate}
+\item le message\_id est présent ;
+\item le capteur nommé est l'auteur authentique ;
+\item brut et CSV de référence correspondent ;
+\item l'horloge capteur est exacte ;
+\item la transformation peut être rejouée.
+\end{enumerate}
+\end{frame}
+
+\section{TP 3}
+\begin{frame}[fragile]{TP 3 -- Vérifier tout le lot}
+\small
+\begin{verbatim}
+python3 -m iot_decision.traceability_cli verify \
+ data/samples/batch001_messages.jsonl \
+ data/processed/batch001_structured.csv
+\end{verbatim}
+\begin{block}{Attendu}\texttt{traçabilité vérifiée}\end{block}
+\end{frame}
+
+\begin{frame}{TP 3 -- Rejouer deux liens manuellement}
+\begin{enumerate}
+\item relever fichier, ligne, message\_id et empreinte ;
+\item afficher la ligne JSONL ;
+\item comparer les champs ;
+\item écrire conclusion autorisée et interdite.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Le saut de ligne fait partie de la convention}
+\texttt{sha256sum} sur une sortie de \texttt{sed} inclut un saut de ligne. Le pipeline ne l'inclut pas.
+\begin{block}{Réflexe}Une divergence déclenche l'examen de la convention et de l'entrée.\end{block}
+\end{frame}
+
+\begin{frame}{Test réversible -- altérez seulement une copie}
+Copier dans \texttt{/tmp}, modifier 33.8 en 33.9, relancer la vérification.
+\begin{alertblock}{Attendu}Empreinte différente pour \texttt{source\_line=1}. Le brut de référence reste intact.\end{alertblock}
+\end{frame}
+
+\section{Incident}
+\begin{frame}{Incident -- deux messages semblent identiques}
+Même zone, capteur, instant mesuré, valeur, unité et séquence.
+\decisionquestion{Identiques, doublons certains, candidats doublons ou événements distincts ?}
+\end{frame}
+
+\begin{frame}{Comparer tous les champs change le diagnostic}
+\begin{tabular}{lll}\toprule
+Champ & Message A & Message B \\\midrule
+message\_id & 0002 & replay-a \\
+received\_at & 10:05:00 & 10:05:02 \\
+retained & true & false \\
+topic & /0002 & /replay-a \\
+raw\_sha256 & différent & différent \\\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Un candidat doublon n'autorise pas la suppression}
+Une règle défendable nomme :
+\begin{itemize}
+\item clé et fenêtre de comparaison ;
+\item autorité qui approuve ;
+\item risque de faux positif ;
+\item sort et trace de la ligne écartée ;
+\item procédure de rejeu.
+\end{itemize}
+\end{frame}
+
+\section{Décider}
+\begin{frame}{Mini-débat -- supprimer le brut après le CSV ?}
+\begin{columns}
+\column{.47\textwidth}\textbf{Conserver}\begin{itemize}\item reparsing ;\item preuve ;\item investigation.\end{itemize}
+\column{.47\textwidth}\textbf{Supprimer}\begin{itemize}\item minimisation ;\item confidentialité ;\item coût/attaque.\end{itemize}
+\end{columns}
+Produisez une politique : durée, autorité, accès, intégrité, destruction.
+\end{frame}
+
+\begin{frame}{Le brief final tient en sept éléments}
+\begin{enumerate}
+\item action et périmètre ;
+\item confiance technique ;
+\item confiance opérationnelle ;
+\item deux preuves retrouvables ;
+\item deux incertitudes ;
+\item une limite ;
+\item une vérification prioritaire.
+\end{enumerate}
+150 mots maximum.
+\end{frame}
+
+\begin{frame}{Une réponse recevable sépare les deux confiances}
+\begin{block}{Structure}
+Correspondance brut/table vérifiée : confiance technique élevée. Décision opérationnelle : confiance moyenne au mieux, car capteur, horloge et exhaustivité ne sont pas validés.
+\end{block}
+\end{frame}
+
+\begin{frame}{Exit ticket -- trois phrases sans écran}
+\begin{enumerate}
+\item Je peux justifier... parce que...
+\item Je ne peux pas affirmer...
+\item Je conserverais... pendant... sous l'autorité de...
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Réponse à la question directrice}
+\decisionquestion{Quelles informations conserver pour justifier plus tard ?}
+Brut, adresse et empreinte, identifiants et contexte, deux horloges, unité, version du schéma, code/commande et journal des erreurs.
+\confidencelevel{élevée pour la correspondance brut/table ; moyenne au mieux pour la décision opérationnelle.}
+\end{frame}
+
+\begin{frame}{Références}
+\small
+\begin{itemize}
+\item W3C, \emph{PROV-Overview} et \emph{PROV-DM}, 2013. \url{https://www.w3.org/TR/prov-overview/}
+\item IETF, \emph{RFC 3339 -- Date and Time on the Internet}, 2002. \url{https://www.rfc-editor.org/rfc/rfc3339}
+\item IETF, \emph{RFC 8785 -- JSON Canonicalization Scheme}, 2020. \url{https://www.rfc-editor.org/rfc/rfc8785}
+\item Python Software Foundation, \emph{json -- JSON encoder and decoder}. \url{https://docs.python.org/3/library/json.html}
+\end{itemize}
 \end{frame}
 \end{document}
