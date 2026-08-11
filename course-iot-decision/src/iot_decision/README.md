@@ -7,3 +7,5 @@ Séquence 1: `baseline.py` porte les transformations et la recommandation déter
 Séquence 2 : `source_inventory.py` et sa CLI comparent l'observé à l'attendu.
 
 Séquence 3 : `traceability.py` parse strictement le JSONL, conserve adresse et empreinte de chaque ligne, vérifie le retour à la source et signale les candidats doublons sans suppression automatique.
+
+Séquence 4 : `quality.py` sépare les messages propres des messages rejetés (champ manquant, unité incohérente, valeur hors plage, incohérence temporelle, doublon exact) sans jamais corriger une valeur, puis distingue un silence réel d'un silence expliqué par un rejet ; `quality_cli.py` produit `clean.csv`, `rejected.csv` et le rapport JSON en un seul appel ; `visualize_quality.py` trace la chronologie décisionnelle.

@@ -10,95 +10,139 @@
 
 \begin{frame}{Une décision contestée doit remonter à sa source}
 \large ``35,4\,°C dans le shelter batteries : inspection déclenchée.''
-\decisionquestion{Quel message, quelle transformation et quelles limites permettent de justifier cette décision plus tard ?}
+\decisionquestion{Quel message précis, quelle transformation exacte et quelles limites assumées permettent de justifier cette décision si on vous la conteste plus tard ?}
 \end{frame}
 
 \begin{frame}{À la fin, vous saurez décider si l'indicateur est défendable}
 \begin{itemize}
-\item parser sans correction silencieuse ;
-\item structurer sous un schéma explicite ;
-\item relier chaque ligne au message brut ;
-\item distinguer intégrité, authenticité et vérité physique ;
-\item traiter un quasi-doublon sans détruire la preuve ;
-\item qualifier confiance technique et opérationnelle.
+\item parser des messages JSON sans jamais corriger silencieusement une valeur suspecte ;
+\item structurer le résultat sous un schéma explicite, documenté champ par champ ;
+\item relier chaque ligne de la table structurée au message brut exact dont elle provient ;
+\item distinguer clairement intégrité (les octets n'ont pas changé), authenticité (l'auteur est bien celui qu'il prétend) et vérité physique (la mesure reflète la réalité) ;
+\item traiter un quasi-doublon comme un signal à documenter, jamais comme une ligne à supprimer sans règle ;
+\item qualifier séparément une confiance technique (la chaîne est-elle auditée ?) et une confiance opérationnelle (peut-on agir dessus ?).
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Quatre productions rythment les 240 minutes}
 \begin{enumerate}
-\item TP 1 : produire \texttt{batch001\_structured.csv} ;
-\item TP 2 : défendre un schéma commenté ;
-\item TP 3 : rejouer le lien table $\rightarrow$ brut ;
-\item incident, débat de rétention et brief décisionnel.
+\item TP 1 : produire \texttt{batch001\_structured.csv} à partir des 15 messages bruts ;
+\item TP 2 : défendre un schéma commenté, champ par champ ;
+\item TP 3 : rejouer manuellement le lien entre une ligne de table et son message brut ;
+\item un incident de quasi-doublon, un débat sur la rétention, puis un brief décisionnel.
 \end{enumerate}
-Chaque étape : action, confiance, preuve, incertitude, limite.
+Chaque étape se referme sur les cinq mêmes éléments : une action, une confiance, une preuve, une incertitude et une limite.
 \end{frame}
 
 \section{Situation}
 \begin{frame}{Vote initial -- la décision est-elle justifiée ?}
-A justifiée \quad B plausible mais non auditable\\[.5em]
-C maintenir par prudence \quad D annuler
-\begin{block}{À noter}Confiance 0--100\,\%, fait disponible, preuve prioritaire, coût d'erreur.\end{block}
+A décision justifiée \quad B plausible mais non auditable\\[.5em]
+C maintenir l'inspection par prudence \quad D annuler la décision
+\begin{block}{À noter individuellement}
+Votre confiance de 0 à 100 \%, le seul fait dont vous disposez réellement, la preuve que vous exigeriez en priorité, et le coût d'une erreur dans un sens ou dans l'autre.
+\end{block}
 \end{frame}
 
 \begin{frame}{Une chaîne de justification comporte quatre niveaux}
 \centering\Large Message brut $\rightarrow$ ligne structurée\\
 $\rightarrow$ indicateur $\rightarrow$ action\\[1em]
-\normalsize Chaque flèche doit nommer sa règle, sa version et sa trace.
+\normalsize Chaque flèche de cette chaîne doit pouvoir nommer sa règle de transformation, la version de cette règle au moment des faits, et une trace permettant de la rejouer plus tard.
 \end{frame}
 
 \begin{frame}{La prudence opérationnelle ne remplace pas la preuve}
-Une inspection peut être rationnelle si le coût d'un faux négatif est élevé. Cela ne démontre pas que la mesure est exacte.
-\begin{alertblock}{Deux questions distinctes}L'action est-elle prudente ? La justification data est-elle auditée ?\end{alertblock}
+Déclencher une inspection peut rester une décision rationnelle si le coût d'un faux négatif -- ignorer un vrai risque -- est élevé. Cela ne démontre en rien que la mesure de 35,4\,°C ayant motivé cette décision est exacte.
+\begin{alertblock}{Deux questions distinctes, à ne jamais confondre}
+L'action décidée était-elle prudente compte tenu du risque ? La justification apportée par les données est-elle, elle, réellement auditée ?
+\end{alertblock}
 \end{frame}
 
 \section{Concepts}
 \begin{frame}{Le brut est conservé au plus près de la réception}
 \begin{itemize}
-\item il possède déjà une enveloppe et un payload ;
-\item il peut contenir des métadonnées de collecte ;
-\item il n'est ni pur, ni automatiquement vrai ;
-\item il permet de reparsing avec une règle nouvelle.
+\item Il possède déjà une structure : une enveloppe de réception et un payload publié par l'émetteur.
+\item Il peut contenir des métadonnées propres à la collecte elle-même, comme l'instant de réception.
+\item Il n'est pour autant ni pur ni automatiquement vrai : un message brut peut très bien contenir une erreur du capteur.
+\item Il permet, et c'est l'essentiel, de reparser le lot entier avec une règle nouvelle si celle utilisée aujourd'hui se révèle insuffisante.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Structurer, c'est projeter sous un contrat}
 \begin{columns}
-\column{.47\textwidth}\textbf{Gain}\begin{itemize}\item colonnes stables ;\item calculs ;\item contrôles.\end{itemize}
-\column{.47\textwidth}\textbf{Risque}\begin{itemize}\item champs omis ;\item types forcés ;\item contexte perdu.\end{itemize}
+\column{.47\textwidth}\textbf{Ce que l'on gagne}
+\begin{itemize}
+\item des colonnes stables, aux noms et types fixés à l'avance ;
+\item la possibilité de calculer directement des indicateurs ;
+\item des contrôles de qualité systématiques et automatisables.
+\end{itemize}
+\column{.47\textwidth}\textbf{Ce que l'on risque}
+\begin{itemize}
+\item des champs du message d'origine simplement omis dans la table ;
+\item des types forcés qui masquent une valeur douteuse ;
+\item une part du contexte original perdue en cours de route.
+\end{itemize}
 \end{columns}
-\decisionquestion{Quelle contestation devient impossible si ce champ disparaît ?}
+\decisionquestion{Si ce champ disparaissait de la table, quelle contestation deviendrait alors impossible à formuler ?}
 \end{frame}
 
 \begin{frame}{La provenance relie entités, activités et responsabilités}
-La provenance décrit ce qui a servi, ce qui a été produit et par quelle activité.
-\begin{block}{Version S03 minimale}Fichier source, ligne, empreinte, version de schéma, code et commande.\end{block}
+La provenance décrit ce qui a servi de source, ce qui a été produit à partir d'elle, et par quelle activité précise cette production a eu lieu.
+\begin{exampleblock}{Version minimale retenue pour cette séquence}
+Pour chaque ligne structurée : le fichier source exact, son numéro de ligne, une empreinte cryptographique de cette ligne, la version du schéma appliqué, ainsi que le code et la commande exécutés pour produire cette ligne.
+\end{exampleblock}
 \sourcefoot{W3C, PROV-Overview et PROV-DM, 2013.}
 \end{frame}
 
 \begin{frame}{Auditabilité ne signifie pas exactitude}
-\begin{tabular}{ll}\toprule
-Auditabilité permet & Elle ne garantit pas \\\midrule
-retrouver une source & vérité physique \\
-rejouer une transformation & calibration \\
-détecter un changement & identité de l'auteur \\
-contester une règle & exhaustivité du lot \\\bottomrule
+\begin{tabular}{@{}p{.48\textwidth}p{.44\textwidth}@{}}
+\toprule
+Ce que l'auditabilité permet & Ce qu'elle ne garantit pas pour autant \\
+\midrule
+retrouver précisément la source d'une ligne & la vérité physique de la mesure elle-même \\[2pt]
+rejouer intégralement une transformation & la calibration du capteur d'origine \\[2pt]
+détecter tout changement dans les octets & l'identité réelle de l'auteur du message \\[2pt]
+contester ouvertement une règle appliquée & l'exhaustivité du lot de messages \\
+\bottomrule
 \end{tabular}
+\vfill
+\normalsize Une chaîne parfaitement auditable peut donc, malgré tout, reposer sur une mesure fausse : l'audit porte sur le traitement, pas sur le monde physique.
 \end{frame}
 
 \begin{frame}{Enveloppe, payload et pipeline ont des autorités différentes}
 \small
-\begin{tabular}{lll}\toprule
-Niveau & Exemples & Question \\\midrule
-enveloppe & topic, received\_at & qu'a observé la collecte ? \\
-payload & measured\_at, value & que déclare l'émetteur ? \\
-pipeline & source\_line, hash & comment retrouver le brut ? \\\bottomrule
+\begin{tabular}{@{}p{.18\textwidth}p{.32\textwidth}p{.42\textwidth}@{}}
+\toprule
+Niveau & Exemples de champs & Question à laquelle il répond \\
+\midrule
+enveloppe & \texttt{topic}, \texttt{received\_at} & qu'a observé la chaîne de collecte, et quand ? \\[2pt]
+payload & \texttt{measured\_at}, \texttt{value} & que déclare l'émetteur du message lui-même ? \\[2pt]
+pipeline & \texttt{source\_line}, \texttt{raw\_sha256} & comment retrouver et vérifier le message brut ? \\
+\bottomrule
 \end{tabular}
+\vfill
+\normalsize Ces trois niveaux ne se valident jamais l'un l'autre : le pipeline peut être parfaitement fiable tout en transportant fidèlement une valeur de capteur erronée.
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+\small
+\begin{block}{Le brut est-il « sans structure » par opposition au CSV « structuré » ?}
+Non : le brut possède déjà une structure (enveloppe et payload JSON). Structurer signifie ici projeter cette structure existante sous un schéma de colonnes stable, pas lui donner une structure qu'il n'aurait pas.
+\end{block}
+\begin{block}{Une chaîne parfaitement auditable garantit-elle une mesure physiquement exacte ?}
+Non : l'auditabilité permet de retrouver la source et de rejouer la transformation, mais elle ne calibre aucun capteur et ne certifie aucune vérité de terrain.
+\end{block}
+\begin{block}{Que répond chacun des trois niveaux -- enveloppe, payload, pipeline ?}
+L'enveloppe décrit ce que la collecte a observé ; le payload rapporte ce que l'émetteur déclare ; le pipeline documente comment retrouver et vérifier le message d'origine.
+\end{block}
 \end{frame}
 
 \section{TP 1}
 \begin{frame}{TP 1 -- Prédire avant de parser}
-\begin{enumerate}\item combien d'enveloppes ?\item quels champs par niveau ?\item que faire d'une ligne incomplète ?\item quelle phrase défendre ?\end{enumerate}
+\begin{enumerate}
+\item Combien d'enveloppes attendez-vous en sortie, à partir des 15 messages du fichier brut ?
+\item Quels champs proviennent respectivement de l'enveloppe, du payload et du pipeline lui-même ?
+\item Que doit-il se passer si une ligne du fichier se révèle incomplète pendant le parsing ?
+\item Quelle phrase seriez-vous déjà capable de défendre avant même d'avoir exécuté la commande ?
+\end{enumerate}
 \end{frame}
 
 \begin{frame}[fragile]{TP 1 -- Produire le CSV structuré}
@@ -109,7 +153,9 @@ python3 -m iot_decision.traceability_cli parse \
  data/samples/batch001_messages.jsonl \
  data/processed/batch001_structured.csv
 \end{verbatim}
-\begin{block}{Attendu}15 lignes structurées ; 0 anomalie isolée.\end{block}
+\begin{block}{Résultat attendu}
+15 lignes structurées, réparties sur 17 colonnes ; aucune anomalie isolée sur ce lot précis.
+\end{block}
 \end{frame}
 
 \begin{frame}[fragile]{TP 1 -- Contrôler avant d'interpréter}
@@ -118,74 +164,117 @@ python3 -m iot_decision.traceability_cli parse \
 head -n 3 data/processed/batch001_structured.csv
 tail -n +2 data/processed/batch001_structured.csv | wc -l
 \end{verbatim}
-Attendu : en-tête complet puis 15 lignes de données.
+Résultat attendu : une ligne d'en-tête complète avec 17 noms de colonnes, suivie de 15 lignes de données -- ni plus, ni moins.
 \end{frame}
 
 \begin{frame}{Le mode strict rend l'échec visible}
-Un payload incomplet arrête le lot. Un mode tolérant doit isoler l'erreur et produire une trace.
-\begin{alertblock}{Interdit}Remplacer silencieusement un champ obligatoire par une chaîne vide.\end{alertblock}
+Un payload incomplet doit arrêter immédiatement le traitement du lot entier. Un futur mode tolérant devra, lui, isoler précisément l'erreur et produire une trace explicite de ce qui a été rejeté.
+\begin{exampleblock}{Exemple concret testé en séance}
+Un message dont le payload est vide (\texttt{\{\}}) provoque un arrêt immédiat avec la liste exacte des champs manquants -- jamais un remplacement silencieux par une valeur vide.
+\end{exampleblock}
+\begin{alertblock}{Interdit dans ce pipeline}
+Remplacer silencieusement un champ obligatoire absent par une chaîne vide : cela transformerait une donnée manquante en fausse donnée présente.
+\end{alertblock}
 \end{frame}
 
 \begin{frame}{Point d'étape -- formulation exacte}
 ``15 enveloppes conformes au contrat \texttt{s03-v1} ont été structurées.''
-\begin{alertblock}{Non démontré}Exhaustivité, exactitude physique, authenticité et qualité des horloges.\end{alertblock}
+\begin{alertblock}{Ce que cette phrase ne démontre pas}
+Ni l'exhaustivité du lot d'origine, ni l'exactitude physique des valeurs, ni l'authenticité de leur émetteur, ni la qualité des horloges qui ont produit les horodatages.
+\end{alertblock}
 \end{frame}
 
 \section{TP 2}
 \begin{frame}{TP 2 -- Défendre le schéma champ par champ}
-\small
-\begin{tabular}{llll}\toprule
-Champ & Origine & Contrôle & Risque si supprimé \\\midrule
-topic & enveloppe & non vide & périmètre perdu \\
-unit & payload & vocabulaire & comparaison fausse \\
-source\_line & pipeline & entier $\geq1$ & retour ambigu \\
-schema\_version & pipeline & valeur connue & règle inconnue \\\bottomrule
+\scriptsize
+\begin{tabular}{@{}p{.17\textwidth}p{.12\textwidth}p{.16\textwidth}p{.44\textwidth}@{}}
+\toprule
+Champ & Origine & Contrôle & Risque si ce champ était supprimé \\
+\midrule
+\texttt{topic} & enveloppe & non vide & le périmètre de publication devient impossible à vérifier \\[2pt]
+\texttt{unit} & payload & vocabulaire connu & deux valeurs pourraient être comparées sans partager d'unité \\[2pt]
+\texttt{source\_line} & pipeline & entier $\geq 1$ & le retour au message brut devient ambigu \\[2pt]
+\texttt{schema\_version} & pipeline & valeur connue & la règle de parsing appliquée devient inconnue \\
+\bottomrule
 \end{tabular}
 \end{frame}
 
 \begin{frame}{Pourquoi garder deux horloges ?}
-\texttt{measured\_at} est déclaré par l'émetteur.\\
-\texttt{received\_at} est observé par la collecte.
-\begin{block}{Utilité}Comparer les deux étudie un délai apparent ; cela ne valide aucune horloge.\end{block}
+\texttt{measured\_at} est déclaré directement par l'émetteur du message.\\
+\texttt{received\_at} est observé indépendamment par la chaîne de collecte.
+\begin{block}{Utilité concrète}
+Comparer ces deux horodatages permet d'étudier un délai apparent entre mesure et réception ; cela ne valide en rien l'exactitude de l'une ou l'autre horloge physique.
+\end{block}
 \sourcefoot{IETF, RFC 3339, 2002.}
 \end{frame}
 
 \begin{frame}{Pourquoi message\_id et source\_line ?}
 \begin{itemize}
-\item \texttt{message\_id} est une identité déclarée ;
-\item \texttt{source\_line} est une adresse dans le fichier ;
-\item aucun des deux ne prouve l'auteur ;
-\item leur désaccord déclenche une enquête.
+\item \texttt{message\_id} est une identité déclarée par l'émetteur lui-même, donc jamais vérifiée de façon indépendante.
+\item \texttt{source\_line} est une adresse physique dans le fichier, attribuée par notre propre pipeline, pas par l'émetteur.
+\item Aucun des deux, séparément, ne prouve l'identité réelle de l'auteur du message.
+\item Leur désaccord -- par exemple deux lignes différentes partageant le même \texttt{message\_id} -- doit systématiquement déclencher une enquête.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Pause -- 10 minutes}\centering\Large Au retour : que prouve vraiment une empreinte ?\end{frame}
+\begin{frame}{Auto-vérification avant de continuer}
+\small
+\begin{block}{Pourquoi conserver \texttt{topic} si la colonne \texttt{zone} existe déjà ?}
+Parce que \texttt{zone} seule ne permet plus de vérifier a posteriori la branche de topics et le périmètre exacts qui ont réellement été interrogés lors de l'extraction.
+\end{block}
+\begin{block}{measured\_at et received\_at sont-elles interchangeables ?}
+Non : l'une est déclarée par l'émetteur, l'autre observée par la collecte. Comparer les deux renseigne sur un délai apparent, sans jamais valider la justesse d'aucune des deux horloges.
+\end{block}
+\begin{block}{Que faut-il faire si un payload est incomplet, en mode strict ?}
+Arrêter immédiatement le traitement du lot avec la liste exacte des champs manquants, jamais remplacer silencieusement le champ absent par une valeur vide.
+\end{block}
+\end{frame}
+
+\begin{frame}{Pause -- 10 minutes}\centering\Large Au retour : que prouve vraiment une empreinte cryptographique -- et que ne prouve-t-elle pas ?\end{frame}
 
 \section{Portée des métadonnées}
 \begin{frame}{Une empreinte détecte une différence avec une référence}
-\texttt{raw\_sha256} est calculé sur le contenu exact de la ligne, sans saut final.
-\begin{block}{Elle prouve}La ligne comparée produit ou non la même empreinte.\end{block}
-\begin{alertblock}{Elle ne prouve pas}Auteur, antériorité, authenticité ou vérité physique.\end{alertblock}
+\texttt{raw\_sha256} est calculée sur le contenu exact de la ligne brute, sans le saut de ligne final.
+\begin{block}{Ce qu'elle prouve}
+Que la ligne comparée produit -- ou non -- exactement la même empreinte que la référence enregistrée.
+\end{block}
+\begin{alertblock}{Ce qu'elle ne prouve jamais}
+Ni l'auteur du message, ni son antériorité réelle, ni son authenticité, ni la vérité physique de la mesure qu'il transporte.
+\end{alertblock}
 \end{frame}
 
 \begin{frame}{Canoniser et préserver sont deux stratégies}
 \begin{itemize}
-\item préserver : empreinte des octets reçus, sensible à tout changement ;
-\item canoniser : représentation stable avant cryptographie ;
-\item S03 préserve la ligne brute et documente la convention ;
-\item re-sérialiser JSON peut changer les octets sans changer les valeurs.
+\item Préserver consiste à calculer l'empreinte des octets reçus tels quels : elle devient sensible au moindre changement, y compris purement cosmétique.
+\item Canoniser consiste à construire une représentation stable du contenu avant tout calcul cryptographique, pour ignorer les variations cosmétiques.
+\item Cette séquence choisit de préserver la ligne brute telle quelle, et documente cette convention explicitement dans le schéma.
+\item Une conséquence directe : re-sérialiser le même JSON peut changer les octets produits sans changer aucune des valeurs qu'il contient.
 \end{itemize}
 \sourcefoot{IETF, RFC 8785, JSON Canonicalization Scheme, 2020.}
 \end{frame}
 
 \begin{frame}{Classement -- démontré, plausible ou non démontré ?}
+Pour chacune des affirmations suivantes, décidez si elle est démontrée par nos artefacts, seulement plausible, ou non démontrée du tout :
 \begin{enumerate}
-\item le message\_id est présent ;
-\item le capteur nommé est l'auteur authentique ;
-\item brut et CSV de référence correspondent ;
-\item l'horloge capteur est exacte ;
-\item la transformation peut être rejouée.
+\item le champ \texttt{message\_id} est bien présent dans la ligne ;
+\item le capteur nommé dans le message est réellement son auteur authentique ;
+\item le contenu brut et la ligne CSV de référence se correspondent exactement ;
+\item l'horloge interne du capteur est réglée avec exactitude ;
+\item la transformation appliquée peut être rejouée à l'identique par un tiers.
 \end{enumerate}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+\small
+\begin{block}{Une empreinte identique entre le brut et le CSV prouve-t-elle l'authenticité de l'émetteur ?}
+Non : elle prouve seulement que les octets comparés correspondent à la référence enregistrée -- rien sur qui a produit cette référence à l'origine, ni sur son antériorité.
+\end{block}
+\begin{block}{« Le message\_id est présent » et « le capteur nommé est son auteur authentique » sont-elles au même niveau de preuve ?}
+Non : la première est directement démontrée par simple lecture du champ ; la seconde reste non démontrée, car rien dans le pipeline ne vérifie l'identité réelle de l'émetteur.
+\end{block}
+\begin{block}{Préserver et canoniser produisent-ils la même empreinte pour un JSON re-sérialisé ?}
+Pas nécessairement : préserver capture les octets exacts reçus, donc sensibles à une re-sérialisation ; canoniser vise justement à neutraliser ce genre de variation cosmétique.
+\end{block}
 \end{frame}
 
 \section{TP 3}
@@ -196,81 +285,115 @@ python3 -m iot_decision.traceability_cli verify \
  data/samples/batch001_messages.jsonl \
  data/processed/batch001_structured.csv
 \end{verbatim}
-\begin{block}{Attendu}\texttt{traçabilité vérifiée}\end{block}
+\begin{block}{Résultat attendu}
+\texttt{traçabilité vérifiée} : chaque ligne du CSV reproduit exactement l'empreinte de sa ligne brute déclarée.
+\end{block}
 \end{frame}
 
 \begin{frame}{TP 3 -- Rejouer deux liens manuellement}
+Choisissez par exemple les lignes CSV 3 et 14, puis pour chacune :
 \begin{enumerate}
-\item relever fichier, ligne, message\_id et empreinte ;
-\item afficher la ligne JSONL ;
-\item comparer les champs ;
-\item écrire conclusion autorisée et interdite.
+\item relevez son fichier source, son numéro de ligne, son \texttt{message\_id} et son empreinte \texttt{raw\_sha256} ;
+\item affichez la ligne correspondante du fichier JSONL brut avec \texttt{sed -n} ;
+\item comparez chaque champ entre la ligne structurée et la ligne brute affichée ;
+\item écrivez explicitement une conclusion autorisée par cette comparaison, et une conclusion qu'elle interdit.
 \end{enumerate}
 \end{frame}
 
 \begin{frame}{Le saut de ligne fait partie de la convention}
-\texttt{sha256sum} sur une sortie de \texttt{sed} inclut un saut de ligne. Le pipeline ne l'inclut pas.
-\begin{block}{Réflexe}Une divergence déclenche l'examen de la convention et de l'entrée.\end{block}
+Calculer \texttt{sha256sum} sur la sortie de \texttt{sed} inclut le saut de ligne final de cette ligne. Notre pipeline, lui, calcule l'empreinte sans ce saut de ligne.
+\begin{block}{Réflexe à avoir}
+Une empreinte qui semble diverger doit d'abord faire examiner la convention de calcul utilisée, avant même de suspecter l'entrée elle-même.
+\end{block}
 \end{frame}
 
 \begin{frame}{Test réversible -- altérez seulement une copie}
-Copier dans \texttt{/tmp}, modifier 33.8 en 33.9, relancer la vérification.
-\begin{alertblock}{Attendu}Empreinte différente pour \texttt{source\_line=1}. Le brut de référence reste intact.\end{alertblock}
+Copiez le fichier brut vers \texttt{/tmp}, modifiez la valeur \texttt{33.8} en \texttt{33.9} dans cette copie, puis relancez la vérification sur cette copie altérée.
+\begin{alertblock}{Résultat attendu}
+Une empreinte différente est signalée précisément pour \texttt{source\_line=1} -- et seulement pour celle-là. Le fichier brut de référence, lui, reste parfaitement intact.
+\end{alertblock}
 \end{frame}
 
 \section{Incident}
 \begin{frame}{Incident -- deux messages semblent identiques}
-Même zone, capteur, instant mesuré, valeur, unité et séquence.
-\decisionquestion{Identiques, doublons certains, candidats doublons ou événements distincts ?}
+Deux messages du lot d'incident partagent exactement même site, même zone, même capteur, même instant mesuré, même valeur, même unité et même numéro de séquence.
+\decisionquestion{S'agit-il de messages réellement identiques, de doublons certains, de simples candidats doublons à signaler, ou d'événements distincts ?}
 \end{frame}
 
 \begin{frame}{Comparer tous les champs change le diagnostic}
-\begin{tabular}{lll}\toprule
-Champ & Message A & Message B \\\midrule
-message\_id & 0002 & replay-a \\
-received\_at & 10:05:00 & 10:05:02 \\
+Si l'on compare, au-delà des champs métier déjà identiques ci-dessus, les métadonnées de collecte et de pipeline, les deux messages divergent nettement :
+\begin{tabular}{@{}p{.22\textwidth}p{.3\textwidth}p{.3\textwidth}@{}}
+\toprule
+Champ & Message A & Message B \\
+\midrule
+\texttt{message\_id} & \texttt{...-0002} & \texttt{...-replay-a} \\
+\texttt{received\_at} & 10:05:00 & 10:05:02 \\
 retained & true & false \\
-topic & /0002 & /replay-a \\
-raw\_sha256 & différent & différent \\\bottomrule
+\texttt{topic} (suffixe) & \texttt{/0002} & \texttt{/replay-a} \\
+\texttt{raw\_sha256} & différent & différent \\
+\bottomrule
 \end{tabular}
+\vfill
+\normalsize Même valeur mesurée ne veut donc pas dire même message : ces deux enregistrements restent deux événements de collecte distincts, même s'ils décrivent apparemment la même mesure.
 \end{frame}
 
 \begin{frame}{Un candidat doublon n'autorise pas la suppression}
-Une règle défendable nomme :
+Une règle de déduplication défendable doit nommer explicitement cinq éléments :
 \begin{itemize}
-\item clé et fenêtre de comparaison ;
-\item autorité qui approuve ;
-\item risque de faux positif ;
-\item sort et trace de la ligne écartée ;
-\item procédure de rejeu.
+\item la clé de comparaison utilisée et la fenêtre de temps considérée ;
+\item l'autorité habilitée à approuver une telle règle ;
+\item le risque de faux positif, c'est-à-dire de fusionner à tort deux événements réellement distincts ;
+\item le sort réservé à la ligne écartée, et la trace qui en est conservée ;
+\item la procédure permettant de rejouer la décision si la règle se révèle plus tard incorrecte.
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+\small
+\begin{block}{Deux messages partageant la même valeur mesurée sont-ils nécessairement le même événement ?}
+Non : ce cas d'incident montre deux messages avec une valeur, une zone et un instant identiques, mais des identifiants, horodatages de réception, indicateurs retained et empreintes tous différents -- ce sont deux événements de collecte distincts.
+\end{block}
+\begin{block}{Un pipeline peut-il supprimer automatiquement un candidat doublon détecté ?}
+Non dans cette séquence : la fonction de détection se contente de regrouper les candidats sans jamais en supprimer aucun ; toute suppression exigerait une règle explicite, autorisée et tracée.
+\end{block}
 \end{frame}
 
 \section{Décider}
 \begin{frame}{Mini-débat -- supprimer le brut après le CSV ?}
 \begin{columns}
-\column{.47\textwidth}\textbf{Conserver}\begin{itemize}\item reparsing ;\item preuve ;\item investigation.\end{itemize}
-\column{.47\textwidth}\textbf{Supprimer}\begin{itemize}\item minimisation ;\item confidentialité ;\item coût/attaque.\end{itemize}
+\column{.47\textwidth}\textbf{Arguments pour conserver}
+\begin{itemize}
+\item permettre un reparsing si la règle change ;
+\item garder la preuve opposable en cas de contestation ;
+\item permettre une investigation future sur un incident.
+\end{itemize}
+\column{.47\textwidth}\textbf{Arguments pour supprimer}
+\begin{itemize}
+\item minimiser les données réellement conservées ;
+\item réduire l'exposition en confidentialité ;
+\item réduire le coût de stockage et la surface d'attaque.
+\end{itemize}
 \end{columns}
-Produisez une politique : durée, autorité, accès, intégrité, destruction.
+\vfill
+\normalsize Produisez une politique de compromis explicite : durée de rétention, autorité responsable, contrôle d'accès, mécanisme d'intégrité et condition de destruction.
 \end{frame}
 
 \begin{frame}{Le brief final tient en sept éléments}
 \begin{enumerate}
-\item action et périmètre ;
-\item confiance technique ;
-\item confiance opérationnelle ;
-\item deux preuves retrouvables ;
-\item deux incertitudes ;
-\item une limite ;
-\item une vérification prioritaire.
+\item une action et un périmètre précisément délimité ;
+\item une confiance technique, portant sur la chaîne de traitement ;
+\item une confiance opérationnelle, portant sur la décision elle-même ;
+\item deux preuves chiffrées et retrouvables dans les fichiers produits ;
+\item deux incertitudes qui pourraient changer la décision ;
+\item une limite assumée et explicitement formulée ;
+\item une vérification prioritaire à mener avant toute action irréversible.
 \end{enumerate}
-150 mots maximum.
+150 mots maximum, pas un de plus.
 \end{frame}
 
 \begin{frame}{Une réponse recevable sépare les deux confiances}
-\begin{block}{Structure}
-Correspondance brut/table vérifiée : confiance technique élevée. Décision opérationnelle : confiance moyenne au mieux, car capteur, horloge et exhaustivité ne sont pas validés.
+\begin{block}{Structure attendue}
+La correspondance entre le brut et la table est vérifiée de bout en bout : confiance technique élevée. La décision opérationnelle, elle, ne peut recevoir mieux qu'une confiance moyenne, car ni le capteur, ni son horloge, ni l'exhaustivité du lot ne sont validés par cette seule chaîne.
 \end{block}
 \end{frame}
 
@@ -283,9 +406,9 @@ Correspondance brut/table vérifiée : confiance technique élevée. Décision o
 \end{frame}
 
 \begin{frame}{Réponse à la question directrice}
-\decisionquestion{Quelles informations conserver pour justifier plus tard ?}
-Brut, adresse et empreinte, identifiants et contexte, deux horloges, unité, version du schéma, code/commande et journal des erreurs.
-\confidencelevel{élevée pour la correspondance brut/table ; moyenne au mieux pour la décision opérationnelle.}
+\decisionquestion{Quelles informations faut-il absolument conserver pour pouvoir justifier une décision plus tard ?}
+Le message brut lui-même, son adresse exacte et son empreinte, ses identifiants et leur contexte, ses deux horloges (mesure et réception), son unité, la version du schéma appliqué, le code et la commande exécutés, ainsi qu'un journal des erreurs rencontrées. Sur ce lot précis : 15 messages bruts produisent 15 lignes structurées sur 17 colonnes, et la vérification confirme que chaque ligne correspond exactement à son message d'origine.
+\confidencelevel{élevée pour la correspondance entre le brut et la table ; moyenne au mieux pour la décision opérationnelle elle-même, faute de validation du capteur, de son horloge et de l'exhaustivité du lot.}
 \end{frame}
 
 \begin{frame}{Références}

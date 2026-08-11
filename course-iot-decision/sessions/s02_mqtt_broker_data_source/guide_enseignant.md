@@ -12,7 +12,7 @@ La séquence revient à la source : avant nettoyage, il faut établir ce qui fut
 
 Décision de référence : poursuivre l'analyse sur les quatre zones observées, ne pas généraliser à toute la base, vérifier en priorité la chaîne ou le terrain optronique. Confiance faible pour la couverture globale. Une autre action est recevable si son périmètre, ses preuves et son coût d'erreur sont défendus.
 
-- Les numéros renvoient au PDF de 56 diapositives.
+- Les numéros renvoient au PDF de 60 diapositives (la version augmentée ajoute quatre diapositives d'auto-vérification pour la relecture autonome).
 - Toutes les commandes partent de la racine du dépôt dans un terminal Bash.
 - Ne révéler ni les cinq attendus ni l'absence optronique avant les moments indiqués.
 - Chaque question possède ci-dessous direction et réponse argumentée.
@@ -59,14 +59,14 @@ python3 tests/validate_s02_artifacts.py
 | 0:00–0:15 | situation et vote | 2–6 | choix, confiance, manque |
 | 0:15–0:45 | rôles MQTT, topic et filtre | 7–11 | tableau des responsabilités |
 | 0:45–1:05 | payload, enveloppe, retained | 12–15 | vrai/faux argumenté |
-| 1:05–1:25 | TP 1 : extraction | 16–21 | observe/conclus |
-| 1:25–1:55 | TP 2 : inventaire | 22–28 | CSV + mini-décision |
-| 1:55–2:05 | pause | 29 | — |
-| 2:05–2:30 | lot, attendu, complétude | 30–34 | classement |
-| 2:30–3:15 | TP 3 : matrice et revue | 35–41 | matrice + taux |
-| 3:15–3:40 | incident optronique | 42–46 | hypothèses/vérification |
-| 3:40–3:55 | TP 4 : brief et vote | 47–52 | brief révisé |
-| 3:55–4:00 | synthèse | 53–55 | exit ticket |
+| 1:05–1:25 | TP 1 : extraction | 17–22 | observe/conclus |
+| 1:25–1:55 | TP 2 : inventaire | 23–30 | CSV + mini-décision |
+| 1:55–2:05 | pause | 31 | — |
+| 2:05–2:30 | lot, attendu, complétude | 32–37 | classement |
+| 2:30–3:15 | TP 3 : matrice et revue | 38–44 | matrice + taux |
+| 3:15–3:40 | incident optronique | 45–50 | hypothèses/vérification |
+| 3:40–3:55 | TP 4 : brief et vote | 51–56 | brief révisé |
+| 3:55–4:00 | synthèse | 57–59 | exit ticket |
 
 ## 1. Vote initial — 15 min
 
@@ -106,7 +106,7 @@ python3 tests/validate_s02_artifacts.py
 
 ## 4. TP 1 — Explorer — 20 min
 
-**Afficher :** 16–21. Faire prédire, extraire, contrôler, puis interpréter.
+**Afficher :** 17–22. Faire prédire, extraire, contrôler, puis interpréter.
 
 ```bash
 export PYTHONPATH=src
@@ -134,7 +134,7 @@ Attendu : `4 messages extraits`, `True`, `4`, puis une enveloppe avec topic, ré
 
 ## 5. TP 2 — Construire l'inventaire — 30 min
 
-**Afficher :** 22–28. La CLI produit déjà le diagnostic ; demander de contrôler le CSV avant d'ouvrir le JSON.
+**Afficher :** 23–30. La CLI produit déjà le diagnostic ; demander de contrôler le CSV avant d'ouvrir le JSON.
 
 ```bash
 python3 -m iot_decision.source_inventory_cli data/raw/batch002_observed.jsonl data/samples/batch002_expected_sensors.csv data/processed/batch002_inventory.csv data/processed/batch002_completeness.json
@@ -157,7 +157,7 @@ Attendu : quatre lignes et quatre topics uniques, zones batteries, transmissions
 
 ## 6. Lot et complétude — 25 min
 
-**Afficher :** 30–34. Garder le CSV attendu fermé pendant le classement, puis le révéler.
+**Afficher :** 32–37. Garder le CSV attendu fermé pendant le classement, puis le révéler.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
@@ -171,7 +171,7 @@ Attendu : quatre lignes et quatre topics uniques, zones batteries, transmissions
 
 ## 7. TP 3 — Comparer attendu et observé — 45 min
 
-**Afficher :** 35–41. Faire construire la matrice manuellement avant le diagnostic automatisé.
+**Afficher :** 38–44. Faire construire la matrice manuellement avant le diagnostic automatisé.
 
 ```bash
 head -n 6 data/samples/batch002_expected_sensors.csv
@@ -193,7 +193,7 @@ Attendu : cinq topics attendus, quatre observés, `complete=False`, confiance fa
 
 ## 8. Incident optronique — 25 min
 
-**Afficher :** 42 seulement à 3:15, puis 43–46. Imposer plusieurs causes concurrentes avant toute action.
+**Afficher :** 45 seulement à 3:15, puis 46–49. Imposer plusieurs causes concurrentes avant toute action.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
@@ -206,7 +206,7 @@ Attendu : cinq topics attendus, quatre observés, `complete=False`, confiance fa
 
 ## 9. TP 4 — Brief contradictoire — 15 min
 
-**Afficher :** 47–52. Cinq minutes d'écriture, quatre d'interrogation, trois de révision, trois de vote. Le brief de 120 mots contient action, périmètre, confiance, deux preuves, deux incertitudes et vérification.
+**Afficher :** 51–56. Cinq minutes d'écriture, quatre d'interrogation, trois de révision, trois de vote. Le brief de 120 mots contient action, périmètre, confiance, deux preuves, deux incertitudes et vérification.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
@@ -219,7 +219,7 @@ Attendu : cinq topics attendus, quatre observés, `complete=False`, confiance fa
 
 ## 10. Synthèse et exit ticket — 5 min
 
-**Afficher :** 53–55. Réponse individuelle sans écran.
+**Afficher :** 57–59. Réponse individuelle sans écran.
 
 | Amorce | Direction | Réponse et argument |
 |---|---|---|
@@ -280,4 +280,8 @@ python3 -m json.tool data/processed/batch002_completeness.json
 python3 tests/validate_s02_artifacts.py
 ```
 
-Références complètes dans `latex/common/references.bib` et slide 56 : MQTT 5.0 (OASIS) et documentation officielle Eclipse Mosquitto pour topics, filtres, abonnements et retained.
+Références complètes dans `latex/common/references.bib` et slide 60 : MQTT 5.0 (OASIS) et documentation officielle Eclipse Mosquitto pour topics, filtres, abonnements et retained.
+
+## Note sur la version augmentée du support (relecture autonome)
+
+Quatre diapositives « Auto-vérification avant de continuer » ont été ajoutées (16, 29, 37, 50) : elles rappellent des définitions déjà vues, sans révéler de nouveau résultat sur le cas d'étude, et peuvent être montrées en fin de section ou laissées à la relecture individuelle. La diapositive 59 (« Réponse à la question directrice ») reste, comme avant, le seul endroit qui révèle explicitement le résultat de référence (4/5, absence optronique, confiance faible) : à n'afficher qu'après le vote final et le rendu du brief de TP 4.

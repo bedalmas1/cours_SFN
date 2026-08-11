@@ -36,7 +36,7 @@ Cette séquence installe le réflexe du cours : une pipeline transforme la port�
 
 Une réponse recevable associe action, confiance argumentée, deux preuves retrouvables, deux incertitudes et vérification prioritaire. Une inspection ou un maintien sous réserve peuvent être défendus ; une certitude fondée sur le seul maximum, un seuil supposé normatif ou un retained ancien ne le peut pas.
 
-- Les numéros renvoient au PDF de 48 diapositives.
+- Les numéros renvoient au PDF de 53 diapositives (la version de la séquence 1 ajoute cinq diapositives d'auto-vérification pour la relecture autonome).
 - Toutes les commandes partent de la racine du dépôt dans un terminal Bash.
 - Chaque question ci-dessous possède une direction d'animation et une réponse argumentée.
 - Après chaque activité : **décision, confiance, preuve, incertitude, limite, vérification**.
@@ -86,15 +86,15 @@ Consigner le changement de provenance si le repli remplace le broker.
 |---|---|---|---|
 | 0:00–0:15 | mission et vote | 7–10 | vote, confiance, manque |
 | 0:15–0:45 | donnée → décision | 11–16 | chaîne annotée |
-| 0:45–1:10 | MQTT, topic, payload, retained | 18–23 | observe/conclus |
-| 1:10–1:40 | TP 1 : extraction | 24–25 | JSONL contrôlé |
-| 1:40–1:55 | fraîcheur et restitution | 26–28 | décision révisée |
-| 1:55–2:05 | pause | 30 | — |
-| 2:05–2:30 | brut/transformé/exploitable | 29, 31–32 | classement |
-| 2:30–3:10 | TP 2 : CSV | 33–34 | CSV traçable |
-| 3:10–3:35 | TP 3 : graphique | 35, 37–40 | PNG + limite |
-| 3:35–3:55 | TP 4 : brief et revote | 41, 43–45 | note ≤120 mots |
-| 3:55–4:00 | exit ticket | 47 | trois phrases |
+| 0:45–1:10 | MQTT, topic, payload, retained | 19–24 | observe/conclus |
+| 1:10–1:40 | TP 1 : extraction | 25–26 | JSONL contrôlé |
+| 1:40–1:55 | fraîcheur et restitution | 27–29 | décision révisée |
+| 1:55–2:05 | pause | 32 | — |
+| 2:05–2:30 | brut/transformé/exploitable | 30, 33–34 | classement |
+| 2:30–3:10 | TP 2 : CSV | 35–36 | CSV traçable |
+| 3:10–3:35 | TP 3 : graphique | 37, 40–43 | PNG + limite |
+| 3:35–3:55 | TP 4 : brief et revote | 44, 47–49 | note ≤120 mots |
+| 3:55–4:00 | exit ticket | 51 | trois phrases |
 
 ## 1. Mission et vote — 15 min
 
@@ -121,7 +121,7 @@ Consigner le changement de provenance si le repli remplace le broker.
 
 ## 3. Source MQTT — 25 min
 
-**Afficher :** 18 à 23. Montrer d'abord un seul message.
+**Afficher :** 19 à 24. Montrer d'abord un seul message.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
@@ -133,7 +133,7 @@ Consigner le changement de provenance si le repli remplace le broker.
 
 ## 4. TP 1 — Extraire — 45 min
 
-**Afficher :** 24 pour la démonstration, 25 pour le travail, 26–28 au débrief.
+**Afficher :** 25 pour la démonstration, 26 pour le travail, 27–29 au débrief.
 
 ```bash
 export PYTHONPATH=src
@@ -162,7 +162,7 @@ Attendu : fichier présent, 15 lignes. Ne jamais l'éditer pour corriger une ano
 
 ## 5. Brut, transformé, exploitable — 25 min
 
-**Afficher :** 29, 31 et 32.
+**Afficher :** 30, 33 et 34.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
@@ -172,7 +172,7 @@ Attendu : fichier présent, 15 lignes. Ne jamais l'éditer pour corriger une ano
 
 ## 6. TP 2 — Transformer — 40 min
 
-**Afficher :** 33–34.
+**Afficher :** 35–36.
 
 ```bash
 export PYTHONPATH=src
@@ -194,7 +194,7 @@ Attendu : 15 lignes, cinq zones ; relier une ligne CSV à son JSONL.
 
 ## 7. TP 3 — Visualiser — 25 min
 
-**Afficher :** 35 avant l'exécution, 37–39 pour lire, 40 pour contredire.
+**Afficher :** 37 avant l'exécution, 40–42 pour lire, 43 pour contredire.
 
 ```bash
 python3 -m iot_decision.visualize_baseline data/processed/batch001_measurements.csv sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png
@@ -211,7 +211,7 @@ test -f sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png &
 
 ## 8. TP 4 — Brief et vote final — 20 min
 
-**Afficher :** 41, 43, 44 puis 45. Prévoir cinq minutes d'écriture, quatre de contradiction, trois de révision, puis le vote. Le brief de 120 mots contient action, confiance, deux preuves retrouvables, deux incertitudes et vérification prioritaire.
+**Afficher :** 44, 47, 48 puis 49. Prévoir cinq minutes d'écriture, quatre de contradiction, trois de révision, puis le vote. Le brief de 120 mots contient action, confiance, deux preuves retrouvables, deux incertitudes et vérification prioritaire.
 
 | Question | Direction | Réponse et arguments |
 |---|---|---|
@@ -224,7 +224,7 @@ test -f sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png &
 
 ## 9. Exit ticket — 5 min
 
-**Afficher :** 47. Réponse individuelle sans écran.
+**Afficher :** 51. Réponse individuelle sans écran.
 
 | Amorce | Direction | Réponse et argument |
 |---|---|---|
@@ -282,4 +282,8 @@ test -f sessions/s01_baseline_pipeline/slides/figures/batch001_max_by_zone.png &
 python3 tests/validate_s01_artifacts.py
 ```
 
-Références complètes dans `latex/common/references.bib` et slide 48 : MQTT 5.0 (OASIS), RFC 8259, ISO 8601, JCGM 100, documentation pandas/matplotlib et NISTIR 8286A.
+Références complètes dans `latex/common/references.bib` et slide 53 : MQTT 5.0 (OASIS), RFC 8259, ISO 8601, JCGM 100, documentation pandas/matplotlib et NISTIR 8286A.
+
+## Note sur la version augmentée du support (relecture autonome)
+
+La diapositive 52, affichée après l'exit ticket et avant les références, révèle la recommandation de référence du corrigé (35,4 °C dans `battery-shelter-01`, fraîcheur 65–75 min pour l'abri optronique, inspection ciblée à confiance faible). Elle n'est donc à projeter qu'après le vote final et le rendu du brief de TP 4, jamais avant, pour ne pas orienter la rédaction des étudiants. Les diapositives 17, 31, 38 et 45 sont des points d'auto-vérification (rappels de définitions, pas de nouvelles réponses au cas d'étude) : elles peuvent être montrées en fin de section ou laissées à la relecture individuelle sans effet sur le déroulé.

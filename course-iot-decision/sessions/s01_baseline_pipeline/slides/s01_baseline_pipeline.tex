@@ -17,9 +17,9 @@
     Comprendre comment une donnée imparfaite devient -- ou ne devient pas -- une décision opérationnelle.
   \end{block}
   \begin{itemize}
-    \item Nous suivrons une donnée depuis un capteur jusqu'à un choix d'action.
-    \item Nous apprendrons à distinguer ce qui est observé, calculé, supposé et décidé.
-    \item Les outils informatiques sont des moyens pour exercer le jugement, pas une fin en soi.
+    \item Nous suivrons une même donnée depuis le capteur qui la produit jusqu'au choix d'action qu'elle éclaire, en observant tout ce qu'elle traverse entre les deux.
+    \item À chaque étape, nous apprendrons à distinguer ce qui est observé (un fait mesuré), ce qui est calculé (un résumé construit), ce qui est supposé (une hypothèse non vérifiée) et ce qui est décidé (une action choisie).
+    \item Les outils informatiques -- broker, scripts Python, graphiques -- sont des moyens pour exercer le jugement d'un décideur ; ils ne remplacent jamais ce jugement et ne sont pas une fin en soi.
   \end{itemize}
 \end{frame}
 
@@ -33,7 +33,7 @@
   $\Downarrow$\\[-1mm]
   Décision opérationnelle
   \vfill
-  \normalsize À chaque étape, nous demanderons : que gagne-t-on en lisibilité, que risque-t-on de perdre, et quel niveau de confiance reste défendable ?
+  \normalsize À chaque flèche de ce schéma, nous poserons systématiquement trois questions : que gagne-t-on en lisibilité en franchissant cette étape, que risque-t-on de perdre ou de déformer, et quel niveau de confiance reste défendable une fois cette étape franchie ? Cette même grille de lecture reviendra dans les huit séquences.
 \end{frame}
 
 \begin{frame}{Ce que vous saurez faire à la fin de cette séquence}
@@ -49,9 +49,9 @@
 \begin{frame}{La question qui guidera la séance}
   \decisionquestion{Les données disponibles permettent-elles de maintenir l'activité de maintenance drone prévue à 14 h 00 ?}
   \begin{itemize}
-    \item Réponses possibles : maintenir, inspecter, mettre la zone en sécurité ou déclarer les données insuffisantes.
-    \item Nous ne chercherons pas une réponse spectaculaire, mais une réponse proportionnée aux preuves.
-    \item Une conclusion prudente peut être meilleure qu'une certitude infondée.
+    \item Quatre réponses sont possibles : maintenir l'activité, déclencher une inspection, mettre la zone en sécurité, ou déclarer que les données sont insuffisantes pour trancher.
+    \item Nous ne cherchons pas la réponse la plus spectaculaire, mais la réponse la plus proportionnée aux preuves réellement disponibles à l'instant de la décision.
+    \item Une conclusion prudente et réversible peut être meilleure qu'une certitude affichée mais mal fondée : le cours évalue le raisonnement, pas seulement le résultat.
   \end{itemize}
 \end{frame}
 
@@ -60,32 +60,32 @@
   \Huge Section 1\\[3mm]
   \Large Comprendre la mission et la question de décision
   \vfill
-  \normalsize Nous commençons par le contexte opérationnel avant de manipuler le moindre fichier.
+  \normalsize Nous commençons par le contexte opérationnel avant de manipuler le moindre fichier : une pipeline mal comprise ne se corrige pas avec du code.
 \end{frame}
 
 \begin{frame}{Le scénario : une base aérienne projetée}
   \begin{columns}[T]
     \column{.55\textwidth}
-    La base doit continuer à fonctionner tout en protégeant des équipements sensibles. Des capteurs environnementaux mesurent la température dans plusieurs zones.
+    La base doit continuer à fonctionner tout en protégeant des équipements sensibles. Des capteurs environnementaux mesurent la température dans plusieurs zones, en continu, et transmettent leurs relevés vers un broker MQTT que nous allons interroger.
     \column{.4\textwidth}
     \begin{block}{Contrainte de décision}
-      Les mesures arrivent par une chaîne technique. Le décideur ne voit pas directement le capteur.
+      Les mesures arrivent par une chaîne technique. Le décideur ne voit jamais directement le capteur : il ne voit que ce que la chaîne veut bien lui montrer.
     \end{block}
   \end{columns}
   \vfill
-  \alert{La première question n'est donc pas « quel code écrire ? », mais « quelle décision cette donnée doit-elle éclairer ? »}
+  \alert{La première question n'est donc pas « quel code écrire ? », mais « quelle décision cette donnée doit-elle éclairer, et que peut faire échouer la chaîne qui la produit ? »}
 \end{frame}
 
 \begin{frame}{Les cinq zones critiques}
   \begin{description}
-    \item[Stockage batteries] préserver les batteries de drones et éviter une indisponibilité matérielle.
-    \item[Shelter transmissions] maintenir les communications nécessaires à l'activité.
-    \item[Local informatique tactique] protéger les équipements numériques.
-    \item[Zone de maintenance légère] maintenir l'activité technique quotidienne.
-    \item[Abri matériel optronique] protéger des équipements d'observation sensibles.
+    \item[Stockage batteries] préserver les batteries de drones et éviter une indisponibilité matérielle coûteuse à remplacer en opération.
+    \item[Shelter transmissions] maintenir les communications nécessaires à la conduite de l'activité et à la sécurité du site.
+    \item[Local informatique tactique] protéger les équipements numériques dont dépend le suivi de la mission.
+    \item[Zone de maintenance légère] maintenir l'activité technique quotidienne sans exposer le personnel à un risque évitable.
+    \item[Abri matériel optronique] protéger des équipements d'observation sensibles et coûteux à recalibrer.
   \end{description}
   \vfill
-  \normalsize Une même température n'a pas forcément la même conséquence opérationnelle selon la zone.
+  \normalsize Une même température de 35\,°C n'a donc pas la même conséquence opérationnelle selon la zone où elle est mesurée : le seuil doit toujours être lu avec son contexte d'usage.
 \end{frame}
 
 \begin{frame}{Le contexte de la décision}
@@ -93,9 +93,9 @@
     Une activité de maintenance drone est prévue à 14 h 00 sur une base aérienne projetée. La supervision signale une possible hausse de température dans le stockage batteries.
   \end{block}
   \begin{itemize}
-    \item Des données sont disponibles dans le broker MQTT, mais aucune analyse consolidée n'a encore été réalisée.
-    \item Une vérification terrain prendrait 30 minutes.
-    \item Reporter l'activité a un coût opérationnel.
+    \item Des données sont disponibles dans le broker MQTT, mais aucune analyse consolidée n'a encore été réalisée : personne n'a encore lu ni agrégé ces messages.
+    \item Une vérification terrain prendrait 30 minutes de personnel mobilisé, ce qui n'est pas gratuit si l'alerte se révèle infondée.
+    \item Reporter l'activité a un coût opérationnel direct : chaque option, y compris l'inaction, a un prix.
   \end{itemize}
 \end{frame}
 
@@ -118,42 +118,47 @@
     \end{itemize}
   \end{columns}
   \vfill
-  \alert{Ce vote initial sera comparé au vote final : l'objectif est de voir comment la preuve transforme le jugement.}
+  \alert{Ce vote initial sera comparé au vote final : l'objectif est de voir comment la preuve construite pendant la séance transforme -- ou ne transforme pas -- votre jugement.}
 \end{frame}
 
 \begin{frame}{Une donnée n'est pas encore une décision}
   \begin{description}
-    \item[Message] ce qui a été transmis et reçu.
-    \item[Donnée] un message replacé dans son contexte : zone, unité, temps, capteur.
-    \item[Indicateur] un résumé construit pour répondre à une question.
-    \item[Décision] une action choisie en tenant compte des conséquences et des limites.
+    \item[Message] ce qui a été transmis et reçu, tel quel, sans interprétation.
+    \item[Donnée] un message replacé dans son contexte : la zone qu'il concerne, l'unité de mesure, l'instant auquel il se rapporte.
+    \item[Indicateur] un résumé construit délibérément pour répondre à une question précise, par exemple « quelle est la température maximale observée par zone ? ».
+    \item[Décision] une action choisie en tenant compte des conséquences possibles et des limites de ce que l'on sait.
   \end{description}
-  \begin{block}{Exemple}
-    « 35,4 » est une valeur. « La zone batteries demande une inspection avant poursuite » est une décision conditionnelle.
+  \begin{block}{Exemple filé sur la séance}
+    « 35,4 » est une simple valeur. « 35,4\,°C mesurés dans \texttt{battery-shelter-01} à 10 h 00 » est une donnée. « Le maximum observé dans cette zone est 35,4\,°C » est un indicateur. « La zone batteries demande une inspection avant poursuite de l'activité » est une décision conditionnelle -- nous reconstruirons exactement ce raisonnement d'ici la fin de la séance.
   \end{block}
 \end{frame}
 
 \begin{frame}{Lire une chaîne de données comme une chaîne de responsabilités}
+  \small
+  À chaque flèche de la chaîne \texttt{capteur $\to$ message $\to$ donnée $\to$ indicateur $\to$ décision}, une question de contrôle et un exemple d'erreur possible :
   \begin{enumerate}
-    \item Le capteur produit-il une mesure dans la bonne unité ?
-    \item Le message identifie-t-il la bonne zone et le bon instant ?
-    \item Le broker a-t-il transmis le message attendu ?
-    \item Le traitement a-t-il conservé la trace de la source ?
-    \item L'indicateur répond-il réellement à la question du commandement ?
+    \item \textbf{Le capteur produit-il une mesure dans la bonne unité ?} Un capteur mal étalonné ou configuré en Fahrenheit au lieu de Celsius fausse la valeur avant même son envoi.
+    \item \textbf{Le message identifie-t-il la bonne zone et le bon instant ?} Un topic mal configuré peut publier la mesure d'\texttt{optronics-shelter-01} sous l'identifiant de \texttt{battery-shelter-01}.
+    \item \textbf{Le broker a-t-il transmis le message attendu ?} Un message perdu ou dupliqué change silencieusement l'effectif observé.
+    \item \textbf{Le traitement a-t-il conservé la trace de la source ?} Une transformation qui supprime le topic et l'horodatage de réception rend l'indicateur impossible à auditer plus tard.
+    \item \textbf{L'indicateur répond-il réellement à la question du commandement ?} Un maximum global peut masquer une seule zone critique en la noyant dans la moyenne des autres.
   \end{enumerate}
   \vfill
-  À chaque réponse, nous ajoutons une condition à la confiance.
+  À chaque réponse positive, nous ajoutons une condition qui soutient la confiance ; à chaque doute, nous ajoutons une incertitude à documenter.
 \end{frame}
 
 \begin{frame}{Confiance et incertitude : deux questions différentes}
   \begin{block}{Confiance}
-    Jusqu'à quel point les éléments disponibles sont-ils adaptés à la décision envisagée ?
+    Jusqu'à quel point les éléments disponibles sont-ils adaptés à la décision précise que l'on envisage de prendre ?
   \end{block}
   \begin{block}{Incertitude}
-    Que ne savons-nous pas encore, et quelle ignorance pourrait changer l'action ?
+    Que ne savons-nous pas encore, et quelle ignorance particulière pourrait changer l'action choisie ?
   \end{block}
+  \begin{exampleblock}{Pourquoi ce ne sont pas la même chose}
+    Si un capteur météo affiche « 12\,°C, mise à jour il y a 3 jours », l'incertitude porte sur l'évolution depuis 3 jours ; mais la confiance dans le fait qu'il ne gelait pas ce jour-là peut rester raisonnable. Une conclusion étroite peut donc être solide malgré une incertitude globale importante.
+  \end{exampleblock}
   \begin{alertblock}{Réflexe de décideur}
-    Une incertitude utile n'est pas une liste abstraite : elle conduit à une vérification ou à une action de protection.
+    Une incertitude utile n'est pas une liste abstraite de doutes : elle doit conduire à une vérification concrète ou à une action de protection précise.
   \end{alertblock}
 \end{frame}
 
@@ -166,6 +171,8 @@
   Table CSV\\[2mm]
   $\Downarrow$\quad indicateur et graphique\\[2mm]
   Recommandation opérationnelle
+  \vfill
+  \normalsize Chacune de ces quatre étapes correspond à un TP de la séance : nous les construirons dans cet ordre, sans en sauter aucune, pour que chaque livrable reste rattaché à celui qui le précède.
 \end{frame}
 
 \begin{frame}{Comment va se dérouler votre travail ?}
@@ -177,12 +184,12 @@
     \item décider, qualifier la confiance et proposer une vérification.
   \end{enumerate}
   \vfill
-  \alert{Chaque section alterne explication courte, manipulation, restitution et décision.}
+  \alert{Chaque section alterne explication courte, manipulation, restitution et décision : aucune section n'est purement théorique ni purement technique.}
 \end{frame}
 
 \begin{frame}{Deux repères pour un seul parcours}
   \small
-  Les activités A à I structurent toute la séance; les TP 1 à 4 désignent uniquement les quatre productions techniques.
+  Les activités A à I structurent toute la séance ; les TP 1 à 4 désignent uniquement les quatre productions techniques qui en font partie.
   \begin{columns}[T]
     \column{.47\textwidth}
     \begin{block}{Avant et autour du TP 1}
@@ -203,7 +210,21 @@
       \end{description}
     \end{block}
   \end{columns}
-  \alert{B, C et E préparent les TP : ce ne sont pas des TP supplémentaires.}
+  \alert{B, C et E préparent les TP : ce ne sont pas des TP supplémentaires, mais elles conditionnent la qualité de ceux qui suivent.}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  Si vous relisez cette séquence seul, assurez-vous de pouvoir répondre sans aide aux trois questions suivantes avant de passer à la section 2.
+  \begin{block}{Distinguez-vous message, donnée, indicateur et décision sur un exemple nouveau ?}
+    Rappel : message = ce qui est transmis ; donnée = message replacé dans son contexte (zone, unité, temps) ; indicateur = résumé construit pour une question ; décision = action choisie avec ses conséquences.
+  \end{block}
+  \begin{block}{Sauriez-vous expliquer en une phrase la différence entre confiance et incertitude ?}
+    Rappel : l'incertitude décrit ce que nous ignorons ; la confiance qualifie si nos preuves suffisent pour l'action précise envisagée.
+  \end{block}
+  \begin{block}{Sauriez-vous dire pourquoi la seule présence de messages ne suffit pas à agir ?}
+    Rappel : elle prouve une disponibilité au moment de l'extraction, pas la fraîcheur, l'exactitude, l'exhaustivité, ni l'adéquation à la question posée.
+  \end{block}
 \end{frame}
 
 \begin{frame}[plain]
@@ -211,7 +232,7 @@
   \Huge Section 2\\[3mm]
   \Large Observer la source et préserver la preuve
   \vfill
-  \normalsize Vous allez maintenant travailler en binômes sur les messages MQTT.
+  \normalsize Vous allez maintenant travailler en binômes sur les messages MQTT réellement stockés dans le broker.
 \end{frame}
 
 \begin{frame}{Ce que la pipeline fait -- et ce qu'elle ne fait pas}
@@ -219,33 +240,35 @@
     \column{.47\textwidth}
     \begin{block}{Elle permet de}
       \begin{itemize}
-        \item conserver les messages reçus ;
-        \item comparer les zones ;
-        \item repérer un dépassement observé ;
-        \item expliquer comment un résultat a été produit.
+        \item conserver les messages reçus tels qu'ils sont arrivés ;
+        \item comparer les zones entre elles sur une même base ;
+        \item repérer un dépassement de seuil observé dans le lot ;
+        \item expliquer, étape par étape, comment un résultat a été produit.
       \end{itemize}
     \end{block}
     \column{.47\textwidth}
     \begin{alertblock}{Elle ne prouve pas}
       \begin{itemize}
-        \item que le capteur est calibré ;
-        \item que toutes les données existent ;
-        \item que la situation future sera identique ;
-        \item que le seuil est une norme réelle.
+        \item que le capteur est correctement calibré ;
+        \item que toutes les données attendues existent réellement ;
+        \item que la situation observée restera identique dans le futur ;
+        \item que le seuil utilisé correspond à une norme réelle et validée.
       \end{itemize}
     \end{alertblock}
   \end{columns}
+  \vfill
+  \normalsize Garder ces deux colonnes en tête évite de transformer un résultat technique correct en certitude opérationnelle abusive.
 \end{frame}
 
 \begin{frame}{Comprendre MQTT sans devenir administrateur réseau}
   \begin{description}
-    \item[Publication] un producteur envoie un message.
-    \item[Topic] un chemin textuel permet de classer et de sélectionner les messages.
-    \item[Broker] un service reçoit, conserve éventuellement et redistribue les messages.
-    \item[Abonnement] un client demande les messages correspondant à un topic.
+    \item[Publication] un producteur -- ici un capteur simulé -- envoie un message vers le broker, sans savoir qui le lira.
+    \item[Topic] un chemin textuel hiérarchique qui permet de classer et de sélectionner les messages sans les ouvrir un par un.
+    \item[Broker] un service qui reçoit les messages, en conserve éventuellement une copie, et les redistribue aux abonnés intéressés.
+    \item[Abonnement] un client -- notre script d'extraction -- demande à recevoir tous les messages correspondant à un motif de topic.
   \end{description}
   \begin{block}{Dans notre laboratoire}
-    Nous nous abonnons à `airbase/batch001/\#` pour récupérer les mesures de la mission 001.
+    Nous nous abonnons au motif \texttt{airbase/batch001/\#} : le caractère \texttt{\#} signifie « tout ce qui suit », ce qui nous donne d'un seul coup toutes les zones et tous les capteurs de la mission 001.
   \end{block}
 \end{frame}
 
@@ -255,13 +278,13 @@
 airbase/batch001/battery-shelter-01/temperature/0002
   \end{verbatim}
   \begin{itemize}
-    \item `airbase` : site logique ;
-    \item `batch001` : lot de mission ;
-    \item `battery-shelter-01` : zone ;
-    \item `temperature` : famille de mesure ;
-    \item `0002` : repère de séquence.
+    \item \texttt{airbase} : site logique ;
+    \item \texttt{batch001} : lot de mission ;
+    \item \texttt{battery-shelter-01} : zone déclarée par l'émetteur ;
+    \item \texttt{temperature} : famille de mesure ;
+    \item \texttt{0002} : repère de séquence, ici le troisième message de cette zone.
   \end{itemize}
-  \alert{Nous comparerons le topic avec le contenu JSON : deux indices doivent raconter la même histoire.}
+  \alert{Un topic est une adresse déclarée par la configuration, pas une preuve physique : une erreur de configuration peut publier une mesure sous le mauvais nom de zone sans qu'aucune alerte ne se déclenche. Nous comparerons donc systématiquement le topic avec le contenu JSON : les deux indices doivent raconter la même histoire.}
 \end{frame}
 
 \begin{frame}[fragile]{À l'intérieur du message JSON}
@@ -275,32 +298,32 @@ airbase/batch001/battery-shelter-01/temperature/0002
  "value":35.4,"unit":"celsius","sequence":2}
   \end{verbatim}
   \normalsize
-  La valeur n'est interprétable qu'avec sa zone, son unité, son instant et son identifiant.
+  Ce message réel du lot \texttt{batch001} est celui qui produira, plus tard dans la séance, le maximum observé de la zone \texttt{battery-shelter-01}. La valeur \texttt{35.4} seule ne veut rien dire : elle n'est interprétable qu'accompagnée de sa zone, de son unité, de son instant de mesure et de son identifiant.
 \end{frame}
 
 \begin{frame}{Retained : le piège de la fraîcheur}
-  Un message retained est conservé par le broker et remis à un nouvel abonné qui correspond au topic.
-  \begin{alertblock}{Deux dates à ne pas confondre}
-    \texttt{measured\_at} : instant déclaré de la mesure.\\
-    \texttt{received\_at} : instant où notre extraction a reçu le message.
+  Un message retained est conservé par le broker et remis immédiatement à tout nouvel abonné qui correspond au topic -- même si ce message a été publié bien avant l'abonnement.
+  \begin{alertblock}{Deux dates à ne jamais confondre}
+    \texttt{measured\_at} : instant déclaré de la mesure, fixé par le capteur.\\
+    \texttt{received\_at} : instant où notre extraction a reçu le message, fixé par notre propre outil.
   \end{alertblock}
-  \begin{block}{Question à poser}
-    Un message reçu à 10 h 05 a-t-il nécessairement été mesuré à 10 h 05 ?
+  \begin{block}{Question à garder en tête}
+    Un message reçu par notre extraction à 10 h 05 a-t-il nécessairement été mesuré à 10 h 05 ? Nous répondrons à cette question très concrètement dans quelques minutes, sur nos propres données.
   \end{block}
   Source : OASIS, MQTT Version 5.0, section 3.3.1.3.
 \end{frame}
 
 \begin{frame}{Le premier livrable : préserver la preuve}
   \begin{block}{JSONL brut}
-    Une ligne par enveloppe reçue, conservée au plus près de l'extraction.
+    Une ligne par enveloppe reçue, conservée au plus près de l'extraction, sans aucune modification de son contenu.
   \end{block}
   \begin{itemize}
-    \item ne pas supprimer une valeur gênante ;
-    \item ne pas corriger directement une unité ou une date ;
-    \item conserver topic, réception, retained et payload ;
-    \item pouvoir relier chaque future ligne CSV à sa source.
+    \item Nous ne supprimons jamais une valeur gênante, même si elle complique la suite de l'analyse.
+    \item Nous ne corrigeons jamais directement une unité ou une date suspecte à l'intérieur du fichier brut.
+    \item Nous conservons systématiquement le topic, l'horodatage de réception, l'indicateur retained et le payload complet.
+    \item Nous devons pouvoir relier n'importe quelle future ligne du CSV à la ligne du brut dont elle provient.
   \end{itemize}
-  \alert{Si nous perdons le brut, nous ne pouvons plus expliquer ni corriger notre traitement.}
+  \alert{Si nous perdons le brut, nous perdons la possibilité d'expliquer, de corriger ou de contester notre propre traitement plus tard.}
 \end{frame}
 
 \begin{frame}[fragile]{Démonstration : extraire les messages}
@@ -317,7 +340,7 @@ python3 -m iot_decision.baseline_cli extract-sample \
   \end{verbatim}
   \end{block}
   \normalsize
-  Avant de conclure, vérifier l'effectif, les zones, les dates et les métadonnées conservées.
+  Les deux commandes produisent le même fichier de 15 enveloppes. Avant de conclure quoi que ce soit, vérifiez toujours l'effectif obtenu, les zones représentées, les dates de mesure et les métadonnées conservées.
 \end{frame}
 
 \begin{frame}{Activité D / TP 1 -- Extraction contrôlée}
@@ -339,42 +362,67 @@ python3 -m iot_decision.baseline_cli extract-sample \
 \begin{frame}{Après extraction : première pause de raisonnement}
   \decisionquestion{Que pouvez-vous affirmer uniquement parce que 15 messages ont été extraits ?}
   \begin{itemize}
-    \item Formulez une observation vérifiable.
-    \item Formulez séparément une conclusion qui serait excessive.
-    \item Donnez une action prudente si une information manque.
+    \item Formulez une observation strictement vérifiable dans le fichier, par exemple un effectif ou une zone présente.
+    \item Formulez séparément une conclusion qui serait excessive au vu de cette seule observation.
+    \item Donnez une action prudente à prendre si une information déterminante venait à manquer.
   \end{itemize}
+  \vfill
+  \normalsize Gardez vos trois réponses par écrit : la diapositive suivante va directement les mettre à l'épreuve sur nos données réelles.
 \end{frame}
 
 \begin{frame}{Incident : toutes les zones sont-elles comparables ?}
-  Comparez les dates de mesure avec l'instant d'extraction.
+  \small
+  Comparez, pour chaque zone, l'instant déclaré de la mesure la plus récente (\texttt{measured\_at}) et l'instant de l'extraction (\texttt{received\_at} = 10 h 05).
+  \begin{center}
+  \begin{tabular}{@{}p{.5\textwidth}p{.22\textwidth}p{.22\textwidth}@{}}
+    \toprule
+    Zone & dernière mesure & ancienneté \\
+    \midrule
+    batteries, transmissions, informatique, maintenance & 09 h 50 -- 10 h 00 & 5 à 15 min \\[2pt]
+    \textbf{optronics-shelter-01} & \textbf{08 h 50 -- 09 h 00} & \textbf{65 à 75 min} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
   \begin{enumerate}
-    \item Quelle zone possède les mesures les plus anciennes ?
-    \item Cette ancienne mesure est-elle inutile, ou seulement moins actuelle ?
-    \item Quel effet sur la confiance dans une décision de maintien ?
-    \item Quelle vérification terrain devient prioritaire ?
+    \item L'abri optronique porte les mesures les plus anciennes du lot, de loin : une ancienneté qui ne rend pas la mesure fausse, mais moins actuelle qu'elle n'y paraît au premier coup d'œil.
+    \item Conséquence sur la confiance : toute décision sur l'abri optronique doit intégrer un doute sur la situation actuelle, pas seulement sur la valeur mesurée une heure plus tôt.
+    \item Vérification prioritaire : confirmer sur le terrain ou par un nouveau relevé l'état actuel de cette zone avant toute conclusion la concernant.
   \end{enumerate}
-  \alert{Une donnée ancienne ne doit pas être supprimée pour rendre le graphique plus confortable.}
+  \alert{Une donnée ancienne ne doit jamais être supprimée pour rendre le graphique plus confortable à lire : elle doit être signalée.}
 \end{frame}
 
 \begin{frame}{Restitution du TP 1 : le contradicteur}
-  Un binôme présente son constat ; un autre doit poser trois questions :
+  Un binôme présente son constat ; un autre binôme doit poser trois questions avant d'accepter la conclusion :
   \begin{enumerate}
-    \item Quelle ligne du brut soutient votre affirmation ?
-    \item Quelle date utilisez-vous pour parler de fraîcheur ?
-    \item Quelle information manquante pourrait changer l'action ?
+    \item Quelle ligne précise du fichier brut soutient votre affirmation ?
+    \item Quelle date utilisez-vous exactement pour parler de fraîcheur : mesure ou réception ?
+    \item Quelle information manquante pourrait, à elle seule, changer l'action recommandée ?
   \end{enumerate}
   \vfill
-  \decisionquestion{La présence d'un message est-elle une preuve de situation actuelle ?}
+  \decisionquestion{La présence d'un message dans le brut est-elle une preuve que la situation qu'il décrit est toujours actuelle ?}
 \end{frame}
 
 \begin{frame}{Brut, transformé, exploitable}
   \begin{description}
-    \item[Brut] ce qui a été reçu, avec son contexte d'extraction.
-    \item[Transformé] une représentation dérivée par des règles explicites.
-    \item[Exploitable] une sortie adaptée à une question et à une décision précises.
+    \item[Brut] ce qui a été reçu, avec son contexte complet d'extraction (topic, réception, retained).
+    \item[Transformé] une représentation dérivée du brut par des règles explicites et reproductibles, par exemple aplatir un payload JSON en une ligne de table.
+    \item[Exploitable] une sortie adaptée à une question et à une décision précises, par exemple un graphique construit pour répondre à « quelle zone dépasse le seuil ? ».
   \end{description}
   \begin{block}{Phrase à retenir}
-    Transformer rend souvent les données plus lisibles ; cela ne les rend pas automatiquement plus vraies.
+    Transformer rend souvent les données plus lisibles ; cela ne les rend pas automatiquement plus vraies. Renommer une zone, convertir une unité ou calculer un maximum sont des opérations utiles, mais chacune doit rester traçable jusqu'au brut qui l'a produite.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Que prouve, et que ne prouve pas, un message retained ?}
+    Il prouve seulement qu'il s'agit du dernier message disponible pour ce topic. Il ne prouve ni sa fraîcheur, ni le fonctionnement actuel du capteur, ni l'absence de messages perdus entre-temps.
+  \end{block}
+  \begin{block}{Pourquoi \texttt{measured\_at} et \texttt{received\_at} ne sont-elles jamais interchangeables ?}
+    L'une est déclarée par le capteur, l'autre par notre extraction. Leur écart mesure la fraîcheur réelle, comme l'a montré l'incident optronique : 65 à 75 minutes d'écart contre 5 à 15 minutes pour les quatre autres zones.
+  \end{block}
+  \begin{block}{Pourquoi ne corrige-t-on jamais le fichier brut directement ?}
+    Une correction silencieuse détruit la preuve initiale et confond irrémédiablement la source, la transformation et le jugement de celui qui corrige.
   \end{block}
 \end{frame}
 
@@ -387,17 +435,20 @@ python3 -m iot_decision.baseline_cli extract-sample \
 \end{frame}
 
 \begin{frame}{Du JSON imbriqué vers une ligne CSV}
-  \begin{columns}[T]
-    \column{.46\textwidth}
-    \textbf{Source}\par
-    payload \texttt{zone}, \texttt{value}, \texttt{measured\_at}, \texttt{unit}\\
-    enveloppe \texttt{topic}, \texttt{received\_at}, \texttt{retained}
-    \column{.46\textwidth}
-    \textbf{Sortie}\par
-    une ligne comparable par mesure, avec les champs source conservés.
-  \end{columns}
-  \vfill
-  \alert{Le CSV répond au besoin de comparaison ; il ne remplace pas le JSONL comme preuve de départ.}
+  \scriptsize
+  \begin{center}
+  \begin{tabular}{@{}p{.30\textwidth}p{.1\textwidth}p{.5\textwidth}@{}}
+    \toprule
+    Champ CSV & Origine & Exemple (message ci-dessus) \\
+    \midrule
+    message\_id, site\_id, zone, asset\_type & payload & battery-shelter-01-0002, base-projetee-alpha, battery-shelter-01, drone\_battery\_storage \\[2pt]
+    sensor, measured\_at, value, unit, sequence & payload & temperature, 2026-10-12T10:00:00Z, 35.4, celsius, 2 \\[2pt]
+    topic, received\_at, retained & enveloppe & airbase/batch001/.../0002, 2026-10-12T10:05:00Z, true \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \normalsize
+  \alert{Douze colonnes composent une seule ligne comparable par mesure ; les trois dernières -- issues de l'enveloppe et non du payload -- sont celles qui préservent la traçabilité vers le brut. Le CSV répond au besoin de comparaison ; il ne remplace jamais le JSONL comme preuve de départ.}
 \end{frame}
 
 \begin{frame}[fragile]{Démonstration : produire la table}
@@ -408,7 +459,7 @@ python3 -m iot_decision.baseline_cli transform \
   data/processed/batch001_measurements.csv
   \end{verbatim}
   \normalsize
-  Contrôler ensemble : nombre de lignes, cinq zones, unité unique, horodatages, \texttt{message\_id}, topic et réception.
+  Contrôler ensemble, avant toute analyse : le nombre de lignes obtenu, la présence des cinq zones, l'unicité de l'unité, la cohérence des horodatages, et la conservation de \texttt{message\_id}, du topic et de l'instant de réception.
 \end{frame}
 
 \begin{frame}{Activité F / TP 2 -- Du JSONL vers le CSV}
@@ -429,25 +480,38 @@ python3 -m iot_decision.baseline_cli transform \
 
 \begin{frame}{Lire un contrôle de qualité minimal}
   \begin{itemize}
-    \item 15 lignes : l'effectif attendu est-il bien présent ?
-    \item 5 zones : une zone manque-t-elle complètement ?
-    \item 1 unité : compare-t-on des températures dans la même unité ?
-    \item identifiants uniques : un doublon pourrait-il gonfler un indicateur ?
-    \item dates : les mesures couvrent-elles le même horizon ?
+    \item 15 lignes attendues : si ce nombre diffère, une partie du lot a été perdue ou dupliquée pendant la transformation.
+    \item 5 zones attendues : l'absence complète d'une zone doit être signalée avant toute conclusion sur la base entière.
+    \item 1 seule unité attendue : comparer des degrés Celsius et des degrés Fahrenheit sans le savoir fausserait tous les indicateurs suivants.
+    \item identifiants uniques attendus : un doublon non détecté pourrait compter deux fois la même mesure et gonfler artificiellement un indicateur.
+    \item cohérence des dates attendue : vérifier que les mesures couvrent bien le même horizon temporel avant de les comparer entre zones.
   \end{itemize}
-  \decisionquestion{Le CSV est-il exploitable pour comparer les zones, et avec quelles réserves ?}
+  \decisionquestion{Le CSV obtenu est-il exploitable pour comparer les zones, et avec quelles réserves faut-il l'utiliser ?}
 \end{frame}
 
 \begin{frame}{Un indicateur répond à une question}
   \begin{block}{Question de la baseline}
-    Quelle zone présente le maximum observé le plus élevé ?
+    Quelle zone présente le maximum observé le plus élevé dans ce lot de 15 messages ?
   \end{block}
   \begin{itemize}
-    \item Indicateur choisi : maximum de température par zone.
-    \item Seuil pédagogique : 35 °C.
-    \item Action possible : inspection ciblée avant un maintien sans réserve.
+    \item Indicateur choisi : maximum de température par zone, calculé sur les trois mesures disponibles par zone.
+    \item Seuil pédagogique retenu pour cette séance : 35\,°C -- ce n'est pas une norme officielle, seulement un repère de discussion.
+    \item Action possible si le seuil est franchi : une inspection ciblée de la zone concernée avant un maintien sans réserve de l'activité.
   \end{itemize}
-  \alert{Un indicateur est un choix de représentation : il rend certaines choses visibles et en masque d'autres.}
+  \alert{Un indicateur est un choix de représentation parmi d'autres possibles : il rend certaines choses visibles -- ici, le pic -- et en masque d'autres -- ici, la durée et la fréquence. Nous allons maintenant calculer cet indicateur sur nos propres données.}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Le CSV est-il « plus vrai » que le JSONL dont il dérive ?}
+    Non, seulement plus lisible et plus facile à comparer. Il ne calibre aucun capteur et ne valide ni la zone déclarée ni la fraîcheur des mesures.
+  \end{block}
+  \begin{block}{Pourquoi conserver topic et \texttt{received\_at} dans le CSV alors qu'ils ne servent pas au calcul du maximum ?}
+    Sans eux, il devient impossible de relier une ligne du CSV à sa source et de comparer l'instant de mesure à l'instant d'observation.
+  \end{block}
+  \begin{block}{Un indicateur est-il neutre ?}
+    Non : choisir le maximum par zone met en évidence un pic isolé mais masque sa durée, sa fréquence et son ancienneté -- un autre indicateur raconterait une autre histoire des mêmes données.
+  \end{block}
 \end{frame}
 
 \begin{frame}[plain]
@@ -455,7 +519,7 @@ python3 -m iot_decision.baseline_cli transform \
   \Huge Section 4\\[3mm]
   \Large Construire une vue utile pour décider
   \vfill
-  \normalsize Un graphique n'est pas la conclusion : c'est un instrument de discussion.
+  \normalsize Un graphique n'est pas la conclusion : c'est un instrument de discussion entre le technique et le décideur.
 \end{frame}
 
 \begin{frame}{Maximum observé par zone}
@@ -480,38 +544,52 @@ python3 -m iot_decision.baseline_cli transform \
 \end{frame}
 
 \begin{frame}{Lire le graphique en trois phrases}
+  \small
   \begin{enumerate}
-    \item \textbf{Observation :} le maximum observé dans le stockage batteries est 35,4 °C.
-    \item \textbf{Interprétation prudente :} cette zone mérite une attention ciblée au regard du seuil pédagogique.
-    \item \textbf{Limite :} le graphique ne prouve ni la durée du dépassement, ni la calibration, ni l'état futur.
+    \item \textbf{Observation :} le maximum observé dans le stockage batteries est 35,4\,°C ; les quatre autres zones restent nettement en dessous, entre 28,1\,°C (abri optronique) et 31,8\,°C (local informatique).
+    \item \textbf{Interprétation prudente :} la zone batteries est la seule à franchir le seuil pédagogique de 35\,°C et mérite donc une attention ciblée en priorité.
+    \item \textbf{Limite :} le graphique ne prouve ni la durée du dépassement, ni la calibration du capteur, ni l'état de la zone au moment présent -- il ne montre qu'un pic ponctuel observé à un instant passé.
   \end{enumerate}
   \begin{block}{Règle de présentation}
-    Toujours séparer ce que les données montrent de ce que nous décidons d'en faire.
+    Toujours séparer explicitement, à l'oral comme à l'écrit, ce que les données montrent de ce que nous décidons d'en faire.
   \end{block}
 \end{frame}
 
 \begin{frame}{Ce que le maximum masque}
   \begin{itemize}
-    \item la durée et la continuité d'un éventuel dépassement ;
-    \item l'âge de la mesure et la cadence d'acquisition ;
-    \item les valeurs manquantes ou non reçues ;
-    \item l'incertitude de mesure et la calibration ;
-    \item l'évolution qui suivra l'instant observé.
+    \item Il ne dit rien de la durée ni de la continuité d'un éventuel dépassement : un pic d'une minute et un plateau d'une heure produisent le même maximum.
+    \item Il ne dit rien de l'âge de la mesure ni de la cadence d'acquisition, alors que nous avons déjà vu que cet âge peut varier de plusieurs dizaines de minutes selon la zone.
+    \item Il ne signale aucune valeur manquante ou non reçue : une zone silencieuse n'apparaît pas comme une alerte, elle disparaît simplement du graphique.
+    \item Il ne dit rien de l'incertitude de mesure ni de l'état de calibration du capteur qui l'a produit.
+    \item Il ne dit rien de l'évolution qui suivra l'instant observé : une température qui redescend et une température qui continue de monter produisent, un instant donné, le même maximum.
   \end{itemize}
-  \decisionquestion{Le maximum suffit-il à autoriser une action irréversible ?}
+  \decisionquestion{Le maximum observé suffit-il, à lui seul, à autoriser une action irréversible ?}
 \end{frame}
 
 \begin{frame}{Construire une recommandation défendable}
   \begin{enumerate}
-    \item une action concrète et proportionnée ;
-    \item un niveau de confiance : très faible, faible, moyen ou élevé ;
-    \item deux preuves chiffrées et retrouvables ;
-    \item au moins deux incertitudes qui pourraient changer la décision ;
-    \item une vérification prioritaire, terrain ou technique.
+    \item une action concrète et proportionnée à la preuve disponible ;
+    \item un niveau de confiance explicite : très faible, faible, moyen ou élevé ;
+    \item deux preuves chiffrées et retrouvables dans les fichiers produits ;
+    \item au moins deux incertitudes qui pourraient, si elles se confirmaient, changer la décision ;
+    \item une vérification prioritaire, terrain ou technique, choisie parmi ces incertitudes.
   \end{enumerate}
   \begin{alertblock}{Formulation attendue}
     « Je recommande ..., avec une confiance ..., parce que ... ; je vérifierais ... avant ... . »
   \end{alertblock}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Un graphique peut-il constituer, à lui seul, une preuve suffisante ?}
+    Non : il répond à une question précise et laisse ouvertes toutes les questions qu'il ne pose pas -- durée, tendance, calibration, état futur de la zone.
+  \end{block}
+  \begin{block}{Que faut-il toujours séparer en présentant un résultat à un décideur ?}
+    L'observation directement visible sur le graphique, l'interprétation prudente qui en découle, et l'action proposée : ces trois niveaux ne doivent jamais être fondus en une seule phrase.
+  \end{block}
+  \begin{block}{Un seuil affiché sur un graphique est-il automatiquement une norme ?}
+    Non : ici, 35\,°C reste un seuil pédagogique choisi pour la séance, qui devrait être validé par le métier avant tout usage opérationnel réel.
+  \end{block}
 \end{frame}
 
 \begin{frame}[plain]
@@ -519,7 +597,7 @@ python3 -m iot_decision.baseline_cli transform \
   \Huge Section 5\\[3mm]
   \Large Décider, justifier et vérifier
   \vfill
-  \normalsize Nous revenons maintenant à la situation initiale avec une preuve construite collectivement.
+  \normalsize Nous revenons maintenant à la situation initiale, mais avec une preuve construite collectivement au fil de la séance.
 \end{frame}
 
 \begin{frame}{Activité H / TP 4 -- Le brief décisionnel}
@@ -534,46 +612,46 @@ python3 -m iot_decision.baseline_cli transform \
     \item proposer une vérification terrain ou technique prioritaire.
   \end{enumerate}
   \begin{alertblock}{Règle de restitution}
-    Une observation, une interprétation et une action doivent être identifiables séparément.
+    Une observation, une interprétation et une action doivent rester identifiables séparément dans votre texte.
   \end{alertblock}
 \end{frame}
 
 \begin{frame}{Activité H -- Retour au vote initial}
-  Revotez entre les mêmes options A à D, puis comparez avec votre choix du début :
+  Revotez entre les mêmes options A à D, puis comparez avec votre choix du début de séance :
   \begin{itemize}
-    \item l'action a-t-elle changé ?
-    \item la confiance a-t-elle augmenté ou diminué ?
-    \item quelle étape de la pipeline a produit ce changement ?
-    \item quelle information demanderiez-vous maintenant au système ou au terrain ?
+    \item Votre action a-t-elle changé, et si oui, à cause de quelle preuve précise ?
+    \item Votre confiance a-t-elle augmenté ou diminué depuis le vote initial ?
+    \item Quelle étape précise de la pipeline -- extraction, transformation, visualisation -- a le plus contribué à ce changement ?
+    \item Quelle information supplémentaire demanderiez-vous maintenant au système ou à une équipe terrain ?
   \end{itemize}
   \vfill
-  \alert{Une meilleure compréhension peut conduire à une confiance plus faible : c'est parfois un progrès.}
+  \alert{Une meilleure compréhension de la situation peut conduire à une confiance plus faible qu'au départ : c'est parfois un progrès, pas un échec du raisonnement.}
 \end{frame}
 
 \begin{frame}{Ce que cette première pipeline autorise}
   \begin{block}{Nous pouvons déjà}
-    identifier les messages reçus, comparer les maxima observés, repérer une zone au-dessus d'un seuil pédagogique et demander une inspection ciblée.
+    identifier les 15 messages reçus, comparer les maxima observés entre les cinq zones, repérer qu'une zone dépasse le seuil pédagogique, et demander une inspection ciblée sur cette base.
   \end{block}
   \begin{alertblock}{Nous ne pouvons pas encore}
-    certifier la sécurité de la base, démontrer une tendance, mesurer une durée de dépassement ou remplacer une vérification terrain.
+    certifier la sécurité réelle de la base, démontrer une tendance dans le temps, mesurer la durée d'un dépassement, ni remplacer une vérification terrain par un simple calcul.
   \end{alertblock}
 \end{frame}
 
 \begin{frame}{Transition vers la suite du cours}
-  Les prochaines séquences approfondiront progressivement :
+  Les prochaines séquences approfondiront progressivement chacune des limites que nous venons d'identifier :
   \begin{enumerate}
-    \item la source MQTT et la qualité des messages ;
-    \item le parsing et la traçabilité ;
-    \item les données manquantes, doublons et incohérences ;
-    \item les indicateurs trompeurs ;
-    \item la visualisation, la sécurité et la robustesse.
+    \item la source MQTT et la qualité des messages eux-mêmes ;
+    \item le parsing et la traçabilité de chaque ligne produite ;
+    \item les données manquantes, les doublons et les incohérences ;
+    \item les indicateurs trompeurs et les pièges de l'agrégation ;
+    \item la visualisation, la sécurité et la robustesse de toute la chaîne.
   \end{enumerate}
   \vfill
-  Cette séance fournit la baseline à partir de laquelle nous mesurerons les améliorations et les risques.
+  Cette séance fournit la baseline à partir de laquelle nous mesurerons, séquence après séquence, les améliorations obtenues et les risques qui subsistent.
 \end{frame}
 
 \begin{frame}{Activité I -- Synthèse individuelle}
-  Complétez les trois phrases :
+  Complétez les trois phrases, seul et sans écran :
   \begin{enumerate}
     \item La pipeline permet d'affirmer que ...
     \item Elle ne permet pas d'affirmer que ...
@@ -583,15 +661,27 @@ python3 -m iot_decision.baseline_cli transform \
   \alert{Technique $\rightarrow$ donnée $\rightarrow$ indicateur $\rightarrow$ décision $\rightarrow$ confiance.}
 \end{frame}
 
+\begin{frame}{Ce que la séance a permis d'établir -- synthèse de référence}
+  \small
+  \begin{block}{Résultat de référence sur ce lot}
+    15 messages retained, cinq zones, un maximum de 35,4\,°C dans \texttt{battery-shelter-01}, et une fraîcheur très inégale : 65 à 75 minutes d'ancienneté pour l'abri optronique contre 5 à 15 minutes pour les quatre autres zones.
+  \end{block}
+  \begin{block}{Une recommandation défendable, à titre d'exemple}
+    Inspection ciblée du stockage batteries et vérification terrain de l'abri optronique avant tout maintien sans réserve, avec une confiance qualifiée de \emph{faible} : les preuves sont cohérentes mais le seuil n'est pas homologué et la calibration n'est pas démontrée.
+  \end{block}
+  \normalsize
+  \alert{D'autres formulations restent tout à fait recevables si elles explicitent clairement l'arbitrage entre les preuves retenues et les limites assumées : ce n'est pas la seule action qui est évaluée, mais la qualité du raisonnement qui y conduit.}
+\end{frame}
+
 \begin{frame}{Références et ressources}
   \tiny
   \begin{itemize}
-    \item OASIS, \emph{MQTT Version 5.0}: \url{https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html}
-    \item Eclipse Mosquitto, documentation: \url{https://mosquitto.org/man/mosquitto_sub-1.html}
-    \item Python, bibliothèques `json` et `csv`: \url{https://docs.python.org/3/library/json.html}
-    \item JCGM 100:2008, incertitude de mesure: \url{https://www.bipm.org/en/committees/jc/jcgm/publications}
-    \item NISTIR 8286A Rev. 1, gestion du risque: \url{https://doi.org/10.6028/NIST.IR.8286Ar1}
-    \item Matplotlib, visualisation: \url{https://matplotlib.org/stable/}
+    \item OASIS, \emph{MQTT Version 5.0} -- définit précisément retained, topic et qualité de service : \url{https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html}
+    \item Eclipse Mosquitto, documentation -- broker utilisé dans notre laboratoire : \url{https://mosquitto.org/man/mosquitto_sub-1.html}
+    \item Python, bibliothèques \texttt{json} et \texttt{csv} -- outils standard utilisés par \texttt{iot\_decision} : \url{https://docs.python.org/3/library/json.html}
+    \item JCGM 100:2008 -- cadre normatif de référence pour l'incertitude de mesure : \url{https://www.bipm.org/en/committees/jc/jcgm/publications}
+    \item NISTIR 8286A Rev. 1 -- gestion du risque appliquée aux systèmes d'information : \url{https://doi.org/10.6028/NIST.IR.8286Ar1}
+    \item Matplotlib, documentation -- bibliothèque utilisée pour la visualisation : \url{https://matplotlib.org/stable/}
   \end{itemize}
 \end{frame}
 

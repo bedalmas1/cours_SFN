@@ -1,14 +1,513 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
 \graphicspath{{figures/}}
-
-\title{Séquence 4 -- Qualité des données et incertitude}
+\title{De la donnée capteur à la décision opérationnelle}
+\subtitle{Séquence 4 -- Qualité des données et incertitude}
 \author{École de l'air et de l'espace}
 \date{}
 
 \begin{document}
-\begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Relier la qualité des données au niveau de confiance dans la décision.
+
+\begin{frame}
+  \titlepage
 \end{frame}
+
+\begin{frame}{Bienvenue dans la séquence 4}
+  \begin{block}{Ce que nous ajoutons aujourd'hui}
+    Jusqu'ici, nous avons supposé que les valeurs numériques présentes dans un message étaient au moins plausibles. Aujourd'hui, nous arrêtons de le supposer.
+  \end{block}
+  \begin{itemize}
+    \item Une valeur peut être présente sans être valide : un champ manquant ailleurs dans le même message, une unité incohérente, ou une valeur physiquement impossible peuvent toutes se cacher derrière un nombre d'apparence normale.
+    \item Un silence dans une chronologie de mesures peut être un vrai manque de message, ou seulement la conséquence du rejet d'une ligne invalide : ces deux silences se ressemblent, mais n'appellent pas la même vérification.
+    \item Nous allons construire, sur nos propres données, la différence entre ces deux formes de silence -- et voir pourquoi la confondre peut fausser une décision.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Le fil rouge des huit séquences}
+  \centering
+  \Large Donnée capteur imparfaite\\[2mm]
+  $\Downarrow$\\[-1mm]
+  Pipeline de traitement\\[-1mm]
+  $\Downarrow$\quad \alert{\normalsize aujourd'hui : le filtre qualité}\\[-1mm]
+  Indicateur\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Décision opérationnelle
+  \vfill
+  \normalsize La séquence 1 a construit une pipeline sans jamais interroger la validité des valeurs qu'elle transportait. La séquence 4 ajoute précisément l'étape qui manquait : avant de calculer quoi que ce soit, décider ce qui a le droit d'entrer dans le calcul.
+\end{frame}
+
+\begin{frame}{Ce que vous saurez faire à la fin de cette séquence}
+  \begin{enumerate}
+    \item nommer et détecter quatre types d'erreurs de contenu : champ manquant, unité incohérente, valeur hors plage physique, incohérence temporelle ;
+    \item séparer les messages propres des messages rejetés sans jamais corriger silencieusement une valeur ;
+    \item distinguer un silence réel dans une chronologie d'un silence simplement expliqué par une ligne rejetée ;
+    \item relier un silence non expliqué à la confiance que l'on peut accorder à une valeur qui le suit ;
+    \item recommander une action avec confiance, preuves, incertitudes et vérification terrain.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{La question qui guidera la séance}
+  \decisionquestion{À partir de quel niveau d'erreur et de silence une alerte température devient-elle insuffisante pour agir seule ?}
+  \begin{itemize}
+    \item Nous ne cherchons pas un seuil universel d'erreur acceptable, mais une méthode pour qualifier, cas par cas, ce qu'un lot de données permet réellement d'affirmer.
+    \item Une même valeur d'alerte peut être défendable ou fragile selon ce qui l'entoure : son contexte, ses voisines, et surtout les silences qui la précèdent.
+    \item Le raisonnement compte autant que la conclusion : deux décisions différentes peuvent être également recevables si les preuves et les limites sont explicites.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 1\\[3mm]
+  \Large Une alerte, et rien d'autre
+  \vfill
+  \normalsize Avant d'ouvrir le moindre fichier, nous décidons avec l'information la plus pauvre possible : une phrase.
+\end{frame}
+
+\begin{frame}{Le scénario : une alerte apparaît}
+  \begin{columns}[T]
+    \column{.55\textwidth}
+    Une supervision transmet un message unique : « \texttt{battery-shelter-01} a atteint 36,2\,°C, au-dessus du seuil habituel. » Aucune autre information n'accompagne cette phrase.
+    \column{.4\textwidth}
+    \begin{block}{Contrainte de décision}
+      Vous ne savez ni si cette valeur est isolée, ni si elle a été précédée d'un silence, ni si le message qui la porte respecte les règles de qualité que nous allons définir.
+    \end{block}
+  \end{columns}
+  \vfill
+  \alert{La première question n'est donc pas « la valeur est-elle haute ? », mais « cette valeur est-elle même une donnée sur laquelle on peut raisonner ? »}
+\end{frame}
+
+\begin{frame}{Avant de regarder les données : votre décision}
+  \begin{columns}[T]
+    \column{.5\textwidth}
+    Choisissez une réponse :
+    \begin{enumerate}
+      \item[A.] l'alerte est exploitable telle quelle ;
+      \item[B.] il faut d'abord contrôler la qualité des données ;
+      \item[C.] maintenir l'activité par prudence en attendant ;
+      \item[D.] suspendre l'activité par prudence en attendant.
+    \end{enumerate}
+    \column{.42\textwidth}
+    Notez également :
+    \begin{itemize}
+      \item votre confiance de 0 à 100 \% ;
+      \item votre raison principale ;
+      \item l'information qui vous manque le plus.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \alert{Ce vote initial sera comparé au vote final, une fois le contrôle qualité effectué sur les données réelles.}
+\end{frame}
+
+\begin{frame}{Une valeur n'est pas encore une donnée validée}
+  \begin{description}
+    \item[Valeur] un nombre, isolé de tout contrôle : « 36,2 ».
+    \item[Message] cette valeur replacée dans un message complet, avec un champ censé porter son unité, son horodatage et sa zone.
+    \item[Donnée validée] un message dont chaque champ obligatoire est présent, dont l'unité est reconnue, et dont la valeur reste physiquement plausible.
+    \item[Décision] une action choisie en tenant compte de ce que la donnée validée permet, ou non, d'affirmer.
+  \end{description}
+  \begin{block}{Le piège de cette séquence}
+    Un message peut franchir les trois premières étapes en apparence -- il ressemble à un message normal -- tout en échouant silencieusement à l'une d'elles. Nous allons apprendre à le détecter avant qu'il n'atteigne une décision.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Une alerte réduite à une seule phrase prouve-t-elle quoi que ce soit sur la qualité de la donnée qui la porte ?}
+    Non : elle ne dit rien sur la présence de tous les champs attendus, sur la cohérence de l'unité, ni sur la plausibilité physique de la valeur. Ces propriétés ne se voient qu'en examinant le message complet.
+  \end{block}
+  \begin{block}{Pourquoi distinguer « valeur », « message » et « donnée validée » ?}
+    Parce qu'une même valeur numérique peut appartenir à un message par ailleurs invalide : la valeur seule ne suffit jamais à juger de la qualité de l'ensemble.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 2\\[3mm]
+  \Large Quatre qualités d'une donnée
+  \vfill
+  \normalsize Avant de coder le moindre contrôle, nous devons savoir précisément ce que chaque contrôle est censé vérifier.
+\end{frame}
+
+\begin{frame}{Validité}
+  \begin{block}{Définition}
+    La ligne respecte les règles déclarées : chaque champ obligatoire est présent, l'unité appartient au vocabulaire attendu, et la valeur reste dans une plage physiquement plausible.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} confondre « le champ existe dans le JSON » avec « le champ contient une valeur correcte ».
+    \item \textbf{Effet sur la décision :} une ligne invalide ne doit jamais entrer dans un calcul d'indicateur sans avoir été signalée au préalable.
+  \end{itemize}
+  \decisionquestion{Un message peut-il être syntaxiquement correct -- un JSON qui se parse sans erreur -- tout en étant invalide au sens de cette séquence ?}
+\end{frame}
+
+\begin{frame}{Complétude}
+  \begin{block}{Définition}
+    Tout ce qui était attendu sur une période donnée est effectivement arrivé : aucune zone, aucun instant de mesure attendu ne manque silencieusement.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} confondre un message reçu puis rejeté avec un message qui n'a jamais été reçu du tout.
+    \item \textbf{Effet sur la décision :} un vrai manque de transmission et un rejet de qualité n'appellent pas la même vérification terrain.
+  \end{itemize}
+  \alert{Nous reviendrons sur ce piège précis dans l'incident de fin de séance : c'est le cœur de la séquence.}
+\end{frame}
+
+\begin{frame}{Cohérence}
+  \begin{block}{Définition}
+    Les champs d'une même ligne, ou de lignes voisines dans le temps, ne se contredisent pas entre eux.
+  \end{block}
+  \begin{exampleblock}{Exemple réel du lot}
+    Un message de \texttt{it-room-01} déclare \texttt{measured\_at = 2026-10-19T10:15:00Z} alors qu'il a été \texttt{received\_at = 2026-10-19T09:55:00Z}, soit vingt minutes \emph{avant} l'instant où il prétend avoir été mesuré. Une mesure ne peut pas être reçue avant d'avoir eu lieu.
+  \end{exampleblock}
+  \textbf{Effet sur la décision :} une incohérence temporelle invalide la ligne entière ; elle ne se corrige pas en gardant une seule des deux horloges.
+\end{frame}
+
+\begin{frame}{Précision}
+  \begin{block}{Définition}
+    La mesure reflète un ordre de grandeur physiquement crédible pour le contexte décrit -- ici, la température ambiante d'un abri sur une base aérienne.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire qu'une valeur numérique plausible en apparence est forcément exacte physiquement.
+    \item \textbf{Effet sur la décision :} aucun contrôle automatique de cette séquence ne peut démontrer l'exactitude d'une mesure ; il peut seulement écarter ce qui est physiquement impossible.
+  \end{itemize}
+  \alert{Rejeter une valeur hors plage n'est pas la même chose que valider les valeurs restantes : cela ne fait qu'écarter le pire des cas.}
+\end{frame}
+
+\begin{frame}[fragile]{Un exemple filé : le message incomplet d'it-room-01}
+  \scriptsize
+  \begin{verbatim}
+{"topic":"airbase/batch002/it-room-01/temperature/0002",
+ "received_at":"2026-10-19T09:51:00Z","retained":true,
+ "payload":{"batch_id":"alert-window-002","message_id":"it-room-01-0002",
+  "site_id":"base-projetee-alpha","zone":"it-room-01","asset_type":"tactical_it",
+  "sensor":"temperature","measured_at":"2026-10-19T09:50:00Z",
+  "value":31.4,"sequence":2}}
+  \end{verbatim}
+  \normalsize
+  \alert{Le champ \texttt{unit} est absent de ce payload. La valeur \texttt{31.4} est présente, plausible, et pourtant ce message est invalide : sans unité déclarée, \texttt{31.4} ne veut rien dire.}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Validité et précision sont-elles la même qualité ?}
+    Non : la validité contrôle la forme et la plausibilité déclarative (champs, unité, plage) ; la précision porterait sur l'exactitude physique réelle, que nos contrôles ne peuvent pas démontrer.
+  \end{block}
+  \begin{block}{Pourquoi un message avec un JSON parfaitement valide peut-il être invalide au sens de cette séquence ?}
+    Parce que la validité JSON ne garantit ni la présence de chaque champ métier obligatoire, ni la cohérence entre ses champs, ni la plausibilité physique de sa valeur.
+  \end{block}
+  \begin{block}{Que retenir du message d'\texttt{it-room-01} ci-dessus ?}
+    Qu'une valeur présente et plausible ne suffit pas : l'absence du seul champ \texttt{unit} rend toute la ligne invalide, malgré une valeur en apparence normale.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 3\\[3mm]
+  \Large TP 1 -- Détecter les erreurs
+  \vfill
+  \normalsize Vous allez maintenant appliquer les quatre contrôles à la fenêtre réelle de 24 messages.
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : lancer le contrôle qualité}
+  \scriptsize
+  \begin{verbatim}
+from iot_decision.quality import load_raw, flatten, validate_row
+rows = [flatten(e) for e in load_raw('data/samples/batch002_quality_messages.jsonl')]
+for r in rows:
+    reason = validate_row(r)
+    if reason:
+        print(r['message_id'], '->', reason)
+  \end{verbatim}
+  \normalsize
+  Ce script s'exécute dans le notebook de la séquence, après \texttt{export PYTHONPATH=src}. Avant de le lancer, prédisez : combien de messages seront signalés, et pour quels types de raisons ?
+\end{frame}
+
+\begin{frame}{Activité B / TP 1 -- Détecter sans corriger}
+  \begin{block}{Votre mission}
+    Exécuter le contrôle qualité sur les 24 messages et documenter chaque ligne signalée.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la commande de détection ;
+    \item relever, pour chaque ligne signalée, son \texttt{message\_id} et sa raison exacte ;
+    \item classer les raisons en quatre catégories : champ, unité, valeur, temps ;
+    \item pour chacune, identifier le champ ou la valeur précisément en cause ;
+    \item ne modifier aucun fichier source pendant cette étape.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Un tableau des lignes signalées et une phrase : « Ce lot contient au moins ... type(s) d'erreur distincts. »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Ce que révèle le contrôle qualité}
+  \scriptsize
+  \begin{center}
+  \begin{tabular}{@{}p{.3\textwidth}p{.13\textwidth}p{.45\textwidth}@{}}
+    \toprule
+    Message & Zone & Raison exacte \\
+    \midrule
+    \texttt{it-room-01-0002} & it-room & champ manquant : \texttt{unit} \\[2pt]
+    \texttt{maintenance-zone-01-0002} & maintenance & unité incohérente : \texttt{fahrenheit} \\[2pt]
+    \texttt{optronics-shelter-01-0002} & optronics & valeur hors plage physique : 214,7 \\[2pt]
+    \texttt{it-room-01-0003} & it-room & incohérence temporelle \\[2pt]
+    \texttt{comms-shelter-01-0001} & comms & doublon exact (2e occurrence de la même publication) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \normalsize Cinq lignes rejetées sur vingt-quatre, une par type de contrôle, réparties sur quatre zones différentes.
+\end{frame}
+
+\begin{frame}{Zoom : l'unité incohérente}
+  Le message \texttt{maintenance-zone-01-0002} déclare \texttt{value = 86.9} avec \texttt{unit = "fahrenheit"}, au milieu de quatre autres messages de la même zone tous exprimés en Celsius.
+  \begin{block}{Le calcul qui aurait été silencieusement faux}
+    86,9\,°F correspond à environ 30,5\,°C -- une valeur en fait cohérente avec ses voisines. Sans le contrôle d'unité, ce message aurait été traité comme 86,9\,°C : une aberration invisible dans un tableau, mais catastrophique dans un calcul de maximum.
+  \end{block}
+  \alert{Nous ne convertissons jamais silencieusement l'unité : nous rejetons et documentons, pour que l'erreur de configuration reste visible.}
+\end{frame}
+
+\begin{frame}{Zoom : la valeur hors plage physique}
+  Le message \texttt{optronics-shelter-01-0002} déclare \texttt{value = 214.7} en \texttt{celsius}, entouré de quatre valeurs voisines entre 27,9 et 28,3\,°C.
+  \begin{block}{Bornes retenues pour cette séquence}
+    -10\,°C à 60\,°C. Ce ne sont pas des bornes officielles ni une spécification du fabricant : ce sont des bornes pédagogiques, à faire valider par le responsable du matériel avant tout usage réel.
+  \end{block}
+  \decisionquestion{Si cette valeur n'avait pas été écartée, quel effet aurait-elle eu sur le maximum calculé pour cette zone ?}
+\end{frame}
+
+\begin{frame}{Le doublon exact : une retransmission, pas un candidat}
+  \small
+  Le message \texttt{comms-shelter-01-0001} apparaît deux fois dans le brut : même topic, même \texttt{message\_id}, même mesure, même horodatage de mesure -- seul l'instant de réception diffère de quatre secondes.
+  \begin{alertblock}{Rappel de la séquence 3}
+    Un \emph{candidat} doublon partage des valeurs semblables mais porte des identifiants différents : on ne le supprime jamais sans règle explicite. Ici, c'est l'inverse : l'identifiant, le topic et la mesure sont rigoureusement identiques -- une retransmission du même événement, probablement liée au mécanisme de re-livraison de MQTT.
+  \end{alertblock}
+  \normalsize Ce cas précis est le seul de cette séquence où retirer une ligne ne perd aucune information : les deux occurrences décrivent le même événement, pas deux événements distincts.
+\end{frame}
+
+\begin{frame}{Débrief -- quelles erreurs sont graves pour la décision ?}
+  \begin{enumerate}
+    \item Classez les cinq erreurs détectées de la plus grave à la moins grave pour la décision concernant \texttt{battery-shelter-01}.
+    \item Une erreur sur une zone différente de celle en alerte a-t-elle la même gravité qu'une erreur sur la zone en alerte elle-même ?
+    \item Le doublon exact aurait-il faussé un décompte s'il n'avait pas été détecté ? Dans quel sens ?
+    \item Une ligne rejetée est-elle perdue pour l'analyse, ou seulement exclue du calcul ?
+  \end{enumerate}
+  \vfill
+  \alert{Une ligne rejetée reste dans \texttt{rejected.csv} avec sa raison : elle quitte le calcul, jamais le dossier de preuve.}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Pourquoi ne pas convertir silencieusement 86,9\,°F en Celsius plutôt que rejeter le message ?}
+    Parce que corriger silencieusement masquerait l'erreur de configuration qui a produit cette unité incorrecte, et empêcherait de la détecter ailleurs dans le système.
+  \end{block}
+  \begin{block}{En quoi le doublon exact de \texttt{comms-shelter-01} diffère-t-il d'un candidat doublon de la séquence 3 ?}
+    Le candidat doublon partage des valeurs semblables avec des identifiants différents et reste ambigu ; le doublon exact ici partage un identifiant, un topic et une mesure rigoureusement identiques : c'est la même publication reçue deux fois.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 4\\[3mm]
+  \Large Rejet, correction, quarantaine
+  \vfill
+  \normalsize Détecter une erreur ne dit pas encore quoi en faire : trois réponses sont possibles, une seule est appliquée ici.
+\end{frame}
+
+\begin{frame}{Rejet, correction, quarantaine}
+  \begin{description}
+    \item[Rejet] écarter la ligne du calcul, en conservant sa trace complète et sa raison exacte dans un fichier séparé.
+    \item[Correction] remplacer une valeur jugée fautive par une valeur jugée plus probable, silencieusement ou explicitement.
+    \item[Quarantaine] isoler une ligne ambiguë sans la valider ni la rejeter définitivement, en attendant un avis humain ou une vérification externe.
+  \end{description}
+  \begin{alertblock}{Choix retenu dans cette séquence}
+    Le rejet, systématiquement documenté. Aucune correction automatique n'est appliquée : convertir une unité ou ajuster une valeur resterait une hypothèse, jamais une observation.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Pourquoi ce cours ne corrige jamais silencieusement}
+  \begin{itemize}
+    \item Une correction silencieuse remplace une observation par une hypothèse, sans que quiconque relisant le fichier plus tard ne puisse s'en rendre compte.
+    \item Elle rend impossible la détection d'un problème récurrent : si l'unité Fahrenheit est corrigée automatiquement partout, personne ne remarquera qu'un capteur reste mal configuré.
+    \item Elle transfère silencieusement la responsabilité du jugement de l'humain vers un script, sans trace du raisonnement suivi.
+  \end{itemize}
+  \decisionquestion{Existe-t-il un cas, dans ce lot, où une quarantaine aurait été plus appropriée qu'un rejet ferme ?}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : produire clean.csv et rejected.csv}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.quality_cli \
+  data/samples/batch002_quality_messages.jsonl \
+  data/processed/batch002_measurements_clean.csv \
+  data/processed/batch002_rejected.csv \
+  data/processed/batch002_quality_report.json
+  \end{verbatim}
+  \normalsize
+  Une seule commande produit les trois sorties à partir de la même source et du même calcul, pour qu'elles ne puissent jamais se désaccorder entre elles.
+\end{frame}
+
+\begin{frame}{Activité D / TP 2 -- Séparer sans corriger}
+  \begin{block}{Votre mission}
+    Produire \texttt{clean.csv} et \texttt{rejected.csv}, puis vérifier qu'aucune valeur n'a été modifiée.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la commande de séparation ;
+    \item vérifier les 19 lignes propres et les 5 lignes rejetées ;
+    \item comparer chaque valeur de \texttt{rejected.csv} à sa ligne d'origine dans le brut ;
+    \item confirmer qu'aucune valeur n'a changé, seule une raison a été ajoutée ;
+    \item produire la chronologie figurée à partir des deux fichiers.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Les deux CSV et une phrase : « Ce lot propre est-il suffisant pour comparer les zones ? Pourquoi ? »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lire un contrôle de qualité minimal}
+  \begin{itemize}
+    \item 24 lignes brutes attendues : si ce nombre diffère, le fichier source a changé.
+    \item 19 lignes propres et 5 rejetées attendues : la somme doit toujours retomber sur 24.
+    \item cinq raisons de rejet distinctes attendues : une seule occurrence de chaque type sur ce lot précis.
+    \item aucune valeur modifiée entre le brut et \texttt{rejected.csv} : seule une colonne supplémentaire est ajoutée.
+    \item toutes les colonnes d'origine conservées dans \texttt{clean.csv} : topic, réception et retained compris.
+  \end{itemize}
+  \decisionquestion{Le fichier propre est-il exempt de toute erreur, ou seulement des cinq erreurs que nos quatre contrôles savent détecter ?}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Pourquoi produire les trois fichiers -- propre, rejeté, rapport -- en un seul appel de commande ?}
+    Parce qu'ils partagent la même source et le même calcul : les produire séparément risquerait un désaccord entre eux si l'un était régénéré sans les autres.
+  \end{block}
+  \begin{block}{Que perd-on en supprimant \texttt{rejected.csv} après la séance ?}
+    La preuve que ces cinq lignes ont existé et la raison précise de leur exclusion : toute contestation future deviendrait impossible à instruire.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 5\\[3mm]
+  \Large Le silence de battery-shelter-01
+  \vfill
+  \normalsize Nous revenons maintenant à la zone en alerte, avec les preuves construites depuis le début de la séance.
+\end{frame}
+
+\begin{frame}[fragile]{Incident -- quatre silences détectés}
+  \scriptsize
+  \begin{verbatim}
+python3 -m json.tool data/processed/batch002_quality_report.json
+  \end{verbatim}
+  \normalsize
+  Le rapport signale un silence -- un écart de plus de sept minutes entre deux mesures propres consécutives -- sur quatre zones : \texttt{battery-shelter-01}, \texttt{it-room-01}, \texttt{maintenance-zone-01} et \texttt{optronics-shelter-01}.
+  \decisionquestion{Ces quatre silences ont-ils tous la même origine ?}
+\end{frame}
+
+\begin{frame}{Silence réel ou effet du filtrage ?}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{.28\textwidth}p{.14\textwidth}p{.14\textwidth}p{.32\textwidth}@{}}
+    \toprule
+    Zone & Silence & Expliqué ? & Explication \\
+    \midrule
+    battery-shelter-01 & 20 min & \textbf{non} & aucune ligne rejetée dans cette zone \\[2pt]
+    it-room-01 & 15 min & oui & deux lignes rejetées dans la fenêtre \\[2pt]
+    maintenance-zone-01 & 10 min & oui & une ligne rejetée (unité incohérente) \\[2pt]
+    optronics-shelter-01 & 10 min & oui & une ligne rejetée (valeur hors plage) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \normalsize Trois silences sur quatre s'expliquent entièrement par une ligne que nous avons nous-mêmes rejetée : ce n'est pas un message perdu en transit, c'est un message reçu puis écarté pour une raison déjà documentée. Un seul silence reste sans explication.
+\end{frame}
+
+\begin{frame}{La chronologie de la fenêtre d'alerte}
+  \centering
+  \includegraphics[width=.85\textwidth]{batch002_quality_timeline.png}
+\end{frame}
+
+\begin{frame}{Ce que le silence de battery-shelter-01 signifie}
+  \begin{block}{Ce que nous observons}
+    Dernière mesure propre à 9 h 45 (34,6\,°C), puis un silence de vingt minutes sans aucun message reçu pour cette zone, puis une reprise à 10 h 05 avec une valeur de 36,2\,°C -- au-dessus du seuil pédagogique de 35\,°C.
+  \end{block}
+  \begin{alertblock}{Ce que nous ne pouvons pas affirmer}
+    Ni que la température a grimpé progressivement pendant ce silence, ni qu'un incident technique a interrompu la transmission, ni que la valeur de reprise est exacte : le silence laisse ces trois hypothèses ouvertes.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Activité F -- Brief décisionnel et vote final}
+  \begin{block}{Votre mission}
+    Rédiger une recommandation de 150 mots maximum à partir des trois fichiers produits.
+  \end{block}
+  \begin{enumerate}
+    \item choisir une action concrète et son périmètre ;
+    \item qualifier la confiance ;
+    \item citer deux preuves chiffrées et retrouvables (fichier et champ) ;
+    \item citer deux incertitudes qui pourraient changer la décision ;
+    \item proposer une vérification terrain ou technique prioritaire.
+  \end{enumerate}
+  \begin{alertblock}{Règle de restitution}
+    Le silence réel de \texttt{battery-shelter-01} doit apparaître explicitement dans votre argumentation, pas seulement la valeur de 36,2\,°C.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Ce que cette séquence permet}
+  \begin{block}{Nous pouvons déjà}
+    nommer et localiser quatre types d'erreurs de contenu, séparer propre et rejeté de façon traçable, et distinguer un silence réel d'un silence expliqué par nos propres rejets.
+  \end{block}
+  \begin{alertblock}{Nous ne pouvons pas encore}
+    expliquer la cause du silence réel de \texttt{battery-shelter-01}, certifier l'état actuel de cette zone, ni garantir qu'aucune autre erreur, non couverte par nos quatre contrôles, ne subsiste dans le lot propre.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Un silence expliqué par un rejet est-il sans importance pour la décision ?}
+    Non : il reste un signal sur la qualité de la source à surveiller ; il n'est simplement pas un signal d'absence de transmission comme celui de \texttt{battery-shelter-01}.
+  \end{block}
+  \begin{block}{Peut-on affirmer que \texttt{battery-shelter-01} est en panne à partir de ce seul silence ?}
+    Non : le silence a plusieurs causes possibles -- panne, coupure de transmission, filtre d'extraction incorrect, ou hausse réelle simplement non enregistrée -- que seule une vérification terrain ou technique peut départager.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Transition vers la suite du cours}
+  Les prochaines séquences s'appuieront directement sur ce réflexe de qualité :
+  \begin{enumerate}
+    \item les indicateurs et leurs pièges d'agrégation, y compris quand la donnée sous-jacente est déjà propre ;
+    \item la visualisation et la communication d'une incertitude sans donner une fausse impression de certitude ;
+    \item la sécurité et la robustesse de toute la chaîne de collecte, en amont même de nos contrôles de qualité.
+  \end{enumerate}
+  \vfill
+  Le rapport qualité produit aujourd'hui restera une pièce du dossier de preuve pour toute décision future concernant ce lot.
+\end{frame}
+
+\begin{frame}{Activité G -- Synthèse individuelle}
+  Complétez les trois phrases, seul et sans écran :
+  \begin{enumerate}
+    \item Le contrôle qualité permet d'affirmer que ...
+    \item Il ne permet pas d'affirmer que ...
+    \item Avant une action irréversible, je vérifierais ...
+  \end{enumerate}
+  \vfill
+  \alert{Valeur $\rightarrow$ validité $\rightarrow$ silence réel ou expliqué $\rightarrow$ décision $\rightarrow$ confiance.}
+\end{frame}
+
+\begin{frame}{Ce que la séance a permis d'établir -- synthèse de référence}
+  \small
+  \begin{block}{Résultat de référence sur ce lot}
+    24 messages bruts, 19 lignes propres, 5 lignes rejetées (une par type de contrôle). Un seul silence sur quatre détectés est réel : celui de \texttt{battery-shelter-01}, vingt minutes sans message, immédiatement suivi d'une valeur de 36,2\,°C au-dessus du seuil pédagogique.
+  \end{block}
+  \begin{block}{Une recommandation défendable, à titre d'exemple}
+    Vérification terrain prioritaire de \texttt{battery-shelter-01} avant toute conclusion sur une tendance, avec une confiance qualifiée de \emph{faible} : la valeur haute est propre, mais rien n'explique le silence qui la précède directement.
+  \end{block}
+  \normalsize
+  \alert{D'autres formulations restent recevables si elles distinguent explicitement silence réel et silence expliqué par un rejet, et si elles proportionnent l'action à cette seule incertitude documentée.}
+\end{frame}
+
+\begin{frame}{Références et ressources}
+  \tiny
+  \begin{itemize}
+    \item ISO 8000-8, \emph{Information and data quality -- Concepts and measuring} -- cadre de référence pour validité et complétude : \url{https://www.iso.org/standard/60805.html}
+    \item OASIS, \emph{MQTT Version 5.0} -- retransmission et mécanisme retenu pour le doublon exact : \url{https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html}
+    \item JCGM 100:2008, incertitude de mesure : \url{https://www.bipm.org/en/committees/jc/jcgm/publications}
+    \item NISTIR 8286A Rev. 1, gestion du risque appliquée aux systèmes d'information : \url{https://doi.org/10.6028/NIST.IR.8286Ar1}
+    \item Python, bibliothèques \texttt{json} et \texttt{csv} : \url{https://docs.python.org/3/library/json.html}
+    \item Matplotlib, documentation : \url{https://matplotlib.org/stable/}
+  \end{itemize}
+\end{frame}
+
 \end{document}
