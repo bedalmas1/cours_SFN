@@ -109,7 +109,7 @@ Attendu : cinq lignes signalées, une par type d'erreur. Ne pas révéler tout d
 |---|---|---|
 | Les cinq erreurs ont-elles la même gravité ? | Refuser une réponse uniforme. | Non : une valeur hors plage physique menace directement un calcul de maximum ; un champ manquant bloque une comparaison ; un doublon peut gonfler un décompte s'il n'est pas détecté. |
 | Quelle erreur aurait le plus faussé un maximum par zone si elle n'avait pas été rejetée ? | Faire chiffrer l'écart. | La valeur de 214,7 aurait dominé toute agrégation de `optronics-shelter-01`, masquant les valeurs réelles de la zone. |
-| Le doublon exact change-t-il un décompte s'il n'est pas retiré ? | Relier à la séquence 3. | Oui : il compterait deux fois le même événement, contrairement à un candidat doublon de la séquence 3, où l'identité même du message reste incertaine. |
+| Le doublon exact change-t-il un décompte s'il n'est pas retiré ? | Distinguer identité certaine et simple ressemblance. | Oui : il compterait deux fois le même événement. Un doublon exact partage un identifiant et un topic identiques (identité certaine) ; une simple ressemblance de valeurs avec des identifiants différents resterait, elle, un candidat à ne jamais supprimer sans règle explicite. |
 | Une ligne rejetée est-elle perdue pour l'analyse ? | Nuancer. | Non : elle reste dans `rejected.csv` avec sa raison ; elle est exclue du calcul, pas du dossier de preuve. |
 
 ## 5. Pause — 10 min

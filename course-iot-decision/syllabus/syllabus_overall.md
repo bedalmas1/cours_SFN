@@ -261,33 +261,35 @@ associé.
 Engagement : Échelle de confiance : 0 impossible, 1 faible, 2 modérée, 3 forte.
 
 ### Séquence 5 - Indicateurs, agrégations et pièges décisionnels
-Objectif général : Montrer que les indicateurs simplifient la réalité et peuvent masquer un risque.
+Objectif général : Montrer qu'un indicateur, qu'il soit un simple calcul statistique ou un score produit par un modèle automatique, compresse toujours la réalité et peut masquer un risque ; plus ce calcul devient opaque, plus cette compression doit être interrogée avant d'être suivie.
 
 Temps      Activité
 
 0:00-0:15  Accroche : la température moyenne de la base est normale
 
-0:15-0:45  Concepts : moyenne, maximum, seuil, durée de dépassement
+0:15-0:40  Concepts : moyenne, maximum, seuil - un indicateur est un choix de compression
 
-0:45-1:30  TP : calculer les indicateurs globaux et par zone
+0:40-1:10  TP : indicateurs globaux et par zone, retrouver la zone masquée par la moyenne
 
-1:30-1:55  Débrief : quels indicateurs racontent des histoires différentes ?
+1:10-1:30  Débrief : quels indicateurs racontent des histoires différentes ? qu'est-ce qu'un indicateur cache toujours ?
+
+1:30-1:55  Concepts : du calcul transparent au calcul opaque - un modèle est un indicateur qu'on ne peut plus décomposer à la main ; biais d'automatisation, sur-apprentissage, dérive
 
 1:55-2:05  Pause
 
-2:05-2:30  Concepts : agrégation trompeuse, perte d'information
+2:05-2:45  TP : décider à partir d'un score automatique fourni, sans voir sa logique
 
-2:30-3:15  Exercice : retrouver une zone critique masquée par la moyenne
+2:45-3:10  Incident injecté : le score se trompe silencieusement sur un cas hors distribution
 
-3:15-3:40  Challenge : choisir seulement 3 indicateurs pour le décideur
+3:10-3:40  Procès à trois : moyenne, maximum et score opaque - lequel présenter au décideur ?
 
-3:40-3:55  Restitution : justification des indicateurs retenus
+3:40-3:55  Restitution : justification du processus de décision retenu
 
 3:55-4:00  Synthèse
 
-Question décisionnelle : Quel indicateur est réellement pertinent pour décider de maintenir ou non l'activité ?
-Livrables : Tables d'indicateurs ; indicateur trompeur identifié ; recommandation sur les indicateurs à suivre.
-Engagement : Procès de l'indicateur : un groupe défend la moyenne globale, un autre l'attaque, un troisième arbitre.
+Question décisionnelle : Quel indicateur, ou quel processus de décision, est réellement digne de confiance pour décider de maintenir ou non l'activité ?
+Livrables : Tables d'indicateurs ; indicateur trompeur identifié ; journal des requêtes au score automatique ; recommandation sur le processus de décision à suivre.
+Engagement : Procès à trois de l'indicateur : un groupe défend la moyenne globale, un deuxième défend le score automatique, un troisième arbitre en confrontant les deux à la zone masquée et à l'incident.
 
 ### Séquence 6 - Visualisation et communication au décideur
 Objectif général : Produire une visualisation claire sans sur-vendre la certitude.

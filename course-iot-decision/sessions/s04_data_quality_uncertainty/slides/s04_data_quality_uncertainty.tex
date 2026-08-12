@@ -274,8 +274,8 @@ for r in rows:
 \begin{frame}{Le doublon exact : une retransmission, pas un candidat}
   \small
   Le message \texttt{comms-shelter-01-0001} apparaît deux fois dans le brut : même topic, même \texttt{message\_id}, même mesure, même horodatage de mesure -- seul l'instant de réception diffère de quatre secondes.
-  \begin{alertblock}{Rappel de la séquence 3}
-    Un \emph{candidat} doublon partage des valeurs semblables mais porte des identifiants différents : on ne le supprime jamais sans règle explicite. Ici, c'est l'inverse : l'identifiant, le topic et la mesure sont rigoureusement identiques -- une retransmission du même événement, probablement liée au mécanisme de re-livraison de MQTT.
+  \begin{alertblock}{Deux sortes de ressemblance, à ne jamais confondre}
+    Un \emph{candidat} doublon partage des valeurs semblables mais porte des identifiants différents : on ne le supprime jamais sans règle explicite, car deux capteurs distincts peuvent légitimement mesurer la même valeur au même instant. Ici, c'est l'inverse : l'identifiant, le topic et la mesure sont rigoureusement identiques -- une retransmission du même événement, probablement liée au mécanisme de re-livraison de MQTT.
   \end{alertblock}
   \normalsize Ce cas précis est le seul de cette séquence où retirer une ligne ne perd aucune information : les deux occurrences décrivent le même événement, pas deux événements distincts.
 \end{frame}
@@ -296,8 +296,8 @@ for r in rows:
   \begin{block}{Pourquoi ne pas convertir silencieusement 86,9\,°F en Celsius plutôt que rejeter le message ?}
     Parce que corriger silencieusement masquerait l'erreur de configuration qui a produit cette unité incorrecte, et empêcherait de la détecter ailleurs dans le système.
   \end{block}
-  \begin{block}{En quoi le doublon exact de \texttt{comms-shelter-01} diffère-t-il d'un candidat doublon de la séquence 3 ?}
-    Le candidat doublon partage des valeurs semblables avec des identifiants différents et reste ambigu ; le doublon exact ici partage un identifiant, un topic et une mesure rigoureusement identiques : c'est la même publication reçue deux fois.
+  \begin{block}{En quoi le doublon exact de \texttt{comms-shelter-01} diffère-t-il d'un simple candidat doublon ?}
+    Un candidat doublon partage des valeurs semblables avec des identifiants différents et reste ambigu ; le doublon exact ici partage un identifiant, un topic et une mesure rigoureusement identiques : c'est la même publication reçue deux fois.
   \end{block}
 \end{frame}
 

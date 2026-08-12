@@ -7,3 +7,5 @@ Les tests vérifieront les scripts Python et les cas de qualité de données. Il
 `test_traceability.py` couvre parsing strict, erreurs, empreintes et candidats doublons. `validate_s03_artifacts.py` reconstruit et vérifie le CSV S03.
 
 `test_quality.py` couvre les quatre contrôles de validité, la détection de doublon exact et la distinction silence réel/silence expliqué par un rejet. `validate_s04_artifacts.py` reconstruit `clean.csv`, `rejected.csv`, le rapport et la figure, puis exécute le notebook.
+
+`test_indicators.py` couvre la moyenne globale, les maxima par zone et la détection de zone masquée. `test_risk_score.py` couvre le score automatique sur les zones connues et sa mise en défaut silencieuse sur une zone hors calibration. `validate_s05_artifacts.py` reconstruit les deux figures et exécute le notebook.

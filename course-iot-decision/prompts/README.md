@@ -7,3 +7,5 @@ Ce dossier accueillera une grille structurée et un prompt d’évaluation centr
 `s03_assessment_prompt.md` pré-évalue parsing, traçabilité, schéma, incident et raisonnement, avec plafond pour une remise purement technique.
 
 `s04_assessment_prompt.md` pré-évalue la validité ligne à ligne, la séparation propre/rejeté et la distinction entre silence réel et silence expliqué par un rejet.
+
+`s05_assessment_prompt.md` pré-évalue les indicateurs transparents, l'usage discipliné du score automatique avant le débrief, et le diagnostic de la zone hors périmètre de calibration.

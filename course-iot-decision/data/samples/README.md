@@ -7,3 +7,5 @@ Emplacement réservé aux petits jeux de données versionnés utilisés dans les
 `batch001_traceability_incident.jsonl` contient deux messages aux champs métier semblables mais dont identifiant, topic, réception et empreinte diffèrent.
 
 `batch002_quality_messages.jsonl` contient 24 messages sur cinq zones autour d'une alerte température, avec cinq erreurs injectées (champ manquant, unité incohérente, valeur hors plage, incohérence temporelle, doublon exact) et un silence réel de vingt minutes sur `battery-shelter-01` juste avant la valeur haute.
+
+`batch003_shift_scenario.jsonl` contient cinq messages d'une zone de stockage carburant jamais vue à la calibration du score de la séquence 5 ; ses valeurs restent sous le seuil pédagogique de 35 °C mais dépassent le seuil de sécurité réel, bien plus bas, propre au carburant.

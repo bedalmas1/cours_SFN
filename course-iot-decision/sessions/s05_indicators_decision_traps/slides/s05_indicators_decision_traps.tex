@@ -1,15 +1,502 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
 \graphicspath{{figures/}}
-
-\title{Séquence 5 -- Indicateurs et pièges décisionnels}
-\subtitle{Agrégations, simplification et risque masqué}
+\title{De la donnée capteur à la décision opérationnelle}
+\subtitle{Séquence 5 -- Indicateurs, agrégations et pièges décisionnels}
 \author{École de l'air et de l'espace}
 \date{}
 
 \begin{document}
-\begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Montrer que les indicateurs simplifient la réalité et peuvent masquer un risque.
+
+\begin{frame}
+  \titlepage
 \end{frame}
+
+\begin{frame}{Bienvenue dans la séquence 5}
+  \begin{block}{L'idée qui traverse toute la séance}
+    Un indicateur -- qu'il s'agisse d'une simple moyenne ou d'un score produit par un modèle automatique -- résume toujours beaucoup de valeurs en une seule. Ce résumé rend une question lisible, mais il peut aussi cacher exactement ce qui aurait dû changer la décision.
+  \end{block}
+  \begin{itemize}
+    \item Le matin, nous travaillerons avec des indicateurs transparents : une moyenne, un maximum, une durée. Chacun se recalcule à la main, ligne par ligne.
+    \item L'après-midi, nous interrogerons un score automatique dont la logique ne sera lue qu'au moment du débrief -- exactement comme un décideur pressé le ferait avec un système qu'il n'a pas conçu.
+    \item La question n'est jamais « l'indicateur a-t-il raison ? », mais « quelle question précise cet indicateur répond-il, et laquelle laisse-t-il sans réponse ? »
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Le fil rouge des huit séquences}
+  \centering
+  \Large Donnée capteur imparfaite\\[2mm]
+  $\Downarrow$\\[-1mm]
+  Pipeline de traitement\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Indicateur \alert{\normalsize -- transparent ce matin, opaque cet après-midi}\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Décision opérationnelle
+  \vfill
+  \normalsize Les séquences précédentes ont construit la pipeline et vérifié la qualité de ce qui y entre. Cette séquence questionne la toute dernière étape avant la décision : le résumé lui-même, qu'il soit un calcul que vous pouvez vérifier ou un score que vous devez d'abord interroger avant de le comprendre.
+\end{frame}
+
+\begin{frame}{Ce que vous saurez faire à la fin de cette séquence}
+  \begin{enumerate}
+    \item calculer des indicateurs transparents (moyenne, maximum, durée au-dessus d'un seuil) et les vérifier à la main ;
+    \item identifier une zone qu'un indicateur global masque complètement ;
+    \item interroger un score automatique comme un décideur, sans avoir besoin d'en connaître la logique interne ;
+    \item diagnostiquer pourquoi un score bien construit peut se tromper silencieusement sur un cas nouveau ;
+    \item recommander un processus de décision combinant plusieurs indicateurs, avec une confiance différenciée selon leur périmètre de validité.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{La question qui guidera la séance}
+  \decisionquestion{Quel indicateur, ou quel processus de décision, est réellement digne de confiance pour décider de maintenir ou non l'activité ?}
+  \begin{itemize}
+    \item Nous ne cherchons pas l'indicateur parfait -- il n'existe pas -- mais à savoir précisément ce que chaque indicateur peut et ne peut pas garantir.
+    \item Un indicateur transparent et un indicateur opaque peuvent tous deux vous tromper ; ils ne vous trompent simplement pas de la même manière.
+    \item Le raisonnement compte autant que la conclusion : savoir nommer la limite d'un indicateur vaut mieux que lui faire une confiance aveugle ou le rejeter en bloc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 1\\[3mm]
+  \Large Une phrase, et rien d'autre
+  \vfill
+  \normalsize Avant d'ouvrir le moindre fichier, nous décidons avec l'information la plus pauvre possible.
+\end{frame}
+
+\begin{frame}{Le scénario : une phrase sans données}
+  \begin{columns}[T]
+    \column{.55\textwidth}
+    Une supervision transmet une seule phrase : « la température moyenne de la base est normale. » Aucun chiffre par zone, aucune donnée brute ne l'accompagne.
+    \column{.4\textwidth}
+    \begin{block}{Contrainte de décision}
+      Une moyenne globale peut être exacte et pourtant ne rien dire d'une zone isolée qui se comporte très différemment du reste.
+    \end{block}
+  \end{columns}
+  \vfill
+  \alert{La première question n'est donc pas « la moyenne est-elle vraie ? », mais « à quelle question cette moyenne répond-elle, et à laquelle ne répond-elle pas ? »}
+\end{frame}
+
+\begin{frame}{Avant de regarder les données : votre décision}
+  \begin{columns}[T]
+    \column{.5\textwidth}
+    Choisissez une réponse :
+    \begin{enumerate}
+      \item[A.] la moyenne suffit, maintenir l'activité ;
+      \item[B.] il faut d'abord décomposer par zone ;
+      \item[C.] maintenir par prudence en attendant cette décomposition ;
+      \item[D.] suspendre par prudence en attendant cette décomposition.
+    \end{enumerate}
+    \column{.42\textwidth}
+    Notez également :
+    \begin{itemize}
+      \item votre confiance de 0 à 100 \% ;
+      \item votre raison principale ;
+      \item l'information qui vous manque le plus.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \alert{Nous reviendrons sur ce vote une fois les indicateurs calculés, puis à nouveau après avoir interrogé le score automatique.}
+\end{frame}
+
+\begin{frame}{Une moyenne n'est pas encore une décision}
+  \begin{description}
+    \item[Valeur] un nombre isolé : « 30,75 ».
+    \item[Indicateur] cette valeur nommée et reliée à une question : « la moyenne des quinze mesures du lot est de 30,75\,°C ».
+    \item[Compression] l'opération qui a produit cet indicateur : ici, réduire quinze valeurs distinctes à une seule.
+    \item[Décision] une action choisie en tenant compte de ce que l'indicateur permet, et ne permet pas, d'affirmer.
+  \end{description}
+  \begin{block}{Le fil de cette séance}
+    Chaque étape de la journée ajoute une couche de compression : de la moyenne, décomposable à la main, jusqu'au score automatique, qui compresse à son tour ce que la moyenne et le maximum auraient pu montrer séparément.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Une moyenne « normale » exclut-elle un problème localisé dans une seule zone ?}
+    Non : une moyenne peut rester basse même si une zone isolée dépasse largement le reste, tant que les autres zones restent suffisamment basses pour compenser dans le calcul.
+  \end{block}
+  \begin{block}{Pourquoi dire qu'un indicateur est une « compression » plutôt qu'un simple calcul ?}
+    Parce qu'il réduit délibérément plusieurs valeurs à une seule pour répondre à une question précise -- et que toute réduction perd, par construction, une partie de l'information de départ.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 2\\[3mm]
+  \Large Un indicateur est un choix de compression
+  \vfill
+  \normalsize Nous allons maintenant calculer nous-mêmes les indicateurs que la phrase d'accroche résumait en une ligne.
+\end{frame}
+
+\begin{frame}{Moyenne}
+  \begin{block}{Définition}
+    La somme de toutes les valeurs, divisée par leur nombre : un résumé unique pour l'ensemble du lot.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire qu'une moyenne basse garantit qu'aucune valeur individuelle n'est élevée.
+    \item \textbf{Effet sur la décision :} une moyenne rassurante peut coexister avec un risque réel et localisé, sans aucune contradiction mathématique.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Maximum}
+  \begin{block}{Définition}
+    La valeur la plus élevée observée, calculée séparément pour chaque zone.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} traiter un maximum ponctuel comme une tendance durable.
+    \item \textbf{Effet sur la décision :} un maximum élevé désigne une zone précise à surveiller, mais ne dit rien de la fréquence ni de la durée du phénomène.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Seuil et durée au-dessus du seuil}
+  \begin{block}{Définition}
+    Un seuil est une valeur de référence choisie pour discuter d'une action ; la durée au-dessus du seuil mesure depuis combien de temps une zone y reste exposée, à partir des seules mesures observées.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} confondre un seuil pédagogique avec une norme officielle validée par un expert du matériel.
+    \item \textbf{Effet sur la décision :} une durée nulle signifie qu'une seule mesure a franchi le seuil -- ni plus, ni moins -- pas qu'il n'y a aucun sujet.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ce que l'on gagne, ce que l'on risque en compressant}
+  \begin{columns}[T]
+    \column{.47\textwidth}\textbf{Ce que l'on gagne}
+    \begin{itemize}
+      \item une phrase brève, transmissible en quelques secondes ;
+      \item une comparaison rapide entre zones ou entre lots ;
+      \item une base de discussion pour le décideur pressé.
+    \end{itemize}
+    \column{.47\textwidth}\textbf{Ce que l'on risque}
+    \begin{itemize}
+      \item masquer une zone isolée derrière un résultat global rassurant ;
+      \item confondre un pic ponctuel avec une tendance installée ;
+      \item transformer un choix de calcul (quel seuil, quelle durée) en fait présenté comme neutre.
+    \end{itemize}
+  \end{columns}
+  \decisionquestion{Quelle information précise disparaît quand quinze mesures deviennent une seule moyenne ?}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : calculer les indicateurs}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.indicators_cli data/processed/batch001_measurements.csv
+  \end{verbatim}
+  \normalsize
+  Avant d'exécuter, prédisez : la moyenne globale dépassera-t-elle 30\,°C ? Une zone vous semble-t-elle susceptible de franchir 35\,°C malgré tout ?
+\end{frame}
+
+\begin{frame}{Activité B / TP 1 -- Indicateurs et zone masquée}
+  \begin{block}{Votre mission}
+    Calculer les indicateurs du lot et retrouver la zone que la moyenne masque.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la commande de calcul ;
+    \item relever la moyenne globale et le maximum de chaque zone ;
+    \item identifier la ou les zones signalées comme masquées par la moyenne ;
+    \item vérifier à la main, sur une zone, que le résultat affiché est reproductible ;
+    \item noter la durée observée au-dessus du seuil pour la zone masquée.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Le tableau d'indicateurs et une phrase : « La moyenne globale permet / ne permet pas de conclure que ... »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Ce que révèle le calcul}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}lc@{}}
+    \toprule
+    Zone & Maximum observé \\
+    \midrule
+    \textbf{battery-shelter-01} & \textbf{35,4\,°C} \\
+    it-room-01 & 31,8\,°C \\
+    maintenance-zone-01 & 30,5\,°C \\
+    comms-shelter-01 & 29,7\,°C \\
+    optronics-shelter-01 & 28,1\,°C \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \normalsize Moyenne globale sur les quinze mesures : \textbf{30,75\,°C} -- sous le seuil pédagogique de 35\,°C, alors qu'une zone le franchit déjà.
+\end{frame}
+
+\begin{frame}{Zoom : la zone masquée}
+  \texttt{battery-shelter-01} atteint 35,4\,°C alors que la moyenne globale reste à 30,75\,°C : un écart de près de 5\,°C, invisible dans le résumé global.
+  \begin{alertblock}{Ce que la durée observée précise}
+    Une seule des trois mesures de cette zone franchit le seuil. La durée observée au-dessus du seuil est donc de \textbf{0 minute} : le franchissement est réel, mais nous ne pouvons pas encore parler d'un dépassement prolongé.
+  \end{alertblock}
+  \normalsize Recalculer cette moyenne à la main donne exactement le même résultat : rien n'est caché dans le calcul lui-même, seulement dans la façon dont son résultat est ensuite lu.
+\end{frame}
+
+\begin{frame}{Le graphique}
+  \centering
+  \includegraphics[width=.85\textwidth]{batch001_masked_zone.png}
+\end{frame}
+
+\begin{frame}{Débrief -- que cache toujours un indicateur ?}
+  \begin{enumerate}
+    \item La moyenne et le maximum racontent-ils la même histoire sur ce lot précis ?
+    \item Un indicateur plus simple -- comme la moyenne -- est-il nécessairement moins fiable qu'un indicateur composé ?
+    \item Que faudrait-il systématiquement faire avant de se fier à un résumé global, quel qu'il soit ?
+  \end{enumerate}
+  \vfill
+  \alert{Une moyenne n'est pas fausse : elle répond exactement à la question qu'on lui pose. Le risque commence quand on lui fait répondre à une question qu'elle ne pose pas.}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{La moyenne de 30,75\,°C est-elle un résultat faux ?}
+    Non : elle est exacte pour la question qu'elle pose (quelle est la valeur moyenne du lot entier). Elle devient trompeuse seulement si on l'utilise pour répondre à une question qu'elle ne couvre pas (une zone précise dépasse-t-elle un seuil).
+  \end{block}
+  \begin{block}{Pourquoi la durée au-dessus du seuil de \texttt{battery-shelter-01} est-elle nulle malgré un franchissement réel ?}
+    Parce qu'une seule mesure franchit le seuil parmi les trois observées : nous manquons d'une deuxième mesure élevée pour affirmer une durée non nulle, sans pour autant nier le franchissement lui-même.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 3\\[3mm]
+  \Large Du calcul transparent au calcul opaque
+  \vfill
+  \normalsize Un modèle automatique fait la même compression qu'une moyenne, mais vous ne pouvez plus la décomposer à la main.
+\end{frame}
+
+\begin{frame}{Modèle et score automatique}
+  \begin{block}{Définition}
+    Une fonction qui transforme des mesures en une recommandation, sans que sa logique interne soit consultée au moment où la décision est prise.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire qu'un score est plus objectif qu'une moyenne parce qu'il est produit automatiquement.
+    \item \textbf{Effet sur la décision :} un score reproduit et cache les choix de calibration de son concepteur, exactement comme une moyenne cache une dispersion.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Biais d'automatisation}
+  \begin{block}{Définition}
+    La tendance à accorder plus de confiance à une recommandation produite par une machine qu'à un calcul équivalent qu'on pourrait pourtant vérifier soi-même.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} ne jamais remettre en cause un score qui « a toujours eu raison » jusqu'à présent.
+    \item \textbf{Effet sur la décision :} ce biais retarde exactement le moment où l'on remarque qu'un score est sorti de son domaine de validité.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Calibration figée et dérive}
+  \begin{block}{Définition}
+    Un score est réglé une fois, sur un ensemble de cas précis ; la dérive est l'écart entre les conditions actuelles et celles sur lesquelles il a été calibré.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} supposer qu'une règle réglée une fois s'applique universellement, y compris à des cas qu'elle n'a jamais rencontrés.
+    \item \textbf{Effet sur la décision :} plus la situation actuelle s'éloigne de la calibration d'origine, moins le score mérite qu'on le suive sans vérification.
+  \end{itemize}
+  \decisionquestion{Peut-on auditer un score automatique aussi facilement qu'une moyenne ?}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : interroger le score}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.risk_score_cli data/raw/batch001_raw.jsonl
+  \end{verbatim}
+  \normalsize
+  \alert{Règle impérative : ne pas ouvrir \texttt{src/iot\_decision/risk\_score.py} avant le débrief de l'incident. L'intérêt de l'exercice dépend entièrement de ne pas connaître sa logique à l'avance.}
+\end{frame}
+
+\begin{frame}{Activité D / TP 2 -- Interroger le score sans le lire}
+  \begin{block}{Votre mission}
+    Utiliser le score automatique comme le ferait un décideur pressé, sans en lire la logique.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la commande d'interrogation ;
+    \item consigner, pour chaque zone, le score obtenu et la décision affichée ;
+    \item comparer ce classement à celui obtenu ce matin avec les indicateurs transparents ;
+    \item noter une hypothèse, sans preuve, sur ce que le score pourrait prendre en compte ;
+    \item ne pas ouvrir le fichier source du score.
+  \end{enumerate}
+  \begin{block}{Livrable et décision}
+    Le journal des scores obtenus et une phrase : « Ce score me semble / ne me semble pas cohérent avec le calcul de ce matin, parce que ... »
+  \end{block}
+\end{frame}
+
+\begin{frame}{Ce que le score répond sur les zones connues}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    Zone & Score & Décision affichée \\
+    \midrule
+    \textbf{battery-shelter-01} & \textbf{71/100} & \textbf{inspection recommandée} \\
+    it-room-01 & 64/100 & aucune action requise \\
+    maintenance-zone-01 & 61/100 & aucune action requise \\
+    comms-shelter-01 & 59/100 & aucune action requise \\
+    optronics-shelter-01 & 56/100 & aucune action requise \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \normalsize Le score retrouve la même zone d'alerte que le calcul transparent du matin : un premier signe de cohérence, pas encore une preuve de fiabilité générale.
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Le score est-il une intelligence artificielle qui apprend ?}
+    Non, pour cette séance : c'est une fonction fixe, réglée une seule fois. La qualifier de « boîte noire » décrit seulement le fait que sa logique n'est pas consultée pendant l'exercice, pas une technologie particulière.
+  \end{block}
+  \begin{block}{Utiliser un score dont on ignore la logique est-il déjà une erreur ?}
+    Pas en soi : c'est l'utiliser sans jamais le questionner, ni vérifier son périmètre de validité, qui devient risqué -- exactement ce que l'incident suivant va mettre à l'épreuve.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 4\\[3mm]
+  \Large Incident : fuel-storage-01
+  \vfill
+  \normalsize Une nouvelle zone entre en service. Le score va la traiter avec la même règle que les cinq zones d'origine.
+\end{frame}
+
+\begin{frame}{Incident -- une nouvelle zone entre en service}
+  \large Une zone de stockage carburant, \texttt{fuel-storage-01}, vient d'être équipée pour une mission de ravitaillement. Elle n'a jamais fait partie des cinq zones sur lesquelles le score a été réglé.
+  \decisionquestion{Le score peut-il être interrogé sur cette zone comme sur les cinq autres ?}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : le score sur une zone nouvelle}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.risk_score_cli data/samples/batch003_shift_scenario.jsonl
+  \end{verbatim}
+  \normalsize
+  Résultat : \texttt{fuel-storage-01 : score 62/100 -> aucune action requise} -- comparez immédiatement ce chiffre au tableau de la diapositive précédente.
+\end{frame}
+
+\begin{frame}{Ce que le score n'a jamais appris}
+  62/100 se situe exactement dans la fourchette des quatre zones jugées sûres ce matin (56 à 64/100) : rien, dans ce chiffre seul, ne distingue \texttt{fuel-storage-01} d'une zone réellement sans risque.
+  \begin{alertblock}{Le fait opérationnel manquant}
+    Un dépôt de carburant a un seuil de sécurité réel bien plus bas que 35\,°C, en raison du risque de vapeurs inflammables. À 30,9\,°C et en hausse constante sur vingt minutes, cette zone mériterait une attention que le score ne peut pas produire.
+  \end{alertblock}
+  \normalsize Le score applique la même règle -- 70 \% du rapport au maximum sur 35\,°C, 30 \% de la durée observée au-dessus de 35\,°C -- à une zone pour laquelle 35\,°C n'a jamais été le bon repère.
+\end{frame}
+
+\begin{frame}{Le graphique}
+  \centering
+  \includegraphics[width=.85\textwidth]{batch003_risk_score_shift.png}
+\end{frame}
+
+\begin{frame}{Le score a-t-il un bug ?}
+  \begin{columns}[T]
+    \column{.47\textwidth}\textbf{Ce que ce n'est pas}
+    \begin{itemize}
+      \item une erreur de calcul ;
+      \item un cas non prévu par le code ;
+      \item une panne du capteur.
+    \end{itemize}
+    \column{.47\textwidth}\textbf{Ce que c'est}
+    \begin{itemize}
+      \item une règle exécutée correctement ;
+      \item appliquée hors du domaine pour lequel elle a été calibrée ;
+      \item silencieusement, sans aucun signal d'alerte du système lui-même.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \decisionquestion{Que devriez-vous vérifier, avant toute mission future, pour toute zone nouvelle ou atypique interrogée par ce score ?}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Pourquoi ce cas est-il plus difficile à repérer qu'une simple panne ?}
+    Parce que le système ne signale aucune erreur : il produit un score numérique d'apparence normale, dans la même fourchette que des cas réellement sûrs, sans aucun indicateur de sortie de son domaine de calibration.
+  \end{block}
+  \begin{block}{Le calcul du matin (moyenne, maximum) aurait-il pu, seul, détecter ce problème ?}
+    Non plus directement : rien dans les valeurs de \texttt{fuel-storage-01} (28,5 à 30,9\,°C) ne dépasse le seuil pédagogique de 35\,°C. Le problème vient d'un seuil de sécurité réel différent, une information que ni la moyenne, ni le score ne possèdent.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 5\\[3mm]
+  \Large Décider
+  \vfill
+  \normalsize Nous revenons à la question du début de journée, avec deux indicateurs mis à l'épreuve.
+\end{frame}
+
+\begin{frame}{Procès à trois}
+  \begin{block}{Répartition des rôles}
+    Un groupe défend la moyenne globale ; un deuxième défend le score automatique ; un troisième arbitre.
+  \end{block}
+  \begin{enumerate}
+    \item chaque défenseur cite un cas de la séance où son indicateur suffit réellement ;
+    \item l'arbitre cite, pour chacun des deux, un cas où il a échoué aujourd'hui ;
+    \item le procès se conclut par un processus de décision recommandé, pas par la victoire d'un seul indicateur.
+  \end{enumerate}
+  \alert{Aucun des deux ne devrait sortir du procès sans réserve : la moyenne masque une zone connue, le score masque une zone nouvelle.}
+\end{frame}
+
+\begin{frame}{Ce qu'aucun indicateur seul ne peut faire}
+  \begin{block}{La moyenne, seule}
+    Ne peut pas signaler une zone isolée qui dépasse un seuil pendant que les autres restent basses.
+  \end{block}
+  \begin{block}{Le score automatique, seul}
+    Ne peut pas signaler une zone dont le seuil de sécurité réel diffère de celui sur lequel il a été calibré.
+  \end{block}
+  \begin{alertblock}{Ce qui reste nécessaire dans les deux cas}
+    Une décomposition par zone pour la moyenne ; une vérification humaine explicite pour toute zone nouvelle ou atypique avant de suivre un score.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Restitution -- 150 mots maximum}
+  Rédigez une recommandation contenant :
+  \begin{enumerate}
+    \item le processus de décision retenu -- moyenne, maximum, score, ou combinaison ;
+    \item un niveau de confiance différencié selon que la zone est connue ou nouvelle ;
+    \item deux preuves chiffrées et retrouvables, avec leur fichier source ;
+    \item deux incertitudes qui pourraient changer la décision ;
+    \item une vérification prioritaire, terrain ou technique.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Transition vers la suite du cours}
+  Les prochaines séquences s'appuieront directement sur cette double leçon :
+  \begin{enumerate}
+    \item la visualisation et la communication d'une incertitude sans donner une fausse impression de certitude ;
+    \item la sécurité et la robustesse de toute la chaîne de collecte, en amont même des indicateurs calculés aujourd'hui ;
+    \item le mini-projet final, qui exigera de choisir et de justifier un processus de décision complet.
+  \end{enumerate}
+  \vfill
+  Retenez ce réflexe : tout résumé, transparent ou non, mérite d'être interrogé sur son périmètre avant d'être suivi.
+\end{frame}
+
+\begin{frame}{Activité -- Synthèse individuelle}
+  Complétez les trois phrases, seul et sans écran :
+  \begin{enumerate}
+    \item Un indicateur, transparent ou automatique, permet d'affirmer que ...
+    \item Il ne permet pas d'affirmer que ...
+    \item Avant une décision automatisée, je vérifierais ...
+  \end{enumerate}
+  \vfill
+  \alert{Moyenne $\rightarrow$ zone masquée $\rightarrow$ score $\rightarrow$ zone hors calibration $\rightarrow$ décision combinée.}
+\end{frame}
+
+\begin{frame}{Ce que la séance a permis d'établir -- synthèse de référence}
+  \small
+  \begin{block}{Résultat de référence sur ce lot}
+    Moyenne globale 30,75\,°C, masquant \texttt{battery-shelter-01} à 35,4\,°C. Le score automatique retrouve correctement cette zone (71/100, inspection recommandée) mais attribue à \texttt{fuel-storage-01} -- une zone jamais vue à sa calibration -- un score de 62/100, indiscernable des zones réellement sûres.
+  \end{block}
+  \begin{block}{Une recommandation défendable, à titre d'exemple}
+    Combiner systématiquement le maximum par zone (transparent, audité) et une vérification humaine explicite pour toute zone nouvelle avant de suivre un score automatique. Confiance moyenne pour les cinq zones connues, faible pour toute zone hors périmètre de calibration.
+  \end{block}
+  \normalsize
+  \alert{D'autres formulations restent recevables si elles distinguent explicitement ce qu'un indicateur transparent masque de ce qu'un indicateur opaque masque, et proportionnent la confiance au périmètre réellement couvert.}
+\end{frame}
+
+\begin{frame}{Références et ressources}
+  \tiny
+  \begin{itemize}
+    \item Tukey, J. W., \emph{Exploratory Data Analysis}, 1977 -- sur les limites des résumés statistiques uniques.
+    \item NIST/SEMATECH, \emph{e-Handbook of Statistical Methods}, section sur la moyenne et la dispersion : \url{https://www.itl.nist.gov/div898/handbook/}
+    \item Parasuraman, R. et Manzey, D. H., \emph{Complacency and Bias in Human Use of Automation: An Attentional Integration}, Human Factors, 2010 -- référence académique sur le biais d'automatisation : \url{https://doi.org/10.1177/0018720810376055}
+    \item NISTIR 8312, \emph{Four Principles of Explainable Artificial Intelligence}, 2021 : \url{https://doi.org/10.6028/NIST.IR.8312}
+    \item Python, bibliothèque \texttt{csv} : \url{https://docs.python.org/3/library/csv.html}
+    \item Matplotlib, documentation : \url{https://matplotlib.org/stable/}
+  \end{itemize}
+\end{frame}
+
 \end{document}

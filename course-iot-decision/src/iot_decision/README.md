@@ -9,3 +9,5 @@ Séquence 2 : `source_inventory.py` et sa CLI comparent l'observé à l'attendu.
 Séquence 3 : `traceability.py` parse strictement le JSONL, conserve adresse et empreinte de chaque ligne, vérifie le retour à la source et signale les candidats doublons sans suppression automatique.
 
 Séquence 4 : `quality.py` sépare les messages propres des messages rejetés (champ manquant, unité incohérente, valeur hors plage, incohérence temporelle, doublon exact) sans jamais corriger une valeur, puis distingue un silence réel d'un silence expliqué par un rejet ; `quality_cli.py` produit `clean.csv`, `rejected.csv` et le rapport JSON en un seul appel ; `visualize_quality.py` trace la chronologie décisionnelle.
+
+Séquence 5 : `indicators.py` calcule des indicateurs transparents (moyenne, maximum, durée au-dessus d'un seuil) et détecte une zone masquée par la moyenne globale ; `risk_score.py` simule un score automatique déterministe, volontairement non documenté aux étudiants avant le débrief, calibré une fois sur cinq zones et mis en défaut sur une zone nouvelle ; `visualize_indicators.py` et `visualize_risk_score.py` produisent les deux graphiques de la séance.
