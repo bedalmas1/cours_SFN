@@ -1,15 +1,389 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
 \graphicspath{{figures/}}
-
-\title{Séquence 6 -- Visualisation et communication}
-\subtitle{Briefing au décideur}
+\title{De la donnée capteur à la décision opérationnelle}
+\subtitle{Séquence 6 -- Visualisation et communication au décideur}
 \author{École de l'air et de l'espace}
 \date{}
 
 \begin{document}
-\begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Produire une visualisation claire sans donner une impression excessive de certitude.
+
+\begin{frame}
+  \titlepage
 \end{frame}
+
+\begin{frame}{Bienvenue dans la séquence 6}
+  \begin{block}{L'idée qui traverse toute la séance}
+    Un graphique n'est jamais un simple rendu neutre des données : l'échelle d'un axe, la présence ou l'absence d'un seuil, un trait qui relie deux points de part et d'autre d'un silence sont des choix. Chacun peut faire paraître une même mesure alarmante ou anodine.
+  \end{block}
+  \begin{itemize}
+    \item La séquence 5 a montré qu'un indicateur compresse toujours la réalité. Cette séquence montre que la mise en forme visuelle de ce même indicateur peut ajouter -- ou retirer -- une couche de compression supplémentaire.
+    \item Les données ne changent jamais dans cette séance : seule leur présentation change, ce qui rend l'effet du graphique entièrement imputable à celui qui l'a construit.
+    \item La question n'est jamais « le graphique est-il beau ? », mais « quelle certitude ce graphique donne-t-il, et cette certitude est-elle justifiée par les données ? »
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Le fil rouge des huit séquences}
+  \centering
+  \Large Donnée capteur imparfaite\\[2mm]
+  $\Downarrow$\\[-1mm]
+  Pipeline de traitement\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Indicateur\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Visualisation \alert{\normalsize -- le dernier filtre avant le décideur}\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Décision opérationnelle
+  \vfill
+  \normalsize La séquence 5 a produit des indicateurs et un score, chacun avec ses limites documentées. Cette séquence questionne l'étape qui les transforme en image ou en note lisible par un décideur qui n'a ni le temps ni l'envie de relire le calcul.
+\end{frame}
+
+\begin{frame}{Ce que vous saurez faire à la fin de cette séquence}
+  \begin{enumerate}
+    \item identifier les choix de mise en forme -- échelle, seuil, annotation -- qui changent l'impression donnée par un graphique sans changer les données ;
+    \item construire une courbe temporelle par zone à partir d'une table déjà nettoyée ;
+    \item comparer deux mises en forme du même incident et nommer précisément ce que chacune montre ou dissimule ;
+    \item rédiger une mini-note de briefing avec message principal, limite, niveau de confiance et vérification recommandée ;
+    \item défendre à l'oral, en trois minutes, une recommandation face à des questions contradictoires.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{La question qui guidera la séance}
+  \decisionquestion{Comment présenter une alerte sans donner une impression excessive de certitude ?}
+  \begin{itemize}
+    \item Il ne s'agit pas de choisir entre « alarmer » et « rassurer », mais entre représenter fidèlement l'incertitude ou la faire disparaître du cadrage.
+    \item Un graphique honnête peut rester convaincant ; un graphique trompeur n'est pas nécessairement un mensonge délibéré -- souvent, une simple habitude de mise en forme.
+    \item Le raisonnement attendu porte autant sur le choix de représentation que sur la lecture du résultat.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 1\\[3mm]
+  \Large Deux graphiques, un seul incident
+  \vfill
+  \normalsize Avant tout concept, nous regardons deux images construites à partir des mêmes trois mesures.
+\end{frame}
+
+\begin{frame}{Le scénario : le même incident, deux images}
+  \begin{columns}[T]
+    \column{.55\textwidth}
+    La cellule de supervision transmet un premier graphique de \texttt{battery-shelter-01} pour justifier une inspection immédiate.
+    \column{.4\textwidth}
+    \begin{block}{Contrainte de décision}
+      Les trois mesures sous-jacentes sont identiques à celles de la séquence 5 : 34,1 -- 34,6 -- 36,2\,°C. Rien n'a été recalculé.
+    \end{block}
+  \end{columns}
+  \vfill
+  \alert{La première question n'est donc pas « que montre ce graphique ? » mais « qu'est-ce que sa mise en forme a choisi de montrer, et de taire ? »}
+\end{frame}
+
+\begin{frame}{Premier graphique}
+  \centering
+  \includegraphics[width=.82\textwidth]{battery_misleading.png}
+\end{frame}
+
+\begin{frame}{Avant le second graphique : votre décision}
+  \begin{columns}[T]
+    \column{.5\textwidth}
+    Sur la seule base du premier graphique, choisissez :
+    \begin{enumerate}
+      \item[A.] déclencher l'inspection immédiatement ;
+      \item[B.] demander d'abord le graphique complet et le contexte ;
+      \item[C.] maintenir l'activité par prudence en attendant plus d'information ;
+      \item[D.] suspendre l'activité par prudence en attendant plus d'information.
+    \end{enumerate}
+    \column{.42\textwidth}
+    Notez également :
+    \begin{itemize}
+      \item votre confiance de 0 à 100 \% ;
+      \item ce que l'axe vertical vous laisse croire ;
+      \item l'information que ce graphique ne montre pas.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \alert{Nous revenons sur ce vote dans deux minutes, avec le second graphique.}
+\end{frame}
+
+\begin{frame}{Second graphique -- mêmes données}
+  \centering
+  \includegraphics[width=.82\textwidth]{battery_honest.png}
+\end{frame}
+
+\begin{frame}{Ce que le second graphique change}
+  \begin{columns}[T]
+    \column{.47\textwidth}\textbf{Premier graphique}
+    \begin{itemize}
+      \item axe vertical de 34 à 36,5\,°C ;
+      \item trait continu entre les trois points ;
+      \item aucun seuil, aucune annotation.
+    \end{itemize}
+    \column{.47\textwidth}\textbf{Second graphique}
+    \begin{itemize}
+      \item axe vertical de 0 à 40\,°C ;
+      \item trait rompu à l'endroit du silence de 20 minutes ;
+      \item seuil affiché, silence annoté explicitement.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \decisionquestion{Les données ont-elles changé entre les deux graphiques ? Votre décision aurait-elle dû changer ?}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 2\\[3mm]
+  \Large Échelle, seuil, annotation, incertitude visuelle
+  \vfill
+  \normalsize Quatre leviers, toujours disponibles à celui qui construit un graphique, jamais neutres.
+\end{frame}
+
+\begin{frame}{Échelle}
+  \begin{block}{Définition}
+    Les bornes et l'étendue choisies pour un axe, en particulier l'axe vertical d'une série de mesures.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} tronquer l'axe autour des valeurs observées, ce qui agrandit visuellement toute variation, même minime.
+    \item \textbf{Effet sur la décision :} une hausse de 2,1\,°C peut occuper tout l'axe et paraître spectaculaire, ou rester discrète sur une échelle complète -- sans qu'aucun chiffre n'ait changé.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Seuil}
+  \begin{block}{Définition}
+    La valeur de référence à partir de laquelle une mesure devient un sujet de décision, affichée -- ou non -- sur le graphique lui-même.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} omettre le seuil pour éviter de révéler qu'une seule mesure le franchit, ou l'afficher sans préciser qu'il est pédagogique et non une norme officielle.
+    \item \textbf{Effet sur la décision :} sans seuil visible, le lecteur doit deviner ce qui compte comme franchissement -- ou accepter l'impression que le graphique lui suggère.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Annotation}
+  \begin{block}{Définition}
+    Tout texte, flèche ou zone surlignée ajouté au graphique pour désigner explicitement ce que les données seules ne rendent pas visible.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire qu'un graphique « propre », sans aucune annotation, est plus objectif -- alors qu'il oblige simplement le lecteur à reconstruire seul le contexte.
+    \item \textbf{Effet sur la décision :} une annotation bien placée transforme un doute en question explicite ; son absence transforme la même donnée en fausse évidence.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Incertitude visuelle}
+  \begin{block}{Définition}
+    La représentation explicite, sur le graphique, de ce que les données ne couvrent pas : un silence, une zone non mesurée, une mesure isolée.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} relier deux points par un trait continu, y compris lorsqu'un vide de données les sépare, ce qui suggère une évolution progressive jamais observée.
+    \item \textbf{Effet sur la décision :} un trait continu sur un silence de 20 minutes fait paraître une hausse brutale et isolée comme une tendance régulière et donc plus prévisible qu'elle ne l'est.
+  \end{itemize}
+  \decisionquestion{Un trait qui relie deux points est-il toujours une affirmation sur ce qui s'est passé entre eux ?}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Le premier graphique de l'accroche contenait-il une valeur fausse ?}
+    Non : les trois valeurs affichées sont exactement celles mesurées. Ce qui trompe n'est pas la donnée, mais l'échelle tronquée et l'absence de seuil et de silence annoté.
+  \end{block}
+  \begin{block}{Une échelle complète (0 à 40\,°C) est-elle toujours le bon choix ?}
+    Pas nécessairement : elle peut aussi écraser une variation réellement significative sur une zone très stable. Le bon choix dépend du seuil de décision pertinent, pas d'une règle universelle.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : produire les deux mises en forme}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.visualize_briefing \
+  data/processed/batch002_measurements_clean.csv battery-shelter-01 \
+  misleading.png honest.png
+  \end{verbatim}
+  \normalsize
+  Avant d'exécuter, prédisez : sur quelle zone du jeu de données l'écart entre les deux mises en forme sera-t-il le plus faible, et pourquoi ?
+\end{frame}
+
+\begin{frame}{TP 1 -- Courbe temporelle par zone}
+  \begin{block}{Votre mission}
+    Choisir une autre zone de \texttt{batch002\_measurements\_clean.csv} et produire ses deux mises en forme.
+  \end{block}
+  \begin{enumerate}
+    \item exécuter la commande de démonstration sur votre zone ;
+    \item comparer l'échelle verticale des deux images obtenues ;
+    \item relever si un silence existe sur cette zone, et s'il est annoté ;
+    \item noter si un seuil apparaît sur l'une, l'autre, ou aucune des deux images ;
+    \item formuler une phrase : « Sur cette zone, la mise en forme trompeuse change / ne change pas fortement l'impression, parce que ... »
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Débrief -- graphique utile ou trompeur ?}
+  \begin{enumerate}
+    \item Sur quelles zones l'écart entre les deux mises en forme était-il le plus fort ? Le plus faible ?
+    \item Un graphique à l'échelle tronquée est-il toujours trompeur, ou seulement lorsqu'il accompagne une décision ?
+    \item Que faudrait-il exiger systématiquement avant de projeter un graphique devant un décideur pressé ?
+  \end{enumerate}
+  \vfill
+  \alert{Une échelle tronquée n'est pas une erreur de calcul : c'est un choix de cadrage qui mérite d'être justifié, ou corrigé, avant d'atteindre le décideur.}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 3\\[3mm]
+  \Large Le briefing décisionnel
+  \vfill
+  \normalsize Un graphique seul ne suffit pas : il s'accompagne d'une note qui dit ce qu'il permet, et ne permet pas, d'affirmer.
+\end{frame}
+
+\begin{frame}{Briefing décisionnel}
+  \begin{block}{Définition}
+    Une communication courte, structurée, qui relie une observation à une décision recommandée sans faire l'impasse sur ses limites.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} présenter uniquement le graphique le plus frappant, en laissant le décideur reconstruire seul le niveau de confiance.
+    \item \textbf{Effet sur la décision :} sans note explicite, deux lecteurs du même graphique peuvent en tirer deux niveaux de confiance opposés.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Message principal et limite}
+  \begin{block}{Définition}
+    Le message principal énonce ce que l'observation permet d'affirmer, avec ses chiffres ; la limite énonce précisément ce qu'elle ne permet pas encore de conclure.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} formuler un message principal sans limite, ou une limite si vague qu'elle ne change rien à la décision.
+    \item \textbf{Effet sur la décision :} une limite précise (« la mesure haute suit un vide de 20 minutes non expliqué ») oriente directement la vérification à mener ; une limite vague (« les données ne sont pas parfaites ») n'oriente rien.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration : la note de briefing}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.briefing_cli \
+  data/processed/batch002_measurements_clean.csv battery-shelter-01
+  \end{verbatim}
+  \normalsize
+  \confidencelevel{calculé automatiquement à partir du silence détecté et du franchissement de seuil, jamais choisi à la main.}
+\end{frame}
+
+\begin{frame}{Ce que produit la note pour \texttt{battery-shelter-01}}
+  \small
+  \begin{block}{Message principal}
+    battery-shelter-01 : 1/3 mesure(s) $\geq$ 35\,°C, maximum 36,2\,°C.
+  \end{block}
+  \begin{block}{Limite}
+    La seule mesure au-dessus du seuil suit un vide de 20 min, non expliqué par un rejet qualité.
+  \end{block}
+  \begin{block}{Niveau de confiance}
+    faible.
+  \end{block}
+  \begin{block}{Vérification recommandée}
+    vérification terrain avant toute conclusion sur cette zone.
+  \end{block}
+\end{frame}
+
+\begin{frame}{TP 2 -- Produire 2 visualisations et une mini-note}
+  \begin{block}{Votre mission}
+    Choisir une zone (la vôtre du TP\,1, ou une autre) et construire un mini-rapport complet.
+  \end{block}
+  \begin{enumerate}
+    \item produire les deux images (trompeuse et honnête) de cette zone ;
+    \item produire la note de briefing correspondante ;
+    \item choisir laquelle des deux images accompagnerait votre recommandation, et pourquoi ;
+    \item rédiger un mini-rapport de moins de 100 mots : image retenue, message principal, limite, niveau de confiance, recommandation.
+  \end{enumerate}
+  \begin{block}{Livrable}
+    Le mini-rapport, l'image retenue, et l'image écartée conservée pour comparaison.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant de continuer}
+  \small
+  \begin{block}{Le niveau de confiance de la note dépend-il d'un jugement personnel ?}
+    Non : il découle directement de règles fixes (présence d'un franchissement de seuil, présence d'un vide non expliqué juste avant), appliquées de la même façon à toute zone.
+  \end{block}
+  \begin{block}{Une zone sans aucun franchissement peut-elle recevoir une confiance « faible » ?}
+    Pas avec les règles de ce module : l'absence de franchissement du seuil produit une confiance « moyenne », pas « faible » -- la note ne signale pas un danger qui n'existe pas dans les données.
+  \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 4\\[3mm]
+  \Large Brief oral et jeu de rôle
+  \vfill
+  \normalsize Le même mini-rapport doit maintenant résister à des questions posées en direct, sans préparation supplémentaire.
+\end{frame}
+
+\begin{frame}{Jeu de rôle -- trois rôles}
+  \begin{description}
+    \item[Cellule data] présente le mini-rapport en trois minutes, image à l'appui.
+    \item[Décideur pressé] interrompt si le message principal n'est pas clair en moins de trente secondes.
+    \item[Red team] cherche l'angle mort : échelle, silence non mentionné, seuil confondu avec une norme officielle.
+  \end{description}
+  \vfill
+  \alert{Chaque rôle change à chaque passage : présenter un rapport et démonter celui d'un autre groupe font partie du même apprentissage.}
+\end{frame}
+
+\begin{frame}{Brief oral -- 3 minutes par groupe}
+  Structure attendue, dans l'ordre :
+  \begin{enumerate}
+    \item la situation en une phrase ;
+    \item le graphique retenu, projeté ;
+    \item le message principal et la limite, dits explicitement ;
+    \item le niveau de confiance et la recommandation ;
+    \item une vérification prioritaire si le décideur veut aller plus loin.
+  \end{enumerate}
+  \decisionquestion{Si le décideur ne retient qu'une seule phrase de votre brief, laquelle doit-elle être ?}
+\end{frame}
+
+\begin{frame}{Questions contradictoires du commandement}
+  \begin{enumerate}
+    \item « Ce graphique est-il pire ou meilleur que celui du groupe précédent, et pourquoi précisément ? »
+    \item « Si je vous impose l'autre mise en forme de la même zone, votre recommandation change-t-elle ? »
+    \item « Qu'est-ce qui, dans ce graphique, n'est pas une mesure mais un choix de votre part ? »
+    \item « Combien de temps faudrait-il pour vérifier ce que votre limite signale ? »
+  \end{enumerate}
+  \vfill
+  \alert{Une bonne réponse nomme précisément le choix de mise en forme en cause, plutôt que de défendre le graphique dans son ensemble.}
+\end{frame}
+
+\begin{frame}{Activité -- Synthèse individuelle}
+  Complétez les trois phrases, seul et sans écran :
+  \begin{enumerate}
+    \item Un graphique honnête, sur ces données, doit toujours montrer ...
+    \item Un graphique peut rester exact et pourtant donner une impression fausse quand ...
+    \item Avant de projeter un graphique devant un décideur, je vérifierais ...
+  \end{enumerate}
+  \vfill
+  \alert{Même donnée $\rightarrow$ échelle et annotation choisies $\rightarrow$ impression produite $\rightarrow$ note de briefing explicite $\rightarrow$ décision justifiée.}
+\end{frame}
+
+\begin{frame}{Ce que la séance a permis d'établir -- synthèse de référence}
+  \small
+  \begin{block}{Résultat de référence sur ce lot}
+    Les trois mesures de \texttt{battery-shelter-01} (34,1 -- 34,6 -- 36,2\,°C) produisent une image alarmante à échelle tronquée et une image mesurée à échelle complète avec silence annoté -- sans qu'aucune valeur n'ait changé entre les deux.
+  \end{block}
+  \begin{block}{Une recommandation défendable, à titre d'exemple}
+    Toujours présenter la version à échelle complète, seuil et silences annotés, accompagnée de sa note de briefing (message, limite, confiance, vérification). Réserver l'échelle ajustée aux cas où elle sert la lisibilité d'une variation réellement significative, jamais pour l'exagérer.
+  \end{block}
+  \normalsize
+  \alert{D'autres formulations restent recevables si elles distinguent explicitement le rôle de l'échelle, du seuil, de l'annotation et de l'incertitude visuelle dans l'impression produite.}
+\end{frame}
+
+\begin{frame}{Transition vers la suite du cours}
+  Les prochaines séquences s'appuieront directement sur cette leçon :
+  \begin{enumerate}
+    \item la confiance dans la chaîne elle-même -- sécurité, intégrité, robustesse -- en amont de tout graphique ou indicateur ;
+    \item le mini-projet final, qui exigera de construire et de justifier un brief complet, graphique et note compris.
+  \end{enumerate}
+  \vfill
+  Retenez ce réflexe : avant de projeter un graphique, demandez-vous ce qu'il montrerait si son échelle, son seuil ou son annotation changeaient -- et si votre décision y survivrait.
+\end{frame}
+
+\begin{frame}{Références et ressources}
+  \tiny
+  \begin{itemize}
+    \item Tufte, E. R., \emph{The Visual Display of Quantitative Information}, 2\textsuperscript{e} éd., Graphics Press, 2001.
+    \item Cairo, A., \emph{How Charts Lie: Getting Smarter about Visual Information}, W. W. Norton \& Company, 2019.
+    \item Pandey, A. V., Rall, K., Satterthwaite, M. L., Nov, O., Bertini, E., \emph{How Deceptive Are Deceptive Visualizations? An Empirical Analysis of Common Distortion Techniques}, CHI 2015 : \url{https://doi.org/10.1145/2702123.2702608}
+    \item NIST/SEMATECH, \emph{e-Handbook of Statistical Methods}, section sur la représentation graphique de séries temporelles : \url{https://www.itl.nist.gov/div898/handbook/}
+    \item Matplotlib, documentation : \url{https://matplotlib.org/stable/}
+  \end{itemize}
+\end{frame}
+
 \end{document}
