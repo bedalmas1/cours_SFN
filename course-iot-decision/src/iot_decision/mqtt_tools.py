@@ -17,10 +17,12 @@ def _mqtt():
     return mqtt
 
 
-def seed(sample: Path, host: str, port: int) -> int:
+def seed(sample: Path, host: str, port: int, username: str | None = None, password: str | None = None) -> int:
     mqtt = _mqtt()
     records = [json.loads(line) for line in sample.read_text(encoding="utf-8").splitlines() if line]
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="s01-seeder")
+    if username:
+        client.username_pw_set(username, password)
     client.connect(host, port, 60)
     client.loop_start()
     for record in records:
@@ -32,7 +34,8 @@ def seed(sample: Path, host: str, port: int) -> int:
     return len(records)
 
 
-def extract(destination: Path, host: str, port: int, topic: str, idle: float) -> int:
+def extract(destination: Path, host: str, port: int, topic: str, idle: float,
+            username: str | None = None, password: str | None = None) -> int:
     mqtt = _mqtt()
     messages: list[dict] = []
     last_message = time.monotonic()
@@ -54,6 +57,8 @@ def extract(destination: Path, host: str, port: int, topic: str, idle: float) ->
         last_message = time.monotonic()
 
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="s01-extractor")
+    if username:
+        client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(host, port, 60)
@@ -78,9 +83,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--port", type=int, default=1883)
     parser.add_argument("--topic", default="airbase/batch001/#")
     parser.add_argument("--idle", type=float, default=1.0)
+    parser.add_argument("--username", default=None, help="requis par le broker protégé de la séquence 7")
+    parser.add_argument("--password", default=None)
     args = parser.parse_args(argv)
-    count = seed(args.path, args.host, args.port) if args.action == "seed" else extract(
-        args.path, args.host, args.port, args.topic, args.idle)
+    count = seed(args.path, args.host, args.port, args.username, args.password) if args.action == "seed" else extract(
+        args.path, args.host, args.port, args.topic, args.idle, args.username, args.password)
     print(f"{count} messages {'publiés' if args.action == 'seed' else 'extraits'}")
     return 0
 

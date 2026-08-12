@@ -1,14 +1,403 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../../../latex/common/preamble}
 \graphicspath{{figures/}}
-
-\title{Séquence 7 -- Confiance, sécurité et robustesse}
+\title{De la donnée capteur à la décision opérationnelle}
+\subtitle{Séquence 7 -- Confiance, sécurité et robustesse de la chaîne}
 \author{École de l'air et de l'espace}
 \date{}
 
 \begin{document}
-\begin{frame}\titlepage\end{frame}
-\begin{frame}{Objectif de la séquence}
-  Relier sécurité, intégrité des données et qualité de la décision.
+
+\begin{frame}
+  \titlepage
 \end{frame}
+
+\begin{frame}{Bienvenue dans la séquence 7}
+  \begin{block}{L'idée qui traverse toute la séance}
+    Les séquences précédentes ont supposé que chaque message provenait bien du capteur annoncé, envoyé une seule fois, au moment annoncé. Cette séquence retire cette hypothèse et demande : que vaut un indicateur parfaitement calculé si la chaîne qui l'alimente ne peut pas être qualifiée de confiance ?
+  \end{block}
+  \begin{itemize}
+    \item Le matin, nous distinguons ce qu'une authentification et une liste de contrôle d'accès (ACL) protègent réellement, et ce qu'elles ne protègent pas.
+    \item L'après-midi, nous analysons un lot dont certains messages sont exactement ce qu'ils prétendent être -- et d'autres non -- sans qu'aucune valeur ne soit absurde en elle-même.
+    \item La question n'est jamais « ce message est-il vrai ? », mais « quelle confiance cette chaîne mérite-t-elle, et quelle décision cette confiance permet-elle encore ? »
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Le fil rouge des huit séquences}
+  \centering
+  \Large Donnée capteur imparfaite\\[2mm]
+  $\Downarrow$\\[-1mm]
+  Pipeline de traitement\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Indicateur, visualisation\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  \alert{Confiance dans la chaîne elle-même}\\[-1mm]
+  $\Downarrow$\\[-1mm]
+  Décision opérationnelle
+  \vfill
+  \normalsize Les séquences 1 à 6 ont construit, nettoyé, résumé et présenté la donnée. Cette séquence questionne une étape antérieure à toutes les autres : la chaîne qui transporte cette donnée mérite-t-elle d'être crue ?
+\end{frame}
+
+\begin{frame}{Ce que vous saurez faire à la fin de cette séquence}
+  \begin{enumerate}
+    \item définir intégrité, authentification, ACL, injection et rejeu, et relier chacun à un effet décisionnel précis ;
+    \item comparer un broker ouvert et un broker protégé sur des cas concrets d'accès autorisé et refusé ;
+    \item identifier les vulnérabilités d'une chaîne MQTT à partir d'une configuration donnée ;
+    \item analyser un lot suspect pour y détecter doublons, rejeux et ruptures, sans aucun nouveau calcul ;
+    \item classer des hypothèses concurrentes par probabilité et impact, et recommander si l'on peut agir sur ces données.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{La question qui guidera la séance}
+  \decisionquestion{Que vaut une décision opérationnelle si l'on ne peut pas qualifier la confiance dans la chaîne de données ?}
+  \begin{itemize}
+    \item Il ne s'agit pas de prouver qu'une chaîne est parfaitement sûre -- aucune ne l'est -- mais de savoir nommer précisément ce qu'elle protège et ce qu'elle ne protège pas.
+    \item Un message peut être numériquement plausible et pourtant ne pas mériter d'être suivi.
+    \item Le raisonnement attendu distingue la confiance dans la source de la confiance dans le traitement qui la reçoit.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 1\\[3mm]
+  \Large Un flux qui ne se comporte pas normalement
+  \vfill
+  \normalsize Avant tout concept, un simple constat : quelque chose dans ce lot ne va pas.
+\end{frame}
+
+\begin{frame}{Le scénario : des messages incohérents}
+  \begin{columns}[T]
+    \column{.55\textwidth}
+    Un extrait de `comms-shelter-01` contient un message dont l'horodatage de mesure est postérieur à sa réception, et un autre qui semble revenir sur une mesure déjà vue vingt-neuf minutes plus tôt.
+    \column{.4\textwidth}
+    \begin{block}{Contrainte de décision}
+      Aucune de ces deux anomalies ne porte sur la valeur physique elle-même : la température reste dans une plage parfaitement normale.
+    \end{block}
+  \end{columns}
+  \vfill
+  \alert{La première question n'est donc pas « la mesure est-elle plausible ? » mais « ce message est-il bien ce qu'il prétend être ? »}
+\end{frame}
+
+\begin{frame}{Avant tout outil : votre décision}
+  \begin{columns}[T]
+    \column{.5\textwidth}
+    Sur la seule base de ce constat, choisissez :
+    \begin{enumerate}
+      \item[A.] traiter le lot normalement, rien ne semble alarmant en valeur ;
+      \item[B.] isoler le lot avant toute analyse plus poussée ;
+      \item[C.] traiter les zones non concernées, isoler `comms-shelter-01` ;
+      \item[D.] demander une vérification terrain avant tout traitement.
+    \end{enumerate}
+    \column{.42\textwidth}
+    Notez également :
+    \begin{itemize}
+      \item votre confiance de 0 à 100 \% ;
+      \item ce qui, dans un message MQTT, pourrait ne pas être fiable ;
+      \item ce que la seule valeur mesurée ne peut jamais garantir.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 2\\[3mm]
+  \Large Intégrité, authentification, ACL, injection, rejeu
+  \vfill
+  \normalsize Cinq notions, puis une démonstration : le même broker, avec et sans protection.
+\end{frame}
+
+\begin{frame}{Intégrité}
+  \begin{block}{Définition}
+    La garantie qu'un message reçu est identique à celui qui a été émis, sans altération en chemin.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} confondre intégrité et exactitude -- un message intègre peut transporter une mesure fausse dès l'origine.
+    \item \textbf{Effet sur la décision :} sans garantie d'intégrité, un message correctement reçu n'est pas nécessairement le message réellement envoyé par le capteur.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Authentification}
+  \begin{block}{Définition}
+    La vérification de l'identité d'un client avant de le laisser se connecter au broker.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire qu'un broker accessible uniquement en local (\texttt{127.0.0.1}) n'a pas besoin d'authentification.
+    \item \textbf{Effet sur la décision :} sans authentification, n'importe quel client capable d'atteindre le port peut publier un message qui semble provenir d'un capteur légitime.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Liste de contrôle d'accès (ACL)}
+  \begin{block}{Définition}
+    Un ensemble de permissions précises, par utilisateur et par topic, appliquées après l'authentification.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire que l'authentification seule suffit -- un utilisateur authentifié mais non restreint peut publier ou lire n'importe quel topic.
+    \item \textbf{Effet sur la décision :} une ACL bien conçue limite un compte capteur compromis à son seul périmètre ; son absence transforme tout compte en accès total.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Injection}
+  \begin{block}{Définition}
+    L'introduction dans le flux d'un message qui n'a jamais été produit par un capteur légitime.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} supposer qu'un message injecté sera forcément une valeur absurde, donc facile à repérer.
+    \item \textbf{Effet sur la décision :} un message injecté avec une valeur plausible peut influencer une décision exactement comme un message authentique.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Rejeu (replay)}
+  \begin{block}{Définition}
+    La republication d'un message déjà vu, sous une identité de message différente, pour le faire passer pour une nouvelle mesure.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} chercher un rejeu uniquement parmi les messages strictement identiques -- un rejeu change délibérément l'identifiant ou le topic.
+    \item \textbf{Effet sur la décision :} un rejeu peut faire réapparaître une mesure ancienne, rassurante ou alarmante, à un moment où elle ne reflète plus la situation réelle.
+  \end{itemize}
+  \decisionquestion{Un contrôle qui vérifie qu'un horodatage n'est pas dans le futur suffit-il à détecter un rejeu ?}
+\end{frame}
+
+\begin{frame}{Auto-vérification avant la démonstration}
+  \small
+  \begin{block}{Un broker accessible uniquement en local peut-il quand même être attaqué ?}
+    Oui : toute machine ou tout conteneur qui atteint ce port -- y compris un processus compromis sur la même machine -- peut s'y connecter si aucune authentification n'est exigée.
+  \end{block}
+  \begin{block}{L'authentification suffit-elle à empêcher un abus de droits ?}
+    Non : un compte authentifié mais sans ACL peut publier ou lire sur n'importe quel topic, y compris ceux d'autres capteurs ou d'autres zones.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration -- broker ouvert vs broker protégé}
+  \scriptsize
+  \begin{verbatim}
+docker compose -f docker/docker-compose.yml up -d --wait mosquitto mosquitto-protected
+
+# 1. anonyme sur le broker ouvert (1883) : reussit
+mosquitto_pub -h 127.0.0.1 -p 1883 -t airbase/test -m hello
+
+# 2. anonyme sur le broker protege (1884) : refuse a la connexion
+mosquitto_pub -h 127.0.0.1 -p 1884 -t airbase/test -m hello
+  \end{verbatim}
+  \normalsize
+  Avant d'exécuter, prédisez : la seconde commande échoue-t-elle silencieusement, ou avec un message explicite ?
+\end{frame}
+
+\begin{frame}{Ce que révèle la démonstration}
+  \tiny
+  \begin{center}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Tentative & Résultat & Visible pour l'émetteur ? \\
+    \midrule
+    anonyme $\rightarrow$ ouvert (1883) & acceptée & -- \\
+    anonyme $\rightarrow$ protégé (1884) & refusée à la connexion & \textbf{oui, explicitement} \\
+    \texttt{capteur-lora} publie & acceptée (ACL autorisée) & -- \\
+    \texttt{superviseur} publie & \textbf{rejetée par l'ACL} & \textbf{non -- silencieux} \\
+    \texttt{capteur-lora} s'abonne & connecté, \textbf{rien reçu} & \textbf{non -- silencieux} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \alert{Un mauvais mot de passe ou une connexion anonyme sur un broker protégé échoue bruyamment. Un abus de droits sur un compte pourtant authentifié échoue silencieusement : la commande de \texttt{superviseur} se termine sans erreur, alors que son message n'a jamais été délivré.}
+\end{frame}
+
+\begin{frame}{Exercice -- identifier les vulnérabilités d'une chaîne MQTT}
+  \begin{block}{Votre mission}
+    À partir de la configuration observée, listez les vulnérabilités présentes et celles que l'ACL protégée corrige.
+  \end{block}
+  \begin{enumerate}
+    \item le broker ouvert de \texttt{mosquitto.conf} accepte-t-il des clients anonymes ? Qu'est-ce que cela permet à un tiers non autorisé ?
+    \item une ACL empêche-t-elle un compte compromis de lire les topics d'une autre zone ?
+    \item les mots de passe et les messages transitent-ils chiffrés entre le client et le broker dans cette configuration ?
+    \item un message parfaitement authentifié et autorisé peut-il quand même être un rejeu ?
+  \end{enumerate}
+  \begin{block}{Livrable}
+    Une liste de vulnérabilités, chacune associée à la protection qui la couvre, la protège partiellement, ou ne la couvre pas du tout dans ce laboratoire.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Débrief -- ce que l'ACL protège, ce qu'elle ne protège pas}
+  \begin{columns}[T]
+    \column{.47\textwidth}\textbf{Couvert par l'authentification et l'ACL}
+    \begin{itemize}
+      \item connexion anonyme non autorisée ;
+      \item lecture ou écriture hors du périmètre d'un compte.
+    \end{itemize}
+    \column{.47\textwidth}\textbf{Non couvert dans ce laboratoire}
+    \begin{itemize}
+      \item absence de chiffrement (TLS) entre client et broker ;
+      \item rejeu d'un message par un compte pourtant autorisé à publier ;
+      \item compromission du compte lui-même (mot de passe volé).
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \decisionquestion{Une chaîne protégée par authentification et ACL est-elle une chaîne digne de confiance ?}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 3\\[3mm]
+  \Large Confiance dans la source, confiance dans le traitement
+  \vfill
+  \normalsize Deux confiances distinctes, à qualifier séparément avant toute décision.
+\end{frame}
+
+\begin{frame}{Confiance dans la source}
+  \begin{block}{Définition}
+    Le degré de certitude que ce message provient bien du capteur, de la zone et de l'instant qu'il annonce.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} l'assimiler à la plausibilité de la valeur mesurée -- une source usurpée peut transmettre une valeur parfaitement crédible.
+    \item \textbf{Effet sur la décision :} une source non qualifiée fragilise toute décision, même appuyée sur des indicateurs impeccablement calculés.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Confiance dans le traitement}
+  \begin{block}{Définition}
+    Le degré de certitude que la pipeline qui reçoit un message ne l'altère pas et ne masque pas ses anomalies.
+  \end{block}
+  \begin{itemize}
+    \item \textbf{Piège fréquent :} croire qu'un contrôle qualité (séquence 4) couvre automatiquement les anomalies de sécurité -- un rejeu passe les contrôles de champs, d'unité et de plage sans aucune difficulté.
+    \item \textbf{Effet sur la décision :} un traitement qui ne croise jamais l'identité des messages entre eux ne peut détecter un rejeu, quelle que soit la qualité de ses contrôles ligne à ligne.
+  \end{itemize}
+  \decisionquestion{Un message peut-il franchir tous les contrôles de qualité de la séquence 4 et rester un rejeu ?}
+\end{frame}
+
+\begin{frame}[fragile]{Démonstration -- diagnostiquer un lot suspect}
+  \scriptsize
+  \begin{verbatim}
+python3 -m iot_decision.chain_trust_cli data/samples/batch004_suspect_scenario.jsonl
+  \end{verbatim}
+  \normalsize
+  Ce module ne recalcule rien : il relit les signaux déjà détectables par les modules des séquences 3 et 4 (candidat de rejeu, doublon exact, incohérence temporelle, silence), et les relie à des hypothèses concurrentes.
+\end{frame}
+
+\begin{frame}{Activité -- Analyse d'un lot suspect}
+  \begin{block}{Votre mission}
+    Exécuter le diagnostic sur \texttt{batch004\_suspect\_scenario.jsonl} et interpréter chaque signal.
+  \end{block}
+  \begin{enumerate}
+    \item relever le nombre de doublons exacts, de candidats de rejeu, d'incohérences temporelles et la durée du silence non expliqué ;
+    \item pour chaque signal, identifier la ou les lignes brutes concernées dans le fichier JSONL ;
+    \item vérifier que la mesure du candidat de rejeu passait bien tous les contrôles de qualité de la séquence 4 ;
+    \item noter si un seul de ces signaux, pris isolément, aurait suffi à alerter.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Ce que révèle le diagnostic}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}lc@{}}
+    \toprule
+    Signal & Valeur observée \\
+    \midrule
+    Doublons exacts & 1 \\
+    Candidats de rejeu (même mesure, identité différente) & 1 \\
+    Incohérences temporelles & 1 \\
+    Silence non expliqué (maximum) & 15 min \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \normalsize Le candidat de rejeu réutilise la mesure de \texttt{comms-shelter-01} de 09:40 (29,3\,°C), republiée sous un nouvel identifiant trente minutes plus tard. Cette mesure est parfaitement valide au sens de la séquence 4 : aucun champ manquant, aucune unité incohérente, aucun horodatage postérieur à la réception.
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge Section 4\\[3mm]
+  \Large Décider malgré l'incertitude sur la chaîne
+  \vfill
+  \normalsize Quatre hypothèses concurrentes, une seule question : peut-on agir sur ces données ?
+\end{frame}
+
+\begin{frame}{Matrice des risques data/cyber}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Hypothèse & Probabilité & Impact & Justification \\
+    \midrule
+    \textbf{Suspicion data/cyber} & \textbf{forte} & \textbf{élevé} & candidat de rejeu + incohérence temporelle \\
+    Problème réseau & forte & moyen & silence non expliqué de 15 min \\
+    Panne capteur & moyenne & moyen & 1 retransmission exacte détectée \\
+    Incident réel & faible & élevé & aucun franchissement de seuil observé \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vfill
+  \normalsize Plusieurs hypothèses restent probables simultanément : elles ne s'excluent pas, elles orientent des vérifications différentes.
+\end{frame}
+
+\begin{frame}{Décision -- peut-on agir sur ces données ?}
+  \decisionquestion{Que vaut une décision opérationnelle si l'on ne peut pas qualifier la confiance dans la chaîne de données ?}
+  \begin{block}{Recommandation sur ce lot}
+    Ne pas agir directement sur ces données : isoler le lot, vérifier l'identité et la source des messages suspects avant toute décision opérationnelle.
+  \end{block}
+  \normalsize Cette recommandation ne rejette pas le lot : elle en retarde l'usage jusqu'à vérification, exactement comme une confiance faible retardait une conclusion dans les séquences précédentes.
+\end{frame}
+
+\begin{frame}{Recommandations de sécurisation minimale}
+  \begin{enumerate}
+    \item désactiver l'accès anonyme dès qu'un broker dépasse le cadre d'un laboratoire strictement local ;
+    \item attribuer une ACL par rôle, jamais un compte unique partagé entre tous les capteurs ;
+    \item conserver l'identifiant de message et le topic d'origine pour pouvoir croiser les messages entre eux, pas seulement les valider un par un ;
+    \item ne jamais déduire qu'un message est sûr du seul fait qu'il a franchi les contrôles de qualité de la séquence 4.
+  \end{enumerate}
+  \decisionquestion{Laquelle de ces quatre recommandations aurait, seule, empêché le candidat de rejeu de ce lot ?}
+\end{frame}
+
+\begin{frame}{Restitution -- 150 mots maximum}
+  Rédigez une recommandation contenant :
+  \begin{enumerate}
+    \item la ou les hypothèses retenues, avec probabilité et impact ;
+    \item un niveau de confiance dans la chaîne, distinct de la confiance dans les valeurs mesurées ;
+    \item deux preuves chiffrées et retrouvables, avec leur fichier source ;
+    \item une vérification prioritaire avant toute décision opérationnelle.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Transition vers la suite du cours}
+  Le mini-projet final s'appuiera directement sur cette séquence :
+  \begin{enumerate}
+    \item un lot ambigu peut combiner un problème de qualité (séquence 4), un indicateur trompeur (séquence 5) et un signal de confiance dans la chaîne (séquence 7) ;
+    \item aucune de ces trois familles de vérification n'en remplace une autre.
+  \end{enumerate}
+  \vfill
+  Retenez ce réflexe : un message qui franchit tous les contrôles de qualité n'a pas nécessairement franchi un contrôle de confiance dans la chaîne -- ce sont deux vérifications différentes.
+\end{frame}
+
+\begin{frame}{Activité -- Synthèse individuelle}
+  Complétez les trois phrases, seul et sans écran :
+  \begin{enumerate}
+    \item Un message peut être valide au sens de la séquence 4 et pourtant ...
+    \item L'authentification protège contre ... ; l'ACL protège en plus contre ...
+    \item Avant d'agir sur un lot dont la chaîne n'est pas qualifiée, je vérifierais ...
+  \end{enumerate}
+  \vfill
+  \alert{Message incohérent $\rightarrow$ signaux de confiance $\rightarrow$ hypothèses concurrentes $\rightarrow$ isolement et vérification $\rightarrow$ décision différée, pas refusée.}
+\end{frame}
+
+\begin{frame}{Ce que la séance a permis d'établir -- synthèse de référence}
+  \small
+  \begin{block}{Résultat de référence sur ce lot}
+    Un doublon exact, un candidat de rejeu et une incohérence temporelle sur \texttt{comms-shelter-01}, plus un silence non expliqué de 15 minutes, placent « suspicion data/cyber » en tête des hypothèses (probabilité forte, impact élevé), devant un problème réseau plausible mais secondaire.
+  \end{block}
+  \begin{block}{Une recommandation défendable, à titre d'exemple}
+    Isoler le lot, vérifier l'identité et la source des messages suspects avant toute décision opérationnelle ; ne jamais confondre la validité ligne à ligne d'un message avec la confiance dans son identité.
+  \end{block}
+  \normalsize
+  \alert{D'autres formulations restent recevables si elles distinguent explicitement confiance dans la source, confiance dans le traitement, et qualité au sens de la séquence 4.}
+\end{frame}
+
+\begin{frame}{Références et ressources}
+  \tiny
+  \begin{itemize}
+    \item Eclipse Mosquitto, documentation \texttt{mosquitto.conf} (authentification, \texttt{password\_file}, \texttt{acl\_file}) : \url{https://mosquitto.org/man/mosquitto-conf-5.html}
+    \item OASIS, \emph{MQTT Version 5.0 Specification}, section sur les messages retained et la persistance : \url{https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html}
+    \item NIST IR 8259A, \emph{IoT Device Cybersecurity Capability Core Baseline}, 2020 : \url{https://doi.org/10.6028/NIST.IR.8259A}
+    \item OWASP, \emph{OWASP Internet of Things Top 10} : \url{https://owasp.org/www-project-internet-of-things/}
+    \item ANSSI, recommandations de sécurité relatives aux objets connectés : \url{https://www.ssi.gouv.fr/}
+  \end{itemize}
+\end{frame}
+
 \end{document}

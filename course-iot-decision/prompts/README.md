@@ -11,3 +11,5 @@ Ce dossier accueillera une grille structurée et un prompt d’évaluation centr
 `s05_assessment_prompt.md` pré-évalue les indicateurs transparents, l'usage discipliné du score automatique avant le débrief, et le diagnostic de la zone hors périmètre de calibration.
 
 `s06_assessment_prompt.md` pré-évalue l'identification des leviers de mise en forme, la note de briefing produite et le choix du graphique honnête pour accompagner la recommandation.
+
+`s07_assessment_prompt.md` pré-évalue la distinction des concepts de sécurité, le diagnostic du lot suspect et la matrice des risques data/cyber.
