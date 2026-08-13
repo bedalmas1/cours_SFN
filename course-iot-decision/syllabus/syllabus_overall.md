@@ -125,6 +125,9 @@ Kubernetes, PostgreSQL, Grafana et TimescaleDB. Ces outils peuvent être pertine
 mais risquent de détourner le cours vers l'infrastructure au lieu de servir l'objectif principal.
 
 ## 9. Déroulé détaillé des 8 séquences
+
+Une **séquence 0 optionnelle de 3 h**, sans écran ni matériel informatique, peut précéder la séquence 1 : « Le détective de la pipeline » (`sessions/s00_pipeline_detective/`). C'est un jeu animé par l'enseignant en maître du jeu, avec budget de jetons et fiche scriptée, qui installe dès l'ouverture la question centrale du cours sans dépendre d'un ordinateur, d'un broker ou d'un accès Internet. Elle ne fait pas partie du décompte des huit séquences numérotées et reste indépendante de leur contenu technique.
+
 ### Séquence 1 - Introduction et pipeline baseline
 Objectif général : Comprendre le scénario opérationnel et construire une première pipeline simple de bout en bout.
 

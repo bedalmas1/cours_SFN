@@ -14,7 +14,7 @@ L’ensemble du cours s’exécute sous Linux dans un terminal Bash. Les command
 ## Organisation
 
 - `syllabus/` : syllabus général et bibliographie ;
-- `sessions/` : huit séquences de quatre heures ;
+- `sessions/` : huit séquences de quatre heures, précédées d'une séquence 0 optionnelle de 3 h sans écran (`sessions/s00_pipeline_detective/`), utilisable en ouverture même sans accès informatique ;
 - `latex/common/` : préambule Beamer et bibliographie partagés ;
 - `src/` : code Python pédagogique ;
 - `data/` : données brutes, traitées et échantillons ;
