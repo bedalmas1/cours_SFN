@@ -9,7 +9,7 @@
 Vous n'avez ni ordinateur ni fichier. Avant d'interroger le maître du jeu (MJ), qui joue le rôle du réseau de renseignement du secteur, vous recevez un **dossier initial** papier à trier collectivement : il mélange des pièces utiles, des pièces sans rapport et des pièces ambiguës, sans indiquer à l'avance laquelle est laquelle. Ce n'est qu'après ce tri que vous dépensez votre budget de jetons auprès du MJ. À la fin, votre cellule remet :
 
 1. une fiche de tri du dossier initial et un plan d'achat ;
-2. un journal de bord tenu au fil des deux rounds ;
+2. un journal de bord oral enregistré au fil des deux rounds (un SITREP après chaque requête) ;
 3. une enveloppe de décision ouverte et complétée ;
 4. un brief oral de 3 minutes en restitution.
 
@@ -18,7 +18,7 @@ Cinq sources composent le dispositif : poste d'observation fixe Nord, écoute ra
 ## Rôles dans la cellule
 
 - **Chef de cellule** : gère le budget de jetons, décide des achats de requêtes ;
-- **Rédacteur du journal** : note preuve, provenance et confiance après chaque requête ;
+- **Opérateur radio** : dicte le SITREP (preuve, provenance, confiance) au dictaphone ou au téléphone immédiatement après chaque requête ;
 - **Porte-parole auprès du MJ** : formule oralement la requête exacte auprès du maître du jeu.
 
 Faites tourner les rôles entre le round 1 et le round 2.
@@ -35,21 +35,29 @@ Votre cellule reçoit **10 jetons** pour toute la partie ; ils ne sont pas renou
 | Ordre de bataille et plan de couverture | 1 jeton | tout le secteur, achat unique | liste officielle des sources engagées |
 | Historique des rapports des dernières 24 h d'une source | 2 jetons | une source | évolution récente de la source |
 | Journal des incidents affectant une source | 2 jetons | une source | pannes ou incidents récents |
-| Comparaison avec une source témoin | 1 jeton | tout le secteur | référence d'une source jugée sans anomalie |
-| Indice de menace consolidé | 1 jeton | tout le secteur | synthèse chiffrée de l'ensemble des sources |
+| Comparaison avec une source témoin * | 1 jeton | tout le secteur | référence d'une source jugée sans anomalie |
+| Indice de menace consolidé * | 1 jeton | tout le secteur | synthèse chiffrée de l'ensemble des sources |
 | Journal des transmissions radio | 2 jetons | tout le secteur | communications suspectes ou anormales sur le réseau |
 | Vérification terrain d'une source (reconnaissance) | 3 jetons + délai (dé) | une source | observation directe sur place, la plus fiable mais la plus coûteuse |
 
+\* Ces deux requêtes ne sont accessibles qu'après avoir acheté au moins deux requêtes individuelles (dernier rapport, historique ou journal des incidents) sur deux sources différentes.
+
 Pour acheter une requête, énoncez à voix haute au MJ : la requête exacte du catalogue et la source concernée si nécessaire, puis remettez le nombre de jetons correspondant.
 
-## Journal de bord
+## Journal de bord (oral)
 
-Une ligne par requête achetée :
+Après chaque requête achetée, l'opérateur radio dicte immédiatement un SITREP de 20 à 30 secondes, enregistré au dictaphone ou au téléphone (écran éteint, aucun autre usage de l'appareil pendant la partie). N'accumulez pas plusieurs réponses avant d'enregistrer : un SITREP par requête, juste après la réponse du MJ. Chaque SITREP couvre, dans l'ordre :
 
-| Requête et source | Coût | Réponse obtenue | Ce que j'observe | Ce que je ne peux pas encore conclure | Confiance (0–3) |
-|---|---:|---|---|---|---|
+1. la requête achetée et la source visée ;
+2. le coût payé ;
+3. la réponse obtenue ;
+4. ce que cela permet de conclure ;
+5. ce que cela ne permet pas encore de conclure ;
+6. la confiance actualisée (0 à 3).
 
 Échelle de confiance : 0 impossible, 1 faible, 2 modérée, 3 forte.
+
+Gardez tous les enregistrements sur l'appareil jusqu'à la synthèse finale : ils serviront à comparer votre raisonnement à l'aveugle, en cours de round, et au moment du brief final.
 
 ## Parcours de la séance — 3 h
 
@@ -114,11 +122,11 @@ En groupe classe, listez toutes les façons dont un renseignement peut tromper q
 
 ## 3 — Round 1 d'investigation — 35 min
 
-Achetez des requêtes en suivant, ou en révisant, votre plan d'achat initial. Après chaque réponse du MJ, remplissez immédiatement une ligne de votre journal avant d'acheter la requête suivante : n'accumulez pas les réponses sans les noter. Rappelez-vous que le budget est commun à toute la partie : ce que vous dépensez maintenant ne sera plus disponible au round 2.
+Achetez des requêtes en suivant, ou en révisant, votre plan d'achat initial. Après chaque réponse du MJ, enregistrez immédiatement un SITREP oral avant d'acheter la requête suivante : n'accumulez pas les réponses sans les enregistrer. Rappelez-vous que le budget est commun à toute la partie : ce que vous dépensez maintenant ne sera plus disponible au round 2.
 
 ## 4 — Mise à jour — 15 min
 
-Le MJ annoncera une information à toutes les cellules en même temps. Notez-la dans votre journal et demandez-vous si elle change une conclusion déjà écrite plus haut.
+Le MJ annoncera une information à toutes les cellules en même temps. Enregistrez un SITREP sur cette annonce et demandez-vous si elle change une conclusion déjà tirée plus haut.
 
 ## 5 — Round 2 d'investigation — 25 min
 

@@ -7,7 +7,7 @@ Ce guide est destiné à l'enseignant. Comptez 60 à 75 minutes de préparation 
 - tous les fichiers du dossier `dossier_initial/` (voir son `README.md`), un jeu complet par cellule : deux fiches de référence (`00_ordre_de_mission.md`, `00_carte_secteur.svg`) gardées entières, plus les huit pièces à trier (`piece_1_...md` à `piece_8_...svg`), imprimées séparément et découpées en fiches distinctes. Les fichiers `.md` intègrent des illustrations (`assets/`) : ouvrez-les dans un visualiseur Markdown (aperçu VS Code, Typora) ou convertissez-les en PDF (`pandoc`) avant impression — un double-clic sur le fichier brut n'affichera pas les images ;
 - fiche de tri du dossier et plan d'achat initial, une par cellule — section « Dossier initial d'investigation » de `guide_etudiant.md` ;
 - catalogue des requêtes, une fiche A4 par cellule — section « Catalogue des requêtes » de `guide_etudiant.md` ;
-- fiche journal de bord, plusieurs exemplaires par cellule — section « Journal de bord » de `guide_etudiant.md` ;
+- consignes du journal de bord oral — section « Journal de bord (oral) » de `guide_etudiant.md`, à lire aux cellules avant le round 1 ; aucune fiche à imprimer, le journal est enregistré, pas écrit ;
 - grille de verrouillage de l'enveloppe de décision, une par cellule — section « Enveloppe de décision » de `guide_etudiant.md` ;
 - fiche maître du jeu complète, y compris la classification de référence du dossier initial — sections « Dossier initial et fiche de classification de référence » et « Fiche maître du jeu » de `guide_enseignant.md`, strictement réservées à l'enseignant, à ne jamais laisser sur une table de cellule.
 
@@ -18,7 +18,8 @@ Ce guide est destiné à l'enseignant. Comptez 60 à 75 minutes de préparation 
 - une enveloppe opaque et refermable par cellule, pour l'enveloppe de décision (distincte de la pochette du dossier initial) ;
 - une horloge ou un minuteur visible pour l'horloge de mission (distincte de l'heure réelle de la séance) ;
 - un dé à six faces, pour le délai des vérifications terrain uniquement ;
-- feuilles vierges et stylos pour les journaux de bord ;
+- un dictaphone ou un téléphone en mode enregistreur par cellule (chargé, écran éteint pendant la partie), pour le journal de bord oral ;
+- feuilles vierges et stylos pour la fiche de tri, le plan d'achat et la grille de verrouillage ;
 - un tableau ou paperboard pour la synthèse finale.
 
 ## 3. Organisation de la salle
@@ -45,6 +46,7 @@ Ce guide est destiné à l'enseignant. Comptez 60 à 75 minutes de préparation 
 
 - [ ] les fiches sont imprimées en nombre suffisant pour toutes les cellules, y compris les huit pièces découpées du dossier initial ;
 - [ ] les jetons et les enveloppes sont prêts, un jeu complet par cellule ;
+- [ ] chaque cellule dispose d'un dictaphone ou d'un téléphone chargé pour le journal de bord oral ;
 - [ ] la fiche maître du jeu a été relue en entier, classification du dossier initial comprise ;
 - [ ] l'horloge de mission et le dé sont disponibles ;
 - [ ] la salle est organisée en cellules séparées avec un poste MJ central identifiable.

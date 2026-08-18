@@ -46,6 +46,8 @@ Si l'horloge de mission d'une cellule dépasse 17 h 00 avant qu'elle n'ait ouver
 | Journal des transmissions radio | 2 jetons | tout le secteur |
 | Vérification terrain d'une source (reconnaissance) | 3 jetons + délai dé | une source |
 
+**Condition d'accès aux deux requêtes de synthèse.** « Comparaison avec une source témoin » et « Indice de menace consolidé » ne sont accessibles qu'après l'achat d'au moins deux requêtes individuelles (dernier rapport, historique ou journal des incidents) portant sur deux sources différentes — condition cumulée sur l'ensemble de la partie, budget commun aux deux rounds. Si une cellule les demande avant d'avoir rempli cette condition, répondez : « Cette synthèse n'est communiquée qu'après vérification d'au moins deux sources individuelles distinctes. », sans révéler laquelle des deux requêtes manque ni orienter son choix. Cette règle empêche une cellule de fermer son enquête en deux achats sans jamais interroger le poste Nord ou les autres sources individuellement.
+
 ## Dossier initial et fiche de classification de référence
 
 Avant tout achat de requête, chaque cellule reçoit le dossier initial (deux fiches de référence — ordre de mission écrit, carte texte du secteur — et huit pièces à trier), reproduit intégralement dans la section « Dossier initial d'investigation » de `guide_etudiant.md`. Ce dossier est fixe et identique pour toutes les cellules ; il ne fait l'objet d'aucune réponse scriptée supplémentaire de votre part pendant la phase de tri : si une cellule demande un complément sur une pièce du dossier, répondez « le dossier ne contient rien de plus que ce qui est écrit ; toute information supplémentaire s'achète auprès du MJ », sans détailler ni orienter le tri.
@@ -111,9 +113,11 @@ Le tri ne s'arrête pas à la classification globale des huit pièces : certaine
 
 ### Requêtes globales
 
+Avant de lire les deux réponses marquées *(soumise à condition)*, vérifiez que la cellule a bien acheté au moins deux requêtes individuelles sur deux sources différentes ; sinon appliquez le refus scripté de la section « Catalogue des requêtes et coûts ».
+
 - **Ordre de bataille et plan de couverture (avant le twist) :** « Cinq éléments sont officiellement engagés sur le dispositif : poste d'observation fixe Nord, écoute radio, informateur local, poste frontalier allié et patrouille avancée. La patrouille avancée est marquée active, dernier contact confirmé il y a 20 jours. »
-- **Comparaison avec une source témoin :** donnez directement le rapport du poste frontalier allié (secteur calme, stable) en le présentant comme référence d'un secteur sans anomalie connue.
-- **Indice de menace consolidé :** « L'indice de menace consolidé du secteur est de 25 sur 100, jugé faible ; il agrège observation, interception et renseignement humain sur une échelle commune et ne signale aucune source en alerte. » Ne donnez aucun détail de calcul si on vous le demande : « la méthode de consolidation n'est pas communiquée à ce niveau. »
+- **Comparaison avec une source témoin** *(soumise à condition)* : donnez directement le rapport du poste frontalier allié (secteur calme, stable) en le présentant comme référence d'un secteur sans anomalie connue.
+- **Indice de menace consolidé** *(soumise à condition)* : « L'indice de menace consolidé du secteur est de 25 sur 100, jugé faible ; il agrège observation, interception et renseignement humain sur une échelle commune et ne signale aucune source en alerte. » Ne donnez aucun détail de calcul si on vous le demande : « la méthode de consolidation n'est pas communiquée à ce niveau. »
 - **Journal des transmissions radio :** « Une transmission non identifiée a été captée brièvement sur une fréquence voisine à 15 h 40, sans échange suivi. Aucune autre anomalie de trafic sur la période. »
 
 ## Twist injecté — à annoncer à 1 h 35 à toutes les cellules simultanément
@@ -178,11 +182,11 @@ Sans révéler le scénario, faites nommer collectivement des façons dont un re
 
 ## 4. Round 1 d'investigation — 35 min
 
-Circulez entre les cellules au poste MJ. Chaque requête suit le catalogue et reçoit la réponse scriptée correspondante, lue ou paraphrasée sans ajout ni omission. Exigez que chaque cellule note dans son journal : requête achetée, coût, réponse obtenue, ce qu'elle permet de conclure, ce qu'elle ne permet pas de conclure, confiance actualisée.
+Circulez entre les cellules au poste MJ. Chaque requête suit le catalogue et reçoit la réponse scriptée correspondante, lue ou paraphrasée sans ajout ni omission. Exigez que chaque cellule enregistre, immédiatement après chaque réponse, un SITREP oral (dictaphone ou téléphone, écran éteint) : requête achetée, coût, réponse obtenue, ce qu'elle permet de conclure, ce qu'elle ne permet pas de conclure, confiance actualisée. N'exigez pas de journal papier : seule la grille de verrouillage et le brief final restent écrits.
 
 ## 5. Twist injecté et relance — 15 min
 
-À 1 h 35, interrompez toutes les cellules et lisez l'annonce du twist (section dédiée ci-dessus). Laissez deux minutes aux cellules pour ajuster leur journal avant de relancer le round 2.
+À 1 h 35, interrompez toutes les cellules et lisez l'annonce du twist (section dédiée ci-dessus). Laissez deux minutes aux cellules pour enregistrer un SITREP sur cette annonce avant de relancer le round 2.
 
 ## 6. Round 2 d'investigation — 25 min
 
@@ -198,7 +202,7 @@ Chaque cellule présente en 3 minutes : action retenue, confiance, deux preuves 
 
 ## 9. Synthèse et révélation — 5 min
 
-Révélez la fiche complète, la classification de référence du dossier initial et la décision de référence. Demandez à chaque cellule de comparer sa décision à l'aveugle (étape 1) à son plan d'achat post-dossier (étape 2) puis à sa décision finale : c'est ce contraste, plus que la fiche complète elle-même, qui doit clore la séance. Passez en revue la taxonomie des pièges rencontrés :
+Révélez la fiche complète, la classification de référence du dossier initial et la décision de référence. Demandez à chaque cellule de comparer sa décision à l'aveugle (étape 1) à son plan d'achat post-dossier (étape 2) puis à sa décision finale : c'est ce contraste, plus que la fiche complète elle-même, qui doit clore la séance. Si le temps le permet, invitez une cellule à faire réécouter un court SITREP du round 1 : le contraste avec le brief final est souvent plus parlant qu'un résumé écrit. Passez en revue la taxonomie des pièges rencontrés :
 
 1. observation ancienne présentée comme situation actuelle (poste d'observation fixe Nord) ;
 2. interception dupliquée comptée comme deux confirmations indépendantes (écoute radio) ;
@@ -221,6 +225,7 @@ Demandez à chaque cellule combien de ces huit problèmes elle a effectivement i
 | Une cellule termine très en avance | Lui demander de rédiger une deuxième version du brief pour une audience différente (le commandant plutôt que la cellule de renseignement). |
 | Une cellule dépasse 17 h 00 d'horloge de mission avant sa décision | Appliquer l'action C par défaut et le noter comme trace de débrief, pas comme sanction. |
 | Une cellule débat sans fin sur le tri du dossier initial sans produire de plan d'achat | Recentrer avec « quelle est la seule requête que vous achèteriez si vous ne pouviez en poser qu'une ? », sans trancher vous-même le tri. |
+| Une cellule oublie d'enregistrer un SITREP après une requête | Lui demander de le faire immédiatement de mémoire avant la requête suivante, sans revenir en arrière ni relire la réponse scriptée ; noter la lacune comme trace de débrief, pas comme sanction. |
 | Une cellule classe toutes les pièces du dossier initial comme « utiles » sans distinction | Ne pas corriger pendant la phase de tri ; noter l'absence de discrimination pour la relancer en synthèse sur le coût réel de cette absence de tri (budget dispersé en round 1). |
 
 ## Critères observables

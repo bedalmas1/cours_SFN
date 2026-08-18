@@ -16,7 +16,7 @@ Après un premier choix décidé à l'aveugle, chaque cellule reçoit un **dossi
 
 ## Livrables et démarrage rapide
 
-Aucune commande, aucun fichier de données à exécuter : le matériel est entièrement imprimé. Livrables attendus par cellule : une fiche de tri du dossier initial et un plan d'achat, un journal de bord rempli, une enveloppe de décision ouverte et complétée, un brief oral de restitution.
+Aucune commande, aucun fichier de données à exécuter : le matériel est entièrement imprimé. Livrables attendus par cellule : une fiche de tri du dossier initial et un plan d'achat, un journal de bord oral enregistré, une enveloppe de décision ouverte et complétée, un brief oral de restitution.
 
 - `guide_enseignant.md` : mode d'emploi complet du MJ — scénario, fiche des réponses scriptées, classification de référence du dossier initial, minutage, débrief.
 - `guide_etudiant.md` : mission, dossier initial à trier, catalogue des requêtes, journal de bord et enveloppe de décision distribués aux cellules.
