@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 16" font-family="Georgia, 'Times New Roman', serif">
+  <circle cx="8" cy="8" r="7" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+  <circle cx="8" cy="8" r="5" fill="none" stroke="#1a1a1a" stroke-width="0.4"/>
+  <g stroke="#1a1a1a" stroke-width="0.6">
+    <line x1="8" y1="2.2" x2="8" y2="13.8"/>
+    <line x1="2.2" y1="8" x2="13.8" y2="8"/>
+  </g>
+  <polygon points="8,3.6 9,8 8,12.4 7,8" fill="#1a1a1a"/>
+  <text x="8" y="2.6" text-anchor="middle" font-size="2.1" fill="#1a1a1a">N</text>
+
+  <text x="17" y="7.2" font-size="4" font-weight="bold" fill="#1a1a1a" textLength="50" lengthAdjust="spacingAndGlyphs">BUREAU DE RENSEIGNEMENT</text>
+  <text x="17" y="12" font-size="3" fill="#4a4a4a" textLength="50" lengthAdjust="spacingAndGlyphs">DU SECTEUR — USAGE INTERNE</text>
+</svg>

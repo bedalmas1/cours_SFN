@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 297 210" font-family="Georgia, 'Times New Roman', serif">
+  <rect x="0" y="0" width="297" height="210" fill="#faf7ef" stroke="#1a1a1a" stroke-width="1.2"/>
+
+  <text x="148.5" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a" textLength="230" lengthAdjust="spacingAndGlyphs">CARTE DU SECTEUR — FICHE DE RÉFÉRENCE</text>
+  <line x1="18" y1="21" x2="279" y2="21" stroke="#1a1a1a" stroke-width="0.5"/>
+
+  <!-- compass -->
+  <g transform="translate(265,38)">
+    <line x1="0" y1="12" x2="0" y2="-12" stroke="#1a1a1a" stroke-width="0.8"/>
+    <polygon points="0,-12 -3,-5 3,-5" fill="#1a1a1a"/>
+    <text x="0" y="-15" text-anchor="middle" font-size="7" fill="#1a1a1a">N</text>
+  </g>
+
+  <!-- sector boundary -->
+  <rect x="18" y="30" width="261" height="150" fill="none" stroke="#8a8272" stroke-width="0.6" stroke-dasharray="3,2"/>
+  <text x="22" y="176" font-size="5" fill="#8a8272">limite indicative du secteur observé</text>
+
+  <!-- connecting lines (drawn first, under the boxes) -->
+  <line x1="160" y1="140" x2="160" y2="76" stroke="#1a1a1a" stroke-width="0.7"/>
+  <line x1="140" y1="141" x2="95" y2="109" stroke="#1a1a1a" stroke-width="0.7"/>
+  <line x1="120" y1="150" x2="98" y2="150" stroke="#1a1a1a" stroke-width="0.7"/>
+
+  <!-- line labels, placed in clear space away from every box -->
+  <text x="164" y="110" font-size="5.5" fill="#1a1a1a">6 km nord</text>
+  <text x="98" y="130" font-size="5" fill="#1a1a1a">3 km nord-ouest</text>
+  <text x="116" y="144" text-anchor="middle" font-size="5" fill="#1a1a1a" textLength="14" lengthAdjust="spacingAndGlyphs">12 km</text>
+
+  <!-- Poste Nord -->
+  <g transform="translate(160,60)">
+    <rect x="-58" y="-13" width="116" height="26" fill="#ffffff" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#1a1a1a" textLength="100" lengthAdjust="spacingAndGlyphs">POSTE D'OBSERVATION</text>
+    <text x="0" y="8" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#1a1a1a" textLength="48" lengthAdjust="spacingAndGlyphs">FIXE NORD</text>
+  </g>
+
+  <!-- Point de controle -->
+  <g transform="translate(160,150)">
+    <rect x="-35" y="-9" width="70" height="18" fill="#1a1a1a"/>
+    <text x="0" y="3" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#faf7ef" textLength="58" lengthAdjust="spacingAndGlyphs">POINT DE CONTRÔLE</text>
+  </g>
+
+  <!-- Axe secondaire / informateur -->
+  <g transform="translate(60,97)">
+    <rect x="-55" y="-13" width="110" height="26" fill="#ffffff" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#1a1a1a" textLength="70" lengthAdjust="spacingAndGlyphs">AXE SECONDAIRE</text>
+    <text x="0" y="8" text-anchor="middle" font-size="5.5" fill="#1a1a1a" textLength="95" lengthAdjust="spacingAndGlyphs">(zone informateur local)</text>
+  </g>
+
+  <!-- Poste frontalier allie -->
+  <g transform="translate(55,150)">
+    <rect x="-52" y="-12" width="104" height="24" fill="#ffffff" stroke="#1a1a1a" stroke-width="0.8"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#1a1a1a" textLength="90" lengthAdjust="spacingAndGlyphs">POSTE FRONTALIER ALLIÉ</text>
+    <text x="0" y="7" text-anchor="middle" font-size="5.5" fill="#1a1a1a" textLength="80" lengthAdjust="spacingAndGlyphs">(secteur adjacent)</text>
+  </g>
+
+  <!-- notes non localisees -->
+  <g transform="translate(232,95)">
+    <rect x="-40" y="-16" width="80" height="32" fill="none" stroke="#1a1a1a" stroke-width="0.5" stroke-dasharray="2,1.5"/>
+    <text x="0" y="-6" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#1a1a1a" textLength="60" lengthAdjust="spacingAndGlyphs">ÉCOUTE RADIO</text>
+    <text x="0" y="1" text-anchor="middle" font-size="5" fill="#1a1a1a" textLength="70" lengthAdjust="spacingAndGlyphs">couverture large bande,</text>
+    <text x="0" y="7" text-anchor="middle" font-size="5" fill="#1a1a1a" textLength="70" lengthAdjust="spacingAndGlyphs">non localisée sur cette carte</text>
+  </g>
+
+  <g transform="translate(232,160)">
+    <rect x="-40" y="-16" width="80" height="32" fill="none" stroke="#1a1a1a" stroke-width="0.5" stroke-dasharray="2,1.5"/>
+    <text x="0" y="-6" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#1a1a1a" textLength="68" lengthAdjust="spacingAndGlyphs">PATROUILLE AVANCÉE</text>
+    <text x="0" y="1" text-anchor="middle" font-size="5" fill="#1a1a1a" textLength="70" lengthAdjust="spacingAndGlyphs">position mobile, dernière zone</text>
+    <text x="0" y="7" text-anchor="middle" font-size="5" fill="#1a1a1a" textLength="70" lengthAdjust="spacingAndGlyphs">de reconnaissance non précisée</text>
+  </g>
+
+  <text x="148.5" y="197" text-anchor="middle" font-size="5.5" font-style="italic" fill="#4a4a4a" textLength="245" lengthAdjust="spacingAndGlyphs">Fiche de référence n° 2 du dossier initial — Séquence 0. Ne fait pas partie des pièces à trier.</text>
+</svg>

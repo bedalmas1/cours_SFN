@@ -16,6 +16,10 @@ Le journal des transmissions révèle une émission non identifiée à 15 h 40 s
 
 **Décision recevable :** action B, renforcement ou vérification ciblée du poste d'observation fixe Nord avant l'entrée de la patrouille, sans compter l'interception dupliquée comme deux preuves, rejet du témoignage aberrant, aucune conclusion nécessaire sur la patrouille avancée après le twist. Confiance modérée sur ce diagnostic, faible sur tout ce qui n'a pas été vérifié par la cellule. Une autre action est recevable si son périmètre, ses preuves et son coût d'erreur sont explicitement défendus.
 
+## Ce que le dossier initial devait faire ressortir
+
+Le dossier initial (huit pièces, section « Dossier initial et fiche de classification de référence » de `guide_enseignant.md`) prépare le terrain avant tout achat : le mémo doctrine et la fiche organique orientent vers le poste Nord et le doublon des stations d'écoute A/B ; la fiche de contact de l'informateur et la note manuscrite non signée font pressentir, sans le prouver, que son témoignage sera à rejeter ; le rappel de sécurité sur les délais prépare l'arbitrage budget/horloge de mission. Les deux pièces de bruit (bulletin météo du secteur Sud, note logistique carburant) ne doivent coûter aucun budget d'attention prolongée. Une cellule qui a bien trié le dossier arrive au round 1 avec un plan d'achat déjà centré sur le poste Nord, l'informateur et le doublon d'interception, plutôt que de découvrir ces pistes au hasard des achats.
+
 ## Taxonomie des huit problèmes à retrouver
 
 1. observation ancienne présentée comme situation actuelle (poste d'observation fixe Nord) ;

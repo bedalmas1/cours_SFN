@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" font-family="Georgia, 'Times New Roman', serif">
+  <g transform="rotate(-8,20,20)">
+    <circle cx="20" cy="20" r="17" fill="none" stroke="#8a1f1f" stroke-width="1"/>
+    <circle cx="20" cy="20" r="13" fill="none" stroke="#8a1f1f" stroke-width="0.5"/>
+    <line x1="9" y1="15.5" x2="31" y2="15.5" stroke="#8a1f1f" stroke-width="0.5"/>
+    <text x="20" y="20.5" text-anchor="middle" font-size="7" font-weight="bold" fill="#8a1f1f" textLength="20" lengthAdjust="spacingAndGlyphs">REÇU</text>
+    <text x="20" y="27" text-anchor="middle" font-size="5.5" fill="#8a1f1f" textLength="18" lengthAdjust="spacingAndGlyphs">15 H 58</text>
+    <line x1="9" y1="29" x2="31" y2="29" stroke="#8a1f1f" stroke-width="0.5"/>
+  </g>
+</svg>

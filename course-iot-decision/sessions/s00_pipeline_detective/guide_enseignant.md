@@ -46,6 +46,27 @@ Si l'horloge de mission d'une cellule dépasse 17 h 00 avant qu'elle n'ait ouver
 | Journal des transmissions radio | 2 jetons | tout le secteur |
 | Vérification terrain d'une source (reconnaissance) | 3 jetons + délai dé | une source |
 
+## Dossier initial et fiche de classification de référence
+
+Avant tout achat de requête, chaque cellule reçoit le dossier initial (deux fiches de référence — ordre de mission écrit, carte texte du secteur — et huit pièces à trier), reproduit intégralement dans la section « Dossier initial d'investigation » de `guide_etudiant.md`. Ce dossier est fixe et identique pour toutes les cellules ; il ne fait l'objet d'aucune réponse scriptée supplémentaire de votre part pendant la phase de tri : si une cellule demande un complément sur une pièce du dossier, répondez « le dossier ne contient rien de plus que ce qui est écrit ; toute information supplémentaire s'achète auprès du MJ », sans détailler ni orienter le tri.
+
+Classification de référence, à ne jamais révéler avant la synthèse finale :
+
+| Pièce | Classification | Ce qu'elle prépare |
+|---|---|---|
+| 1 — Fiche organique du dispositif | Utile | Situe les cinq sources et laisse deviner, sans le dire, que les stations d'écoute A/B partagent un même flux de collecte (piège 2) et que la fiche de la patrouille avancée date de 20 jours (cohérent avec l'ordre de bataille avant twist, piège 4) |
+| 2 — Mémo doctrine fiabilité | Utile | Doctrine générale, transférable à toute mission : pousse à vérifier la maintenance d'un poste figé (piège 1) et à ne jamais recouper un doublon d'interception comme deux preuves (piège 2) |
+| 3 — Fiche de contact de l'informateur local | Utile | Signale une source jamais réévaluée depuis son recrutement, sans dire qu'elle sera aberrante (prépare le piège 3) |
+| 4 — Rappel sécurité sur les délais | Utile | Prépare l'arbitrage budget/horloge de mission (piège 8) |
+| 5 — Bulletin météo secteur Sud | Bruit | Concerne un secteur différent, sans lien avec la décision |
+| 6 — Note logistique carburant | Bruit | Administratif, sans impact sur le diagnostic de menace |
+| 7 — Calendrier de maintenance générique | Ambiguë | Évoque une rotation de maintenance possible sans confirmer ni infirmer un incident précis sur le poste Nord ce mois-ci ; une cellule peut légitimement la classer utile ou bruit tant qu'elle n'a pas acheté le journal des incidents |
+| 8 — Note manuscrite non signée sur l'informateur | Ambiguë | Rumeur non sourcée qui pointe déjà vers le piège 3 sans le confirmer ; à ne pas traiter comme une preuve, seulement comme une piste à vérifier |
+
+Une cellule n'est pas censée retrouver cette classification exacte pendant la phase de tri : l'objectif est qu'elle discute, hésite sur les deux pièces ambiguës, et en tire un plan d'achat qui privilégie le poste Nord, la vérification croisée de l'informateur et la question du doublon d'interception. Une cellule qui classe tout comme « utile » sans distinction, ou qui ignore les deux pièces ambiguës dans son plan d'achat, est un signal à noter pour la synthèse.
+
+Le tri ne s'arrête pas à la classification globale des huit pièces : certaines pièces classées « utile » (2 et 4) mélangent volontairement, à l'intérieur du même document, un contenu décisif et du remplissage purement administratif (rappels de procédure, archivage, exercices incendie...). Une cellule qui cite un point administratif comme une preuve dans son brief final, ou qui n'arrive pas à distinguer les points 1 à 3 du mémo de doctrine (pièce 2) des points 4 à 6, n'a pas terminé son tri : c'est le même réflexe de lecture qu'il faudra appliquer aux réponses scriptées du MJ pendant les rounds.
+
 ## Fiche maître du jeu — réponses scriptées
 
 ### Dernier rapport (connu à 15 h 58)
@@ -95,7 +116,7 @@ Si l'horloge de mission d'une cellule dépasse 17 h 00 avant qu'elle n'ait ouver
 - **Indice de menace consolidé :** « L'indice de menace consolidé du secteur est de 25 sur 100, jugé faible ; il agrège observation, interception et renseignement humain sur une échelle commune et ne signale aucune source en alerte. » Ne donnez aucun détail de calcul si on vous le demande : « la méthode de consolidation n'est pas communiquée à ce niveau. »
 - **Journal des transmissions radio :** « Une transmission non identifiée a été captée brièvement sur une fréquence voisine à 15 h 40, sans échange suivi. Aucune autre anomalie de trafic sur la période. »
 
-## Twist injecté — à annoncer à 1 h 30 à toutes les cellules simultanément
+## Twist injecté — à annoncer à 1 h 35 à toutes les cellules simultanément
 
 Interrompez toutes les cellules en même temps, sans attendre qu'elles le demandent, et annoncez :
 
@@ -109,19 +130,20 @@ Cette section donne la marche à suivre idéale, comme la solution d'un escape g
 
 | # | Question que la cellule doit se poser | Vérification qui y répond | Raisonnement attendu | Piège associé |
 |---:|---|---|---|---|
-| 1 | Le signalement de 15 h 58 est-il daté et confirmé, ou juste alarmant ? | Dernier rapport, puis historique 24 h du poste d'observation fixe Nord | Un signalement choquant sans confirmation n'est qu'un signal, pas une preuve ; il faut d'abord savoir depuis quand il est tenu pour vrai | 1 |
-| 2 | Pourquoi l'observation ne change plus depuis 14 h 05 ? | Historique 24 h : le rapport est identique à chaque créneau depuis 14 h 05 | Une observation qui cesse de varier juste après un évènement technique suggère une panne de remontée, pas forcément une situation stable | 1 |
-| 3 | Existe-t-il une explication technique à ce blocage ? | Journal des incidents du poste d'observation fixe Nord | La panne d'alimentation de la lunette à 14 h 05 donne une cause plausible, à mettre en balance avec un vrai mouvement de troupes | 1 |
-| 4 | L'enjeu de l'entrée de la patrouille justifie-t-il le coût d'une vérification terrain ? | Arbitrage budget/horloge de mission, puis reconnaissance sur le poste Nord | Le coût d'une patrouille exposée à tort dépasse le coût de 3 jetons et d'un délai de reconnaissance ; la vérification confirme un secteur calme, la panne était d'observation, pas de menace | 1, 8 |
-| 5 | L'incident du poste Nord dit-il quelque chose des quatre autres sources ? | Dernier rapport des quatre autres sources | Un incident localisé ne dispense pas de couvrir tout le dispositif annoncé ; la fusion de renseignement porte sur cinq sources, pas une seule | — |
-| 6 | L'interception radio est-elle vraiment confirmée deux fois ? | Historique de l'écoute radio : même message, deux stations, deux fréquences relais | Deux traces d'une même interception relayée ne sont pas deux preuves indépendantes ; il faut chercher la confirmation réelle, pas compter les messages | 2 |
-| 7 | 200 véhicules blindés sur l'axe secondaire : à corriger ou à rejeter ? | Historique et vérification terrain du témoignage de l'informateur local | Un chiffre physiquement invraisemblable au vu du terrain s'écarte du raisonnement, il ne se recoupe pas avec le reste comme une preuve ordinaire | 3 |
-| 8 | Le silence de la patrouille avancée signifie-t-il une capture ou une panne ? | Ordre de bataille et plan de couverture (avant le twist) | L'ordre de bataille initial montre la patrouille active : le silence reste ambigu entre incident et absence de rapport à transmettre, une conclusion doit rester en suspens | 4 |
-| 9 | Que change l'annonce du MJ à 1 h 30 ? | Twist : mise à jour de l'ordre de bataille | La question de la patrouille avancée se referme ; le budget qui lui était réservé doit être redirigé vers l'incident principal | 5 |
-| 10 | L'indice de menace à 25/100 suffit-il à conclure que le secteur est sûr ? | Indice de menace consolidé, confronté aux résultats source par source déjà obtenus | Un indice agrégé peut rester rassurant en absorbant une source figée et une source aberrante ; il ne remplace jamais la lecture source par source | 6 |
-| 11 | La transmission non identifiée change-t-elle l'analyse ? | Journal des transmissions radio | À signaler dans le brief, mais sans suite confirmée elle ne doit pas absorber le budget restant | 7 |
-| 12 | Reste-t-il assez de budget et de temps avant l'entrée de la patrouille ? | Suivi du budget de jetons et de l'horloge de mission | Prioriser la vérification qui a le plus changé le diagnostic (poste Nord) plutôt que de tout vérifier sur le terrain | 8 |
-| 13 | Le brief final peut-il être défendu avec ce qui a été réuni ? | Grille de verrouillage puis brief dans l'enveloppe | Action B, périmètre poste Nord en priorité, confiance modérée, deux preuves (historique figé + reconnaissance confirmant le calme), deux incertitudes (fiabilité durable de l'informateur, origine de la transmission non identifiée), une vérification prioritaire restante | — |
+| 1 | Le dossier initial oriente-t-il le plan d'achat vers le poste Nord, l'informateur et le doublon d'interception ? | Tri des huit pièces du dossier initial | Le mémo doctrine et la fiche de contact de l'informateur pointent déjà les zones à risque ; les deux pièces de bruit (météo, logistique) doivent être écartées sans faire perdre de budget ; les deux pièces ambiguës appellent une vérification, pas une conclusion immédiate | — |
+| 2 | Le signalement de 15 h 58 est-il daté et confirmé, ou juste alarmant ? | Dernier rapport, puis historique 24 h du poste d'observation fixe Nord | Un signalement choquant sans confirmation n'est qu'un signal, pas une preuve ; il faut d'abord savoir depuis quand il est tenu pour vrai | 1 |
+| 3 | Pourquoi l'observation ne change plus depuis 14 h 05 ? | Historique 24 h : le rapport est identique à chaque créneau depuis 14 h 05 | Une observation qui cesse de varier juste après un évènement technique suggère une panne de remontée, pas forcément une situation stable | 1 |
+| 4 | Existe-t-il une explication technique à ce blocage ? | Journal des incidents du poste d'observation fixe Nord | La panne d'alimentation de la lunette à 14 h 05 donne une cause plausible, à mettre en balance avec un vrai mouvement de troupes ; c'est aussi la vérification qui tranche la pièce ambiguë du calendrier de maintenance générique | 1 |
+| 5 | L'enjeu de l'entrée de la patrouille justifie-t-il le coût d'une vérification terrain ? | Arbitrage budget/horloge de mission, puis reconnaissance sur le poste Nord | Le coût d'une patrouille exposée à tort dépasse le coût de 3 jetons et d'un délai de reconnaissance ; la vérification confirme un secteur calme, la panne était d'observation, pas de menace | 1, 8 |
+| 6 | L'incident du poste Nord dit-il quelque chose des quatre autres sources ? | Dernier rapport des quatre autres sources | Un incident localisé ne dispense pas de couvrir tout le dispositif annoncé ; la fusion de renseignement porte sur cinq sources, pas une seule | — |
+| 7 | L'interception radio est-elle vraiment confirmée deux fois ? | Historique de l'écoute radio : même message, deux stations, deux fréquences relais | Deux traces d'une même interception relayée ne sont pas deux preuves indépendantes ; le dossier initial l'annonçait déjà en signalant que les stations A et B partagent un même flux de collecte | 2 |
+| 8 | 200 véhicules blindés sur l'axe secondaire : à corriger ou à rejeter ? | Historique et vérification terrain du témoignage de l'informateur local | Un chiffre physiquement invraisemblable au vu du terrain s'écarte du raisonnement, il ne se recoupe pas avec le reste comme une preuve ordinaire ; la note manuscrite non signée du dossier initial le laissait pressentir sans le confirmer | 3 |
+| 9 | Le silence de la patrouille avancée signifie-t-il une capture ou une panne ? | Ordre de bataille et plan de couverture (avant le twist) | L'ordre de bataille initial montre la patrouille active : le silence reste ambigu entre incident et absence de rapport à transmettre, une conclusion doit rester en suspens | 4 |
+| 10 | Que change l'annonce du MJ à 1 h 35 ? | Twist : mise à jour de l'ordre de bataille | La question de la patrouille avancée se referme ; le budget qui lui était réservé doit être redirigé vers l'incident principal | 5 |
+| 11 | L'indice de menace à 25/100 suffit-il à conclure que le secteur est sûr ? | Indice de menace consolidé, confronté aux résultats source par source déjà obtenus | Un indice agrégé peut rester rassurant en absorbant une source figée et une source aberrante ; il ne remplace jamais la lecture source par source | 6 |
+| 12 | La transmission non identifiée change-t-elle l'analyse ? | Journal des transmissions radio | À signaler dans le brief, mais sans suite confirmée elle ne doit pas absorber le budget restant | 7 |
+| 13 | Reste-t-il assez de budget et de temps avant l'entrée de la patrouille ? | Suivi du budget de jetons et de l'horloge de mission | Prioriser la vérification qui a le plus changé le diagnostic (poste Nord) plutôt que de tout vérifier sur le terrain ; le rappel de sécurité sur les délais, dans le dossier initial, préparait déjà cet arbitrage | 8 |
+| 14 | Le brief final peut-il être défendu avec ce qui a été réuni ? | Grille de verrouillage puis brief dans l'enveloppe | Action B, périmètre poste Nord en priorité, confiance modérée, deux preuves (historique figé + reconnaissance confirmant le calme), deux incertitudes (fiabilité durable de l'informateur, origine de la transmission non identifiée), une vérification prioritaire restante | — |
 
 Une cellule qui n'a pas parcouru toutes les étapes n'a pas échoué : le budget limité rend cette exhaustivité volontairement difficile. Le débrief de synthèse doit faire ressortir quelles étapes ont été sautées et ce que cela a coûté à la décision finale.
 
@@ -130,49 +152,53 @@ Une cellule qui n'a pas parcouru toutes les étapes n'a pas échoué : le budget
 | Temps | Conduite | Trace attendue |
 |---|---|---|
 | 0:00–0:15 | brief mission, formation des cellules, remise du budget et du catalogue | choix initial, confiance avant enquête |
-| 0:15–0:30 | concepts éclair : ce qui peut rendre un renseignement non fiable, sans dévoiler le scénario | liste de pièges possibles évoqués par les cellules |
-| 0:30–1:10 | round 1 d'investigation | journal de bord, requêtes achetées |
-| 1:10–1:25 | pause | — |
-| 1:25–1:40 | twist injecté puis relance | mise à jour du journal |
-| 1:40–2:10 | round 2 d'investigation | journal de bord complété |
-| 2:10–2:15 | marge tampon | absorbe un débordement des rounds 1 ou 2 |
+| 0:15–0:35 | remise et tri du dossier initial | fiche de tri, plan d'achat initial |
+| 0:35–0:45 | concepts éclair : ce qui peut rendre un renseignement non fiable, sans dévoiler le scénario | liste de pièges possibles évoqués par les cellules |
+| 0:45–1:20 | round 1 d'investigation | journal de bord, requêtes achetées |
+| 1:20–1:35 | pause | — |
+| 1:35–1:50 | twist injecté puis relance | mise à jour du journal |
+| 1:50–2:15 | round 2 d'investigation | journal de bord complété |
 | 2:15–2:35 | rédaction et ouverture de l'enveloppe de décision | grille de verrouillage remplie, brief rédigé |
 | 2:35–2:55 | restitution par cellule | brief oral, décision, confiance |
 | 2:55–3:00 | synthèse et révélation de la fiche complète | comparaison décision/référence |
 
-La marge de 2:10–2:15 peut être absorbée directement dans le round qui la précède si nécessaire. En cas de nouveau débordement, réduire la restitution à 2 minutes par cellule plutôt que le temps d'investigation.
+Il n'y a plus de marge tampon dédiée : ce temps a été redistribué vers le tri du dossier initial, qui constitue désormais le cœur de la séance. En cas de débordement, réduire la restitution à 2 minutes par cellule plutôt que le temps de tri ou d'investigation.
 
 ## 1. Brief mission et formation des cellules — 15 min
 
-Présentez la situation, formez 3 à 4 cellules de 3 à 4 étudiants, distribuez budget et catalogue. Faites choisir, sans aucune requête posée : A, B, C ou D, avec un niveau de confiance de 0 à 3 (0 impossible, 1 faible, 2 modérée, 3 forte) et la preuve unique disponible à ce stade (le signalement du poste Nord, rien d'autre).
+Présentez la situation, formez 3 à 4 cellules de 3 à 4 étudiants, distribuez budget et catalogue. Faites choisir, sans aucune requête posée : A, B, C ou D, avec un niveau de confiance de 0 à 3 (0 impossible, 1 faible, 2 modérée, 3 forte) et la preuve unique disponible à ce stade (le signalement du poste Nord, rien d'autre). Ne distribuez pas encore le dossier initial à ce stade : ce choix doit rester à l'aveugle.
 
-## 2. Concepts éclair — 15 min
+## 2. Remise et tri du dossier initial — 20 min
 
-Sans révéler le scénario, faites nommer collectivement des façons dont un renseignement peut tromper un observateur : source silencieuse, observation ancienne présentée comme actuelle, double comptage d'une même information, témoignage invraisemblable, ordre de bataille obsolète, indice global qui masque une source en alerte, fausse piste sans conséquence. N'affirmez ni ne niez qu'un de ces cas se produira dans le jeu.
+Distribuez à chaque cellule le dossier initial complet (deux fiches de référence et huit pièces à trier, section « Dossier initial d'investigation » de `guide_etudiant.md`). Laissez les cellules lire, discuter et remplir leur fiche de tri puis leur plan d'achat, sans intervenir sur le contenu : si une cellule vous interroge sur une pièce, rappelez que le dossier ne contient rien de plus que ce qui est écrit et que tout complément s'achète. Circulez pour vérifier que chaque cellule produit bien un plan d'achat écrit avant la fin du créneau, mais ne validez ni n'invalidez son tri. Gardez la classification de référence (section dédiée ci-dessus) sous la main pour le débrief, sans vous y référer devant les cellules.
 
-## 3. Round 1 d'investigation — 40 min
+## 3. Concepts éclair — 10 min
+
+Sans révéler le scénario, faites nommer collectivement des façons dont un renseignement peut tromper un observateur, en partant de ce que le tri du dossier vient de faire remonter : source silencieuse, observation ancienne présentée comme actuelle, double comptage d'une même information, témoignage invraisemblable, ordre de bataille obsolète, indice global qui masque une source en alerte, fausse piste sans conséquence. N'affirmez ni ne niez qu'un de ces cas se produira dans le jeu.
+
+## 4. Round 1 d'investigation — 35 min
 
 Circulez entre les cellules au poste MJ. Chaque requête suit le catalogue et reçoit la réponse scriptée correspondante, lue ou paraphrasée sans ajout ni omission. Exigez que chaque cellule note dans son journal : requête achetée, coût, réponse obtenue, ce qu'elle permet de conclure, ce qu'elle ne permet pas de conclure, confiance actualisée.
 
-## 4. Twist injecté et relance — 15 min
+## 5. Twist injecté et relance — 15 min
 
-À 1 h 30, interrompez toutes les cellules et lisez l'annonce du twist (section dédiée ci-dessus). Laissez deux minutes aux cellules pour ajuster leur journal avant de relancer le round 2.
+À 1 h 35, interrompez toutes les cellules et lisez l'annonce du twist (section dédiée ci-dessus). Laissez deux minutes aux cellules pour ajuster leur journal avant de relancer le round 2.
 
-## 5. Round 2 d'investigation — 30 min
+## 6. Round 2 d'investigation — 25 min
 
 Même fonctionnement que le round 1. Rappelez l'horloge de mission à mi-round si une cellule approche 17 h 00 sans avoir encore vérifié le poste d'observation fixe Nord.
 
-## 6. Enveloppe de décision — 20 min
+## 7. Enveloppe de décision — 20 min
 
 Chaque cellule remplit sa grille de verrouillage (section « Enveloppe de décision » de `guide_etudiant.md`) : elle doit nommer et justifier au moins **quatre problèmes distincts** rencontrés avant de pouvoir ouvrir son enveloppe et y déposer son brief final (action, périmètre, confiance, deux preuves, deux incertitudes, une vérification prioritaire restante). Ne validez l'ouverture qu'après vérification de la grille.
 
-## 7. Restitution — 20 min
+## 8. Restitution — 20 min
 
 Chaque cellule présente en 3 minutes : action retenue, confiance, deux preuves citées, problème le plus déterminant identifié. Les autres cellules peuvent contester une preuve ou une confiance affichée, sans révéler leurs propres résultats.
 
-## 8. Synthèse et révélation — 5 min
+## 9. Synthèse et révélation — 5 min
 
-Révélez la fiche complète et la décision de référence. Passez en revue la taxonomie des pièges rencontrés :
+Révélez la fiche complète, la classification de référence du dossier initial et la décision de référence. Demandez à chaque cellule de comparer sa décision à l'aveugle (étape 1) à son plan d'achat post-dossier (étape 2) puis à sa décision finale : c'est ce contraste, plus que la fiche complète elle-même, qui doit clore la séance. Passez en revue la taxonomie des pièges rencontrés :
 
 1. observation ancienne présentée comme situation actuelle (poste d'observation fixe Nord) ;
 2. interception dupliquée comptée comme deux confirmations indépendantes (écoute radio) ;
@@ -194,10 +220,12 @@ Demandez à chaque cellule combien de ces huit problèmes elle a effectivement i
 | Une cellule demande une requête hors catalogue | Répondre « cette information n'est pas disponible dans le système actuel », sans inventer de contenu. |
 | Une cellule termine très en avance | Lui demander de rédiger une deuxième version du brief pour une audience différente (le commandant plutôt que la cellule de renseignement). |
 | Une cellule dépasse 17 h 00 d'horloge de mission avant sa décision | Appliquer l'action C par défaut et le noter comme trace de débrief, pas comme sanction. |
+| Une cellule débat sans fin sur le tri du dossier initial sans produire de plan d'achat | Recentrer avec « quelle est la seule requête que vous achèteriez si vous ne pouviez en poser qu'une ? », sans trancher vous-même le tri. |
+| Une cellule classe toutes les pièces du dossier initial comme « utiles » sans distinction | Ne pas corriger pendant la phase de tri ; noter l'absence de discrimination pour la relancer en synthèse sur le coût réel de cette absence de tri (budget dispersé en round 1). |
 
 ## Critères observables
 
-L'étudiant distingue un rapport reçu d'une situation actuelle ; ne compte pas une interception dupliquée comme deux confirmations indépendantes ; rejette un témoignage invraisemblable plutôt que de l'intégrer ; suspend sa conclusion sur une source silencieuse tant que l'ordre de bataille n'est pas vérifié ; met à jour sa confiance après le twist ; cite une preuve précise pour chaque problème nommé ; propose une vérification qui reste réalisable avant l'échéance de mission.
+L'étudiant distingue un rapport reçu d'une situation actuelle ; ne compte pas une interception dupliquée comme deux confirmations indépendantes ; rejette un témoignage invraisemblable plutôt que de l'intégrer ; suspend sa conclusion sur une source silencieuse tant que l'ordre de bataille n'est pas vérifié ; met à jour sa confiance après le twist ; cite une preuve précise pour chaque problème nommé ; propose une vérification qui reste réalisable avant l'échéance de mission ; distingue, dans le dossier initial, une pièce utile d'une pièce de bruit avant de dépenser son budget.
 
 ## Sources
 

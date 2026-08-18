@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148mm" height="110mm" viewBox="0 0 148 110" font-family="Georgia, 'Times New Roman', serif">
+  <rect x="0" y="0" width="148" height="110" fill="#ffffff"/>
+  <rect x="0" y="0" width="148" height="99" fill="#f4f1e8" stroke="#1a1a1a" stroke-width="1.2"/>
+  <rect x="3" y="3" width="142" height="93" fill="none" stroke="#1a1a1a" stroke-width="0.4"/>
+
+  <text x="6" y="11" font-size="6" font-weight="bold" fill="#1a1a1a" textLength="90" lengthAdjust="spacingAndGlyphs">DOSSIER PERSONNEL — SOURCE HUMAINE</text>
+  <line x1="6" y1="14" x2="142" y2="14" stroke="#1a1a1a" stroke-width="0.4"/>
+
+  <!-- confidential stamp, kept clear of the title on its left -->
+  <g transform="translate(124,10) rotate(-9)">
+    <rect x="-19" y="-5.5" width="38" height="11" fill="none" stroke="#8a1f1f" stroke-width="0.7" rx="1.2"/>
+    <text x="0" y="2.2" text-anchor="middle" font-size="5" font-weight="bold" fill="#8a1f1f" letter-spacing="0.5" textLength="32" lengthAdjust="spacingAndGlyphs">CONFIDENTIEL</text>
+  </g>
+
+  <!-- redacted photo box, label kept inside the same column width, below the box -->
+  <rect x="6" y="18" width="26" height="28" fill="#111111"/>
+  <text x="19" y="50" text-anchor="middle" font-size="4" fill="#555555" textLength="24" lengthAdjust="spacingAndGlyphs">photo retirée</text>
+
+  <!-- top field block: sits to the right of the photo box (box ends at x=32), never overlapping it -->
+  <text x="34" y="24" font-size="5" fill="#1a1a1a" textLength="24" lengthAdjust="spacingAndGlyphs">Identité :</text>
+  <rect x="64" y="20.5" width="66" height="5.5" fill="#111111"/>
+
+  <text x="34" y="32" font-size="5" fill="#1a1a1a" textLength="24" lengthAdjust="spacingAndGlyphs">Statut :</text>
+  <text x="64" y="32" font-size="5" fill="#1a1a1a" textLength="62" lengthAdjust="spacingAndGlyphs">contact humain rémunéré</text>
+
+  <text x="34" y="40" font-size="5" fill="#1a1a1a" textLength="27" lengthAdjust="spacingAndGlyphs">Recrutement :</text>
+  <text x="64" y="40" font-size="5" fill="#1a1a1a" textLength="36" lengthAdjust="spacingAndGlyphs">il y a 3 mois</text>
+
+  <line x1="6" y1="55" x2="142" y2="55" stroke="#1a1a1a" stroke-width="0.3" stroke-dasharray="1.5,1"/>
+
+  <text x="6" y="62" font-size="5" font-weight="bold" fill="#1a1a1a">Zone de couverture</text>
+  <text x="6" y="68" font-size="5" fill="#1a1a1a" textLength="110" lengthAdjust="spacingAndGlyphs">Axe secondaire et village voisin.</text>
+
+  <text x="6" y="76" font-size="5" font-weight="bold" fill="#1a1a1a" textLength="132" lengthAdjust="spacingAndGlyphs">Vérification croisée depuis le recrutement</text>
+  <text x="6" y="82" font-size="5" fill="#1a1a1a">Aucune.</text>
+
+  <text x="6" y="90" font-size="5" font-weight="bold" fill="#1a1a1a" textLength="46" lengthAdjust="spacingAndGlyphs">Motivation déclarée :</text>
+  <text x="56" y="90" font-size="5" fill="#1a1a1a" textLength="30" lengthAdjust="spacingAndGlyphs">Rémunération.</text>
+
+  <text x="6" y="96.5" font-size="5" font-weight="bold" fill="#1a1a1a" textLength="52" lengthAdjust="spacingAndGlyphs">Historique de fiabilité :</text>
+  <text x="62" y="96.5" font-size="5" fill="#1a1a1a" textLength="76" lengthAdjust="spacingAndGlyphs">non disponible (1re mission)</text>
+
+  <text x="142" y="106" text-anchor="end" font-size="3.8" font-style="italic" fill="#4a4a4a" textLength="70" lengthAdjust="spacingAndGlyphs">Pièce n° 3 — dossier initial, séquence 0</text>
+</svg>
