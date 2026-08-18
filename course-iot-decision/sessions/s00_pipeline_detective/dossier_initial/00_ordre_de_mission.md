@@ -36,5 +36,3 @@ Cinq éléments composent le dispositif de renseignement du secteur : poste d'ob
 - Annexe C — Catalogue des requêtes disponibles auprès du bureau de renseignement (remis séparément par le MJ)
 
 ---
-
-*Fiche de référence n° 1 du dossier initial — Séquence 0.*

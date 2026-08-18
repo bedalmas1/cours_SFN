@@ -16,4 +16,4 @@ Pour toute question relative à cette note, contacter le bureau logistique au po
 
 ---
 
-*Pièce n° 6 du dossier initial — Séquence 0. À trier : utile, sans rapport, ou ambiguë.*
+*Pièce n° 6 du dossier initial*

@@ -12,4 +12,4 @@ Les dates de maintenance des postes d'observation ne sont pas systématiquement 
 
 ---
 
-*Pièce n° 7 du dossier initial — Séquence 0. À trier : utile, sans rapport, ou ambiguë.*
+*Pièce n° 7 du dossier initial*

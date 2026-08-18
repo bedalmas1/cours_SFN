@@ -20,4 +20,4 @@ Ce mémo est doctrinal : il rappelle des principes valables pour toutes les miss
 
 ---
 
-*Pièce n° 2 du dossier initial — Séquence 0. À trier : utile, sans rapport, ou ambiguë.*
+*Pièce n° 2 du dossier initial*

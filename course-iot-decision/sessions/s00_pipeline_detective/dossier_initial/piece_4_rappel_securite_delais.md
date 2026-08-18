@@ -10,4 +10,4 @@ Par ailleurs, le port du gilet réfléchissant reste obligatoire pour tout dépl
 
 ---
 
-*Pièce n° 4 du dossier initial — Séquence 0. À trier : utile, sans rapport, ou ambiguë.*
+*Pièce n° 4 du dossier initial*

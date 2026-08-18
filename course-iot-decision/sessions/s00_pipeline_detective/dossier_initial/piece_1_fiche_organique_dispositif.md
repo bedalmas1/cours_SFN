@@ -28,4 +28,4 @@ Les cinq éléments sont rattachés au même bureau de renseignement et ne dépe
 
 *Note administrative : la présente fiche reprend la trame standard utilisée depuis l'exercice CENTAURE de l'année précédente ; seules les données propres au secteur actuel ont été mises à jour.*
 
-*Pièce n° 1 du dossier initial — Séquence 0. À trier : utile, sans rapport, ou ambiguë.*
+*Pièce n° 1 du dossier initial*

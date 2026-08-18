@@ -19,4 +19,4 @@ Ce bulletin concerne exclusivement le secteur Sud. Le secteur Nord fait l'objet 
 
 ---
 
-*Pièce n° 5 du dossier initial — Séquence 0. À trier : utile, sans rapport, ou ambiguë.*
+*Pièce n° 5 du dossier initial*
