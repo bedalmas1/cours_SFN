@@ -10,21 +10,46 @@ Les documents `.md` sont volontairement fournis, réalistes et abondamment illus
 
 | Fichier | Format |
 |---|---|
-| `00_ordre_de_mission.md` | Texte, avec tampon de réception illustré |
+| `00_ordre_de_mission.md` / `.pdf` | Texte, avec tampon de réception illustré |
 | `00_carte_secteur.svg` | Image (à imprimer en A4 paysage) |
 
 ## Pièces à trier
 
 | Fichier | Format | Choix de format |
 |---|---|---|
-| `piece_1_fiche_organique_dispositif.md` | Paragraphes rédigés + organigramme, une icône par source | Cinq portraits de source plutôt qu'un tableau à six colonnes ; se lit comme un vrai dossier organique |
-| `piece_2_memo_doctrine_fiabilite.md` | Texte | Mémo doctrinal à six points, dont trois administratifs sans intérêt pour la mission |
+| `piece_1_fiche_organique_dispositif.md` / `.pdf` | Paragraphes rédigés + organigramme, une icône par source | Cinq portraits de source plutôt qu'un tableau à six colonnes ; se lit comme un vrai dossier organique |
+| `piece_2_memo_doctrine_fiabilite.md` / `.pdf` | Texte | Mémo doctrinal à six points, dont trois administratifs sans intérêt pour la mission |
 | `piece_3_fiche_contact_informateur.svg` | Image | Fiche personnelle caviardée : le rendu visuel (bandes noires, tampon) porte l'information autant que le texte |
-| `piece_4_rappel_securite_delais.md` | Paragraphes rédigés | Deux paragraphes plutôt qu'une liste à puces, dont un seul concerne vraiment la mission |
-| `piece_5_bulletin_meteo_secteur_sud.md` | Prose + tableau | Synthèse rédigée en tête, tableau détaillé en appui — comme un vrai bulletin météo |
-| `piece_6_note_logistique_carburant.md` | Paragraphes rédigés, une icône par rubrique | Quatre rubriques logistiques racontées plutôt que tabulées, aucune ne concernant le renseignement |
-| `piece_7_calendrier_maintenance_generique.md` | Prose + frise chronologique illustrée | Une frise visuelle remplace le tableau multi-colonnes, avec une case « ? » bien visible pour le poste Nord |
+| `piece_4_rappel_securite_delais.md` / `.pdf` | Paragraphes rédigés | Deux paragraphes plutôt qu'une liste à puces, dont un seul concerne vraiment la mission |
+| `piece_5_bulletin_meteo_secteur_sud.md` / `.pdf` | Prose + tableau | Synthèse rédigée en tête, tableau détaillé en appui — comme un vrai bulletin météo |
+| `piece_6_note_logistique_carburant.md` / `.pdf` | Paragraphes rédigés, une icône par rubrique | Quatre rubriques logistiques racontées plutôt que tabulées, aucune ne concernant le renseignement |
+| `piece_7_calendrier_maintenance_generique.md` / `.pdf` | Prose + frise chronologique illustrée | Une frise visuelle remplace le tableau multi-colonnes, avec une case « ? » bien visible pour le poste Nord |
 | `piece_8_note_manuscrite_informateur.svg` | Image | Note manuscrite non signée : le papier froissé, l'écriture à la main et la tache de café sont le message — un fichier texte perdrait tout l'effet |
+
+Les `.pdf` des pièces 1, 2, 4, 5, 6, 7 et de l'ordre de mission sont prêts à imprimer directement (mise en page A4, illustrations à leur échelle d'origine). La pièce 1 tient sur deux pages (cinq portraits de source détaillés + organigramme) ; les autres tiennent sur une page. Les pièces 3 et 8 restent des `.svg` à imprimer directement, sans PDF associé.
+
+`planches_impression.pdf` regroupe les trois `.svg` du dossier (carte du secteur, pièce 3, pièce 8) en un seul fichier à deux pages A4 paysage, pour lancer une seule impression : page 1 la carte du secteur pleine page, page 2 les pièces 3 et 8 côte à côte à leur échelle d'origine (elles seront de toute façon découpées séparément). Les `.svg` individuels restent la source ; régénérer ce PDF si l'un d'eux change.
+
+## Feuilles à remplir (une par cellule, sauf mention contraire)
+
+Ces feuilles ne font pas partie du dossier à trier : ce sont les supports vierges sur lesquels les élèves écrivent pendant la partie. Deux d'entre elles sont remises au MJ pendant la séance ; les deux autres restent dans la cellule ou vont à l'enseignant.
+
+| Fichier | Moment | Qui remplit | Remis à |
+|---|---|---|---|
+| `09_decision_initiale_individuelle.md` / `.pdf` / `.docx` | Étape 0, avant ouverture du dossier | chaque élève (à imprimer en autant d'exemplaires que d'élèves) | conservé par la cellule, comparé en synthèse (étape 8) |
+| `10_fiche_tri_et_plan_achat.md` / `.pdf` / `.docx` | Étape 1, avant le premier achat de requête | la cellule | montré/remis au MJ avant le round 1 |
+| `11_enveloppe_decision.md` / `.pdf` / `.docx` | Étape 6 | la cellule | scellé dans une enveloppe, remis au MJ avant la restitution |
+| `12_exit_ticket.md` / `.pdf` / `.docx` | Fin de séance | chaque élève (à imprimer en autant d'exemplaires que d'élèves) | remis à l'enseignant |
+
+Le journal de bord et le brief de restitution restent oraux (dictaphone / téléphone) : ils n'ont pas de feuille papier associée.
+
+Trois formats par feuille, mêmes contenus, format A4 :
+
+- `.md` : source, pour retoucher le texte ou régénérer les autres formats ;
+- `.pdf` : prêt à imprimer directement, une page chacun, bandeau du bureau de renseignement en en-tête ;
+- `.docx` : version éditable dans Word/LibreOffice, pour ajuster librement la mise en page, le nombre de lignes des tableaux, etc., avant impression.
+
+Si le contenu d'un `.md` change, régénérer le `.pdf` (conversion HTML avec mise en page A4, puis impression PDF) et le `.docx` (le `.docx` n'est pas généré depuis le `.md` automatiquement : le réécrire à la main ou reconstruire son contenu à partir du `.md` mis à jour).
 
 ## Illustrations (`assets/`)
 

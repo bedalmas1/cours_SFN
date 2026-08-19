@@ -11,6 +11,7 @@ Décision de référence : ne pas dérouter ni annuler l'entrée de la patrouill
 ## Matériel du maître du jeu
 
 - cette fiche maître du jeu (ci-dessous), imprimée et gardée hors de vue des cellules ;
+- en option, les fiches de `reponses_mj/` : une carte imprimée par réponse scriptée, à découper et à remettre directement à une cellule au lieu de lire la réponse à voix haute — pratique si vous préférez faire circuler des transmissions papier plutôt que parler pour chaque requête ;
 - le stock de jetons et d'enveloppes par cellule (voir `instructions_avant_seance.md`) ;
 - un dé à six faces, pour le délai des vérifications terrain uniquement — il ne modifie jamais le contenu d'une réponse ;
 - une horloge de mission visible, distincte de l'heure réelle de la séance.
@@ -170,7 +171,7 @@ Il n'y a plus de marge tampon dédiée : ce temps a été redistribué vers le t
 
 ## 1. Brief mission et formation des cellules — 15 min
 
-Présentez la situation, formez 3 à 4 cellules de 3 à 4 étudiants, distribuez budget et catalogue. Faites choisir, sans aucune requête posée : A, B, C ou D, avec un niveau de confiance de 0 à 3 (0 impossible, 1 faible, 2 modérée, 3 forte) et la preuve unique disponible à ce stade (le signalement du poste Nord, rien d'autre). Ne distribuez pas encore le dossier initial à ce stade : ce choix doit rester à l'aveugle.
+Ouvrez avec le discours scripté de `discours_ouverture_mj.md` (à lire ou paraphraser, sans en dévoiler davantage), puis formez 3 à 4 cellules de 3 à 4 étudiants et distribuez budget et catalogue. Faites choisir, sans aucune requête posée : A, B, C ou D, avec un niveau de confiance de 0 à 3 (0 impossible, 1 faible, 2 modérée, 3 forte) et la preuve unique disponible à ce stade (le signalement du poste Nord, rien d'autre). Ne distribuez pas encore le dossier initial à ce stade : ce choix doit rester à l'aveugle.
 
 ## 2. Remise et tri du dossier initial — 20 min
 

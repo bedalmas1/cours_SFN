@@ -19,6 +19,8 @@ Après un premier choix décidé à l'aveugle, chaque cellule reçoit un **dossi
 Aucune commande, aucun fichier de données à exécuter : le matériel est entièrement imprimé. Livrables attendus par cellule : une fiche de tri du dossier initial et un plan d'achat, un journal de bord oral enregistré, une enveloppe de décision ouverte et complétée, un brief oral de restitution.
 
 - `guide_enseignant.md` : mode d'emploi complet du MJ — scénario, fiche des réponses scriptées, classification de référence du dossier initial, minutage, débrief.
+- `discours_ouverture_mj.md` : texte scripté à lire à voix haute par le MJ pour ouvrir la séance, avant le choix à l'aveugle.
+- `reponses_mj/` : fiches PDF prêtes à imprimer et à découper, une carte par réponse scriptée du catalogue de requêtes, à remettre directement à une cellule au lieu de lire la réponse à voix haute — voir son `README.md`.
 - `guide_etudiant.md` : mission, dossier initial à trier, catalogue des requêtes, journal de bord et enveloppe de décision distribués aux cellules.
 - `dossier_initial/` : fichiers prêts à imprimer du dossier initial (un fichier par pièce, texte ou image selon le cas) — voir son `README.md`.
 - `corrige.md` : résultat de référence condensé, pour préparation rapide ou relecture après séance.
