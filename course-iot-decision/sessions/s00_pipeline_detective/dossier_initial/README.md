@@ -12,6 +12,7 @@ Les documents `.md` sont volontairement fournis, réalistes et abondamment illus
 |---|---|
 | `00_ordre_de_mission.md` / `.pdf` | Texte, avec tampon de réception illustré |
 | `00_carte_secteur.svg` | Image (à imprimer en A4 paysage) |
+| `00_catalogue_requetes.md` / `.pdf` (dans `documents_equipes/`) | Texte, tableau des requêtes et de leur coût | Une fiche par cellule, gardée sous les yeux toute la partie ; à ne jamais confondre avec la fiche maître du jeu (réponses scriptées, réservée à l'enseignant) |
 
 ## Pièces à trier
 

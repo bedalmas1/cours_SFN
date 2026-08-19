@@ -6,7 +6,7 @@ Ce guide est destiné à l'enseignant. Comptez 60 à 75 minutes de préparation 
 
 - tous les fichiers du dossier `dossier_initial/` (voir son `README.md`), un jeu complet par cellule : deux fiches de référence (`00_ordre_de_mission.md`, `00_carte_secteur.svg`) gardées entières, plus les huit pièces à trier (`piece_1_...md` à `piece_8_...svg`), imprimées séparément et découpées en fiches distinctes. Les fichiers `.md` intègrent des illustrations (`assets/`) : ouvrez-les dans un visualiseur Markdown (aperçu VS Code, Typora) ou convertissez-les en PDF (`pandoc`) avant impression — un double-clic sur le fichier brut n'affichera pas les images ;
 - fiche de tri du dossier et plan d'achat initial, une par cellule — section « Dossier initial d'investigation » de `guide_etudiant.md` ;
-- catalogue des requêtes, une fiche A4 par cellule — section « Catalogue des requêtes » de `guide_etudiant.md` ;
+- catalogue des requêtes, une fiche A4 par cellule — `dossier_initial/documents_equipes/00_catalogue_requetes.md` / `.pdf`, prêt à imprimer (contenu identique à la section « Catalogue des requêtes » de `guide_etudiant.md`) ;
 - consignes du journal de bord oral — section « Journal de bord (oral) » de `guide_etudiant.md`, à lire aux cellules avant le round 1 ; aucune fiche à imprimer, le journal est enregistré, pas écrit ;
 - grille de verrouillage de l'enveloppe de décision, une par cellule — section « Enveloppe de décision » de `guide_etudiant.md` ;
 - fiche maître du jeu complète, y compris la classification de référence du dossier initial — sections « Dossier initial et fiche de classification de référence » et « Fiche maître du jeu » de `guide_enseignant.md`, strictement réservées à l'enseignant, à ne jamais laisser sur une table de cellule.

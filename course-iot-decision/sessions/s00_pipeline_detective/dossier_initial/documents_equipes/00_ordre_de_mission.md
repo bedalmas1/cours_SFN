@@ -1,4 +1,4 @@
-<img src="assets/sceau_bureau.svg" width="260" alt="Bureau de renseignement du secteur"> <img src="assets/tampon_reception.svg" width="70" alt="Tampon de réception, 15 h 58">
+<img src="../assets/sceau_bureau.svg" width="260" alt="Bureau de renseignement du secteur"> <img src="../assets/tampon_reception.svg" width="70" alt="Tampon de réception, 15 h 58">
 
 # ORDRE DE MISSION
 
@@ -27,12 +27,6 @@ Une patrouille amie doit pénétrer dans ce secteur à 17 h 00, heure de mission
 
 ## Dispositif disponible
 
-Cinq éléments composent le dispositif de renseignement du secteur : poste d'observation fixe Nord, écoute radio et interception, informateur local, poste frontalier allié, patrouille avancée. Le détail de chacun figure dans la fiche organique du dispositif (pièce n° 1).
-
-## Annexes jointes au dossier initial
-
-- Annexe A — Fiche organique du dispositif (pièce n° 1)
-- Annexe B — Carte du secteur (fiche de référence n° 2)
-- Annexe C — Catalogue des requêtes disponibles auprès du bureau de renseignement (remis séparément par le MJ)
+Cinq éléments composent le dispositif de renseignement du secteur : poste d'observation fixe Nord, écoute radio et interception, informateur local, poste frontalier allié, patrouille avancée. Le détail de chacun figure dans la fiche organique du dispositif.
 
 ---
