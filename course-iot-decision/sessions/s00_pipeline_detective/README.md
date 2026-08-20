@@ -24,5 +24,6 @@ Aucune commande, aucun fichier de données à exécuter : le matériel est enti�
 - `guide_etudiant.md` : mission, dossier initial à trier, catalogue des requêtes, journal de bord et enveloppe de décision distribués aux cellules.
 - `dossier_initial/` : fichiers prêts à imprimer du dossier initial (un fichier par pièce, texte ou image selon le cas) — voir son `README.md`.
 - `corrige.md` : résultat de référence condensé, pour préparation rapide ou relecture après séance.
+- `debrief_synthese.md` : support de débrief détaillé — analyse pièce par pièce du dossier initial et correspondance complète avec les sujets des séquences 1 à 8, pour approfondir l'étape 9 de `guide_enseignant.md` si le temps le permet.
 - `evaluation.md` : grille de notation.
 - `instructions_avant_seance.md` : matériel à imprimer et préparer avant la séance.
