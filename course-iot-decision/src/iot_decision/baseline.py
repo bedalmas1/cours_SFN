@@ -47,13 +47,13 @@ def load_raw(path: str | Path) -> list[dict]:
 
 def extract_sample(source: str | Path, destination: str | Path) -> int:
     """Copie exactement un échantillon vers le brut et retourne son effectif."""
-    records = load_raw(source)
+    source = Path(source)
     target = Path(destination)
+
     target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", encoding="utf-8", newline="\n") as stream:
-        for record in records:
-            stream.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
-    return len(records)
+    target.write_bytes(source.read_bytes())
+
+    return len(load_raw(source))
 
 
 def transform_raw(records: Iterable[dict]) -> list[dict]:
